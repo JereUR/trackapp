@@ -1,7 +1,12 @@
-import React from 'react'
+import LoginForm from '@/components/Login/LoginForm'
+import type { Metadata } from 'next'
+
+export const metadata: Metadata = {
+  title: 'TrackApp - Iniciar sesión'
+}
 
 const LoginPage = () => {
-  return <div>LoginPage</div>
+  return <LoginForm />
 }
 
 export default LoginPage
