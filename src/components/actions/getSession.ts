@@ -19,7 +19,7 @@ export default async function getSession(req: NextRequest) {
     return null
   } */
 
-  session = {
+  /* session = {
     user: {
       id: 4,
       email: 'jeremias.jdv@gmail.com',
@@ -31,7 +31,7 @@ export default async function getSession(req: NextRequest) {
       photo: 'string | null',
       created_at: ''
     }
-  }
+  } */
 
   return session
 
