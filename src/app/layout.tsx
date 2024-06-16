@@ -3,12 +3,12 @@
 import { Inter as FontSans } from 'next/font/google'
 import './globals.css'
 import { cn } from '@/lib/utils'
-import { ThemeProvider } from '@/components/providers/ThemeProvider'
 import { Toaster } from '@/components/ui/toaster'
 
 import TopBar from '@/components/TopBar/TopBar'
 import { usePathname } from 'next/navigation'
 import TopBarWithLinks from '@/components/TopBar/TopBarWithLinks'
+import ThemeProvider from '@/components/providers/ThemeProvider'
 
 const fontSans = FontSans({
   subsets: ['latin'],
