@@ -27,15 +27,13 @@ const ThemeSwitcher = () => {
         <TabsTrigger value="light" onClick={() => handleThemeChange('light')}>
           <SunIcon
             className={`h-6 w-6 ${
-              resolvedTheme === 'light' && 'text-purple-600'
+              resolvedTheme === 'light' && 'text-blue-600'
             }`}
           />
         </TabsTrigger>
         <TabsTrigger value="dark" onClick={() => handleThemeChange('dark')}>
           <MoonIcon
-            className={`h-6 w-6 ${
-              resolvedTheme === 'dark' && 'text-purple-600'
-            }`}
+            className={`h-6 w-6 ${resolvedTheme === 'dark' && 'text-blue-600'}`}
           />
         </TabsTrigger>
       </TabsList>
