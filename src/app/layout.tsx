@@ -4,12 +4,12 @@ import { Inter as FontSans } from 'next/font/google'
 import './globals.css'
 import { cn } from '@/lib/utils'
 import { Toaster } from '@/components/ui/toaster'
-
-import TopBar from '@/components/topbar/TopBar'
 import { usePathname } from 'next/navigation'
-import TopBarWithLinks from '@/components/topbar/TopBarWithLinks'
-import ThemeProvider from '@/components/providers/ThemeProvider'
-import AuthContextProvider from '@/components/context/AuthContext'
+
+import TopBar from '@components/topbar/TopBar'
+import TopBarWithLinks from '@components/topbar/TopBarWithLinks'
+import ThemeProvider from '@components/providers/ThemeProvider'
+import AuthContextProvider from '@components/context/AuthContext'
 
 const fontSans = FontSans({
   subsets: ['latin'],
