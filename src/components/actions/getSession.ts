@@ -2,8 +2,8 @@
 
 import { NextRequest } from 'next/server'
 import { cookies } from 'next/headers'
-/* import { Session } from '../types/User'
-import { setCookies } from '../context/setCookies' */
+/* import { Session } from '../types/User' */
+import { setCookies } from './setCookies'
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_BACKEND_URL
 
@@ -19,7 +19,7 @@ export default async function getSession(req: NextRequest) {
     return null
   } */
 
-  /* session = {
+  session = {
     user: {
       id: 4,
       email: 'jeremias.jdv@gmail.com',
@@ -31,7 +31,7 @@ export default async function getSession(req: NextRequest) {
       photo: 'string | null',
       created_at: ''
     }
-  } */
+  }
 
   return session
 
