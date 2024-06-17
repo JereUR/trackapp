@@ -3,9 +3,9 @@
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 
-import ThemeSwitcher from '@components/global/ThemeSwitcher'
+import ThemeSwitcher from '@/components/global/ThemeSwitcher'
 
-const TopBarWithLinks = () => {
+export default function TopBarWithLinks() {
   const pathname = usePathname()
   const router = useRouter()
 
@@ -59,5 +59,3 @@ const TopBarWithLinks = () => {
     </div>
   )
 }
-
-export default TopBarWithLinks
