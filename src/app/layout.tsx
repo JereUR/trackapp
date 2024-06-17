@@ -7,8 +7,8 @@ import { usePathname } from 'next/navigation'
 
 import AuthContextProvider from '@/components/context/AuthContext'
 import ThemeProvider from '@/components/providers/ThemeProvider'
-import TopBar from '@/components/topbar/TopBar'
-import TopBarWithLinks from '@/components/topbar/TopBarWithLinks'
+import TopBar from '@/components/header/TopBar'
+import TopBarWithLinks from '@/components/header/TopBarWithLinks'
 import { Toaster } from '@/components/ui/toaster'
 
 const fontSans = FontSans({
