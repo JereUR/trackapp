@@ -1,5 +1,6 @@
-import LoginForm from '@/components/Login/LoginForm'
 import type { Metadata } from 'next'
+
+import LoginForm from '@/components/session/LoginForm'
 
 export const metadata: Metadata = {
   title: 'TrackApp - Iniciar sesión'
