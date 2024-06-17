@@ -10,7 +10,7 @@ const TopBarWithLinks = () => {
   const router = useRouter()
 
   return (
-    <div className="flex justify-between items-center p-6 text-white bg-slate-600 dark:bg-slate-800">
+    <div className="flex justify-between items-center p-6 text-white shadow-md bg-slate-600 dark:bg-slate-800">
       <div className="flex gap-16 items-center">
         <div>
           <p
