@@ -107,7 +107,7 @@ const RecoverForm = () => {
   }
 
   return (
-    <div className="flex justify-center h-full items-center rounded-lg p-10 shadow-md">
+    <div className="flex justify-center h-full items-center rounded-lg p-10 m-10 shadow-md">
       <div className="flex-1 flex-col justify-center items-center mt-6">
         <p className="text-3xl font-extralight">Reestablecer contraseña</p>
         <form onSubmit={handleSubmit} className="w-full max-w-md">

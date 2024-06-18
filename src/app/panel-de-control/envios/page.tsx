@@ -1,7 +1,7 @@
 import React from 'react'
 
 const ShipmentsPage = () => {
-  return <div>ShipmentsPage</div>
+  return <div className="m-10">ShipmentsPage</div>
 }
 
 export default ShipmentsPage

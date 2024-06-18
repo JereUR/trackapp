@@ -84,7 +84,7 @@ const LoginForm = () => {
   return (
     <div className="flex justify-center h-full items-center">
       <div className="flex gap-12 max-h-full">
-        <div className="flex-1">
+        <div className="hidden lg:flex lg:flex-1">
           <Image
             src={imgLogin}
             alt="Login"
@@ -92,7 +92,7 @@ const LoginForm = () => {
             priority
           />
         </div>
-        <div className="flex-1 flex-col justify-center items-center mt-6">
+        <div className="shadow-md p-10 rounded-lg lg:shadow-none flex-1 flex-col justify-center items-center mt-6">
           <p className="text-3xl font-extralight">Iniciar sesión</p>
           <form onSubmit={handleSubmit} className="w-full">
             <div className="mt-6">

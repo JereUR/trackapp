@@ -36,7 +36,7 @@ const ModalRecover: React.FC<Props> = ({
     >
       <div
         ref={modalRef}
-        className="bg-background p-8 rounded-lg w-[30vw] h-fit"
+        className="bg-background p-8 rounded-lg m-10 lg:w-[50vw] xl:w-[30vw] h-fit"
       >
         <div className="flex justify-end">
           <button
@@ -49,7 +49,7 @@ const ModalRecover: React.FC<Props> = ({
         {recoverState ? (
           <div className="grid place-items-center text-center">
             <BsMailboxFlag className="h-20 w-20 mb-6 text-blue-600 animate-bounce" />
-            <span>
+            <span className="flex flex-col">
               Acabamos de enviarle un correo electrónico con instrucciones para
               restablecer su contraseña. Si no recibe un correo electrónico,{' '}
               <a
@@ -64,7 +64,7 @@ const ModalRecover: React.FC<Props> = ({
         ) : (
           <div className="flex flex-col justify-center">
             <p className="text-xl font-semibold mb-4">Restablecer Contraseña</p>
-            <span className="mx-4 my-2">
+            <span className="flex justify-start my-2">
               Ingrese si correo electrónico y recibirá un mail con la
               información necesaria para reestablecer su contraseña.
             </span>

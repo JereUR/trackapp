@@ -1,9 +1,9 @@
-import { useTheme } from 'next-themes'
 import { useEffect, useState } from 'react'
 import { MoonIcon, SunIcon } from '@radix-ui/react-icons'
+import { useTheme } from 'next-themes'
 import { Tabs, TabsList, TabsTrigger } from '../ui/tabs'
 
-const ThemeSwitcher = () => {
+const ThemeSwitcher = ({ className }: { className?: string }) => {
   const { resolvedTheme, setTheme } = useTheme()
   const [mounted, setMounted] = useState(false)
 
@@ -14,7 +14,7 @@ const ThemeSwitcher = () => {
   }, [resolvedTheme])
 
   if (!mounted) {
-    return <div>Loading...</div> // Mostrar estado de carga mientras se carga el tema
+    return <div>Loading...</div>
   }
 
   const handleThemeChange = (selectedTheme: string) => {
@@ -22,18 +22,20 @@ const ThemeSwitcher = () => {
   }
 
   return (
-    <Tabs defaultValue={resolvedTheme}>
-      <TabsList className="bg-background py-5">
+    <Tabs defaultValue={resolvedTheme} className={className}>
+      <TabsList className="bg-background py-2 md:py-5">
         <TabsTrigger value="light" onClick={() => handleThemeChange('light')}>
           <SunIcon
-            className={`h-6 w-6 ${
+            className={`h-5 w-5 md:h-6 md:w-6 ${
               resolvedTheme === 'light' && 'text-blue-600'
             }`}
           />
         </TabsTrigger>
         <TabsTrigger value="dark" onClick={() => handleThemeChange('dark')}>
           <MoonIcon
-            className={`h-6 w-6 ${resolvedTheme === 'dark' && 'text-blue-600'}`}
+            className={`h-5 w-5 md:h-6 md:w-6 ${
+              resolvedTheme === 'dark' && 'text-blue-600'
+            }`}
           />
         </TabsTrigger>
       </TabsList>
