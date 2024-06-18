@@ -22,7 +22,7 @@ export default function TopBarWithLinks() {
         <div>
           <p
             className="text-3xl font-semibold cursor-pointer"
-            onClick={() => router.replace('/panel-de-control')}
+            onClick={() => router.replace('/')}
           >
             TrackApp
           </p>
