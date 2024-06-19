@@ -1,7 +1,12 @@
+import ShowFleets from '@/components/dashboard/ShowFleets'
 import React from 'react'
 
-const MainPage = () => {
-  return <div>MainPage</div>
+const AdminHomePage = () => {
+  return (
+    <div>
+      <ShowFleets />
+    </div>
+  )
 }
 
-export default MainPage
+export default AdminHomePage
