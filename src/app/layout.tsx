@@ -5,7 +5,7 @@ import './globals.css'
 import { cn } from '@/lib/utils'
 import { usePathname } from 'next/navigation'
 
-import AuthContextProvider from '@/components/context/AuthContext'
+import UserContextProvider from '@/components/context/UserContext'
 import ThemeProvider from '@/components/providers/ThemeProvider'
 import TopBar from '@/components/header/TopBar'
 import TopBarWithLinks from '@/components/header/TopBarWithLinks'
@@ -33,7 +33,7 @@ export default function RootLayout({
           fontSans.variable
         )}
       >
-        <AuthContextProvider>
+        <UserContextProvider>
           <ThemeProvider
             attribute="class"
             defaultTheme="dark"
@@ -57,7 +57,7 @@ export default function RootLayout({
               <Toaster />
             </>
           </ThemeProvider>
-        </AuthContextProvider>
+        </UserContextProvider>
       </body>
     </html>
   )

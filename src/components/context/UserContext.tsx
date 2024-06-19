@@ -16,8 +16,9 @@ import { Login, Register, User } from '../types/User'
 import { useToast } from '../ui/use-toast'
 import { setCookies } from '../actions/setCookies'
 import { removeCookies } from '../actions/removeCookies'
+import { Fleet } from '../types/Fleet'
 
-type AuthContextType = {
+type UserContextType = {
   user: User | null
   token: string | null
   recoverState: boolean
@@ -27,19 +28,53 @@ type AuthContextType = {
   logout: () => Promise<void>
   signUp: ({ dataRegister }: { dataRegister: Register }) => Promise<void>
   recover: ({ email }: { email: string }) => Promise<void>
+  fleets: Fleet[]
+  loadingFleet: boolean
+  getFleets: () => void
+  getFleetById: ({ id }: { id: string }) => Promise<Fleet | null>
+  getWorkingFleet: () => Promise<Fleet>
+  updateWorkingFleet: ({ id }: { id: number }) => Promise<boolean>
 }
 
-export const AuthContext = createContext<AuthContextType | null>(null)
+export const UserContext = createContext<UserContextType | null>(null)
 
-export default function AuthContextProvider({
+const initialUser = {
+  id: 1,
+  email: 'jeremias.jdv@gmail.com',
+  first_name: 'Jeremias',
+  last_name: 'Dominguez Vega',
+  gender: 'male',
+  role: 'admin'
+}
+
+const initialFleets: Fleet[] = [
+  {
+    id: 1,
+    name: 'Fleet 1',
+    description: 'Fleet 1 description',
+    gps: 1,
+    on_working_area: true
+  },
+  {
+    id: 2,
+    name: 'Fleet 2',
+    description: 'Fleet 2 description',
+    gps: 2,
+    on_working_area: false
+  }
+]
+
+export default function UserContextProvider({
   children
 }: {
   children: ReactNode
 }) {
-  const [user, setUser] = useState<User | null>(null)
+  const [user, setUser] = useState<User | null>(initialUser)
+  const [fleets, setFleets] = useState<Fleet[]>(initialFleets)
   const [token, setToken] = useState<string | null>(null)
   const [recoverState, setRecoverState] = useState<boolean>(false)
   const [loadingUser, setLoadingUser] = useState(false)
+  const [loadingFleet, setLoadingFleet] = useState(true)
 
   const router = useRouter()
   const pathname = usePathname()
@@ -81,12 +116,12 @@ export default function AuthContextProvider({
       )
 
       if (response.status === 200 || response.status === 204) {
-        const authToken = response.headers.authorization
-        setCookies(authToken)
-        localStorage.setItem('token', authToken)
+        const userToken = response.headers.Userorization
+        setCookies(userToken)
+        localStorage.setItem('token', userToken)
         localStorage.setItem('user', JSON.stringify(response.data.user))
 
-        setToken(authToken)
+        setToken(userToken)
         setUser(response.data.user)
         setTimeout(() => {
           router.push('/panel-de-control')
@@ -241,21 +276,144 @@ export default function AuthContextProvider({
     }
   }
 
+  async function getFleets() {
+    setLoadingFleet(true)
+    try {
+      const response = await axios.get(`${BASE_URL}fleets`)
+
+      if (response.status === 200 || response.status === 204) {
+        setFleets(response.data)
+      } else {
+        toast({
+          title: 'Oh no! Algo salió mal.',
+          description: response.statusText
+        })
+      }
+    } catch (error: any) {
+      toast({
+        variant: 'destructive',
+        title: 'Oh no! Algo salió mal.',
+        description: error.message
+      })
+    } finally {
+      setLoadingFleet(false)
+    }
+  }
+
+  async function getFleetById({ id }: { id: string }): Promise<Fleet | null> {
+    setLoadingFleet(true)
+    try {
+      const response = await axios.get(`${BASE_URL}api/v1/fleet?id=${id}`, {
+        headers: {
+          Authorization: token
+        }
+      })
+
+      if (response.status === 200 || response.status === 204) {
+        return response.data
+      } else {
+        toast({
+          title: 'Oh no! Algo salió mal.',
+          description: response.statusText
+        })
+        return null
+      }
+    } catch (error: any) {
+      toast({
+        variant: 'destructive',
+        title: 'Oh no! Algo salió mal.',
+        description: error.message
+      })
+      return null
+    } finally {
+      setLoadingFleet(false)
+    }
+  }
+
+  async function getWorkingFleet() {
+    setLoadingFleet(true)
+    try {
+      const response = await axios.get(`${BASE_URL}api/v1/fleet_working`, {
+        headers: {
+          Authorization: token
+        }
+      })
+
+      if (response.status === 200 || response.status === 204) {
+        return response.data
+      } else {
+        toast({
+          title: 'Oh no! Algo salió mal.',
+          description: response.statusText
+        })
+        return null
+      }
+    } catch (error: any) {
+      toast({
+        variant: 'destructive',
+        title: 'Oh no! Algo salió mal.',
+        description: error.message
+      })
+      return null
+    } finally {
+      setLoadingFleet(false)
+      /* return initialFleets[0] */
+    }
+  }
+
+  async function updateWorkingFleet({ id }: { id: number }): Promise<boolean> {
+    setLoadingFleet(true)
+    let url = `${BASE_URL}api/v1/activate_fleet_working_status?id=${id}`
+    try {
+      const response = await axios.put(url, null, {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: token
+        }
+      })
+
+      if (response.status === 200) {
+        return true
+      } else {
+        toast({
+          title: 'Oh no! Algo salió mal.',
+          description: response.statusText
+        })
+        return false
+      }
+    } catch (error: any) {
+      toast({
+        variant: 'destructive',
+        title: 'Oh no! Algo salió mal.',
+        description: error.message
+      })
+      return false
+    } finally {
+      setLoadingFleet(false)
+    }
+  }
+
   return (
-    <AuthContext.Provider
+    <UserContext.Provider
       value={{
         user,
+        fleets,
         token,
         recoverState,
         loadingUser,
+        loadingFleet,
         setRecoverState,
         login,
         logout,
         signUp,
-        recover
+        recover,
+        getFleets,
+        getFleetById,
+        getWorkingFleet,
+        updateWorkingFleet
       }}
     >
       {children}
-    </AuthContext.Provider>
+    </UserContext.Provider>
   )
 }

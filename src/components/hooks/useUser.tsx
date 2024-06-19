@@ -2,13 +2,13 @@
 
 import { useContext } from 'react'
 
-import { AuthContext } from '../context/AuthContext'
+import { UserContext } from '../context/UserContext'
 
 export default function useUser() {
-  const context = useContext(AuthContext)
+  const context = useContext(UserContext)
 
   if (!context) {
-    throw new Error('useUser must be used within a AuthContext')
+    throw new Error('useUser must be used within a UserContext')
   }
 
   return context
