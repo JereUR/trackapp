@@ -23,13 +23,7 @@ export default async function getSession(req: NextRequest) {
     user: {
       id: 4,
       email: 'jeremias.jdv@gmail.com',
-      first_name: 'Jeremias',
-      last_name: 'DV',
-      gender: 'male',
-      birthdate: 'string',
-      role: 'admin',
-      photo: 'string | null',
-      created_at: ''
+      role: 'admin'
     }
   }
 
