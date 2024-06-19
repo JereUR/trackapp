@@ -16,7 +16,7 @@ import { Login, Register, User } from '../types/User'
 import { useToast } from '../ui/use-toast'
 import { setCookies } from '../actions/setCookies'
 import { removeCookies } from '../actions/removeCookies'
-import { Fleet } from '../types/Fleet'
+import { Fleet, PropsUpdateFleet } from '../types/Fleet'
 
 type UserContextType = {
   user: User | null
@@ -32,6 +32,11 @@ type UserContextType = {
   loadingFleet: boolean
   getFleets: () => void
   getFleetById: ({ id }: { id: string }) => Promise<Fleet | null>
+  updateFleet: ({
+    dataFleet
+  }: {
+    dataFleet: PropsUpdateFleet
+  }) => Promise<boolean>
   getWorkingFleet: () => Promise<Fleet>
   updateWorkingFleet: ({ id }: { id: number }) => Promise<boolean>
 }
@@ -330,6 +335,56 @@ export default function UserContextProvider({
     }
   }
 
+  async function updateFleet({
+    dataFleet
+  }: {
+    dataFleet: PropsUpdateFleet
+  }): Promise<boolean> {
+    setLoadingFleet(true)
+
+    const data = {
+      id: dataFleet.id,
+      name: dataFleet.name,
+      description: dataFleet.description
+    }
+
+    console.log(data)
+
+    let url = `${BASE_URL}api/v1/fleet?id=${dataFleet.id}`
+    try {
+      const response = await axios.put(
+        url,
+        {
+          data
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: token
+          }
+        }
+      )
+      if (response.status === 200) {
+        return true
+      } else {
+        toast({
+          title: 'Oh no! Algo salió mal.',
+          description: response.statusText
+        })
+        return false
+      }
+    } catch (error: any) {
+      toast({
+        variant: 'destructive',
+        title: 'Oh no! Algo salió mal.',
+        description: error.message
+      })
+      return false
+    } finally {
+      setLoadingFleet(false)
+    }
+  }
+
   async function getWorkingFleet() {
     setLoadingFleet(true)
     try {
@@ -409,6 +464,7 @@ export default function UserContextProvider({
         recover,
         getFleets,
         getFleetById,
+        updateFleet,
         getWorkingFleet,
         updateWorkingFleet
       }}
