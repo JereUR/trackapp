@@ -41,7 +41,7 @@ export default function TopBarWithLinks() {
 
       <div
         className={`md:flex md:items-center md:justify-end ${
-          isMenuOpen ? 'flex' : 'hidden'
+          isMenuOpen ? 'flex flex-col' : 'hidden'
         } absolute md:static top-full left-0 w-full bg-slate-600 dark:bg-slate-800 md:bg-transparent md:dark:bg-transparent z-10`}
       >
         <div className="flex flex-col md:flex-row gap-1 md:gap-4 items-center w-full md:w-auto p-4 md:p-0">
