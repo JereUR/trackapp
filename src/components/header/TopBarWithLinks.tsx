@@ -42,9 +42,9 @@ export default function TopBarWithLinks() {
       <div
         className={`md:flex md:items-center md:justify-end ${
           isMenuOpen ? 'flex' : 'hidden'
-        } flex-col md:flex-row w-full mt-4 md:mt-0`}
+        } absolute md:static top-full left-0 w-full bg-slate-600 dark:bg-slate-800 md:bg-transparent md:dark:bg-transparent z-10`}
       >
-        <div className="flex flex-col md:flex-row gap-1 md:gap-4 items-center w-full md:w-auto">
+        <div className="flex flex-col md:flex-row gap-1 md:gap-4 items-center w-full md:w-auto p-4 md:p-0">
           {user?.role === 'admin' || user?.role === 'staff' ? (
             <>
               <Link
@@ -106,7 +106,7 @@ export default function TopBarWithLinks() {
             </>
           )}
         </div>
-        <div className="flex justify-end items-center gap-4 mt-4 md:mt-0 md:ml-4">
+        <div className="flex justify-end items-center gap-4 mt-4 md:mt-0 md:ml-4 p-4 md:p-0">
           {user && <UserMenu user={user} />}
           <ThemeSwitcher />
         </div>
