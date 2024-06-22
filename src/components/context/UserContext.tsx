@@ -21,6 +21,7 @@ import { Fleet, PropsUpdateFleet } from '../types/Fleet'
 type UserContextType = {
   user: User | null
   token: string | null
+  count: number
   recoverState: boolean
   loadingUser: boolean
   setRecoverState: Dispatch<SetStateAction<boolean>>
@@ -127,7 +128,7 @@ export default function UserContextProvider({
   const [users, setUsers] = useState(initialUsers)
   const [fleets, setFleets] = useState<Fleet[]>(initialFleets)
   const [token, setToken] = useState<string | null>(null)
-  const [count, setCount] = useState(0)
+  const [count, setCount] = useState<number>(0)
   const [recoverState, setRecoverState] = useState<boolean>(false)
   const [loadingUser, setLoadingUser] = useState(false)
   const [loadingFleet, setLoadingFleet] = useState(true)
@@ -578,6 +579,7 @@ export default function UserContextProvider({
       value={{
         user,
         users,
+        count,
         fleets,
         token,
         recoverState,
