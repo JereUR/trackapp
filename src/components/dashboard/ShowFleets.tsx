@@ -14,16 +14,9 @@ const ShowFleets = () => {
   }, [token])
 
   return (
-    <div className="flex gap-8 m-8">
+    <div className="flex gap-8 m-10">
       <div className=" w-3/4 flex flex-col gap-8">
-        <Card className="max-w-sm mx-auto py-4 px-6 shadow-lg rounded-lg border-none dark:border-solid">
-          <CardContent className="bg-gray-200 dark:bg-gray-800 text-center py-4 px-6 rounded-lg">
-            <p className="text-2xl font-bold mb-2 text-foreground">
-              Flotas Disponibles
-            </p>
-            <p className="text-6xl font-bold text-blue-600">{fleets.length}</p>
-          </CardContent>
-        </Card>
+        <p className="text-3xl font-bold">Mis flotas</p>
 
         <div className="justify-around">
           {fleets.length > 0 ? (

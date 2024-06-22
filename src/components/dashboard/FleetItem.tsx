@@ -43,21 +43,21 @@ const FleetItem: React.FC<Props> = ({ fleet }) => {
 
   return (
     <Card
-      className={`flex justify-between bg-card my-8 mx-28 border-none dark:border-solid ${
+      className={`flex justify-between bg-card m-8 p-4 border-none dark:border-solid ${
         !fleet.gps && 'opacity-60'
       }`}
     >
       <div>
         <CardHeader>
           <CardTitle className="flex gap-6 items-center">
-            <p className="text-3xl font-bold">{fleet.name}</p>
+            <p className="text-2xl font-bold">{fleet.name}</p>
             {fleet.on_working_area ? (
-              <p className="text-lg text-foreground font-normal py-2 px-4 rounded-full bg-orange-500 opacity-90">
+              <p className="text-foreground font-normal py-2 px-4 rounded-full bg-orange-500 opacity-90">
                 Area de trabajo activa
               </p>
             ) : (
               <p
-                className="text-lg text-foreground font-normal py-2 px-4 rounded-full bg-gray-500 opacity-90"
+                className="text-foreground font-normal py-2 px-4 rounded-full bg-gray-500 opacity-90"
                 style={{ textShadow: '2px 2px 4px rgba(0, 0, 0, 0.3)' }}
               >
                 Area de trabajo inactiva
@@ -67,7 +67,7 @@ const FleetItem: React.FC<Props> = ({ fleet }) => {
         </CardHeader>
         <CardContent className="flex">
           <div className="flex flex-col gap-6">
-            <p className="text-lg italic text-gray-400">
+            <p className="text-sm italic text-gray-400">
               {fleet.description ? fleet.description : 'Sin descripción'}
             </p>
             <span className="py-2 underline w-fit rounded-full text-foreground font-semibold">
