@@ -10,6 +10,7 @@ import ThemeProvider from '@/components/providers/ThemeProvider'
 import TopBar from '@/components/header/TopBar'
 import TopBarWithLinks from '@/components/header/TopBarWithLinks'
 import { Toaster } from '@/components/ui/toaster'
+import ShipmentsContextProvider from '@/components/context/ShipmentsContext'
 
 const fontSans = FontSans({
   subsets: ['latin'],
@@ -34,29 +35,31 @@ export default function RootLayout({
         )}
       >
         <UserContextProvider>
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="dark"
-            disableTransitionOnChange
-          >
-            <>
-              {noLinks ? (
-                <div className="flex flex-col min-h-screen">
-                  <TopBar />
-                  <main className="flex-grow flex justify-center items-center">
+          <ShipmentsContextProvider>
+            <ThemeProvider
+              attribute="class"
+              defaultTheme="dark"
+              disableTransitionOnChange
+            >
+              <>
+                {noLinks ? (
+                  <div className="flex flex-col min-h-screen">
+                    <TopBar />
+                    <main className="flex-grow flex justify-center items-center">
+                      {children}
+                    </main>
+                  </div>
+                ) : (
+                  <div>
+                    <TopBarWithLinks />
                     {children}
-                  </main>
-                </div>
-              ) : (
-                <div>
-                  <TopBarWithLinks />
-                  {children}
-                </div>
-              )}
+                  </div>
+                )}
 
-              <Toaster />
-            </>
-          </ThemeProvider>
+                <Toaster />
+              </>
+            </ThemeProvider>
+          </ShipmentsContextProvider>
         </UserContextProvider>
       </body>
     </html>
