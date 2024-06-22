@@ -2,19 +2,18 @@
 
 import { useEffect, useState } from 'react'
 import dynamic from 'next/dynamic'
-
 import { Card, CardContent, CardTitle } from '../ui/card'
 import useUser from '../hooks/useUser'
 import useShipments from '../hooks/useShipments'
 import { Shipment } from '../types/Shipment'
 
-const ShipmentMap = dynamic(() => import('./ShipmentMap'), {
+// Carga dinámica del componente ShipmentMap sin SSR
+const ShipmentMap = dynamic(() => import('./maps/ShipmentMap'), {
   ssr: false
 })
 
 const AsideSection = () => {
   const [shipments, setShipments] = useState<Shipment[]>([])
-
   const { token, fleets, getFleets, loadingFleet } = useUser()
   const { getOnProgressShipments, loadingShipment } = useShipments()
 
@@ -23,6 +22,11 @@ const AsideSection = () => {
       const onProgressShipments = await getOnProgressShipments()
       setShipments(onProgressShipments)
     }
+
+    /* if (token) {
+      getFleets()
+      getShipments()
+    } */
 
     getFleets()
     getShipments()
