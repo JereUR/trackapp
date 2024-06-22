@@ -28,6 +28,19 @@ type UserContextType = {
   logout: () => Promise<void>
   signUp: ({ dataRegister }: { dataRegister: Register }) => Promise<void>
   recover: ({ email }: { email: string }) => Promise<void>
+  users: User[]
+  loadingUsers: boolean
+  getUsers: ({
+    q,
+    page,
+    ITEMS_PER_PAGE,
+    role
+  }: {
+    q: string
+    page: string
+    ITEMS_PER_PAGE: number
+    role?: string
+  }) => void
   fleets: Fleet[]
   loadingFleet: boolean
   getFleets: () => void
@@ -39,6 +52,7 @@ type UserContextType = {
   }) => Promise<boolean>
   getWorkingFleet: () => Promise<Fleet>
   updateWorkingFleet: ({ id }: { id: number }) => Promise<boolean>
+  getDrivers: () => Promise<User[]>
 }
 
 export const UserContext = createContext<UserContextType | null>(null)
@@ -51,6 +65,41 @@ const initialUser = {
   gender: 'male',
   role: 'admin'
 }
+
+const initialUsers = [
+  {
+    id: 1,
+    email: 'jeremias.jdv@gmail.com',
+    first_name: 'Jeremias',
+    last_name: 'Dominguez Vega',
+    gender: 'male',
+    role: 'driver'
+  },
+  {
+    id: 2,
+    email: 'leanlibutti@gmail.com',
+    first_name: 'Leandro',
+    last_name: 'Libutti',
+    gender: 'male',
+    role: 'driver'
+  },
+  {
+    id: 3,
+    email: 'pepito@gmail.com',
+    first_name: 'Pepito',
+    last_name: 'Perez',
+    gender: 'male',
+    role: 'staff'
+  },
+  {
+    id: 4,
+    email: 'ana@gmail.com',
+    first_name: 'Ana',
+    last_name: 'Gonzalez',
+    gender: 'female',
+    role: 'staff'
+  }
+]
 
 const initialFleets: Fleet[] = [
   {
@@ -75,11 +124,14 @@ export default function UserContextProvider({
   children: ReactNode
 }) {
   const [user, setUser] = useState<User | null>(initialUser)
+  const [users, setUsers] = useState(initialUsers)
   const [fleets, setFleets] = useState<Fleet[]>(initialFleets)
   const [token, setToken] = useState<string | null>(null)
+  const [count, setCount] = useState(0)
   const [recoverState, setRecoverState] = useState<boolean>(false)
   const [loadingUser, setLoadingUser] = useState(false)
   const [loadingFleet, setLoadingFleet] = useState(true)
+  const [loadingUsers, setLoadingUsers] = useState(false)
 
   const router = useRouter()
   const pathname = usePathname()
@@ -281,6 +333,79 @@ export default function UserContextProvider({
     }
   }
 
+  async function getUsers({
+    q,
+    page,
+    ITEMS_PER_PAGE,
+    role
+  }: {
+    q: string
+    page: string
+    ITEMS_PER_PAGE: number
+    role?: string
+  }): Promise<void> {
+    setLoadingUsers(true)
+    const params = new URLSearchParams()
+    params.append('regex', q)
+    params.append('page', page)
+    params.append('items_per_page', ITEMS_PER_PAGE.toString())
+    params.append('role', role || '')
+    const url = `${BASE_URL}api/v1/users?${params.toString()}`
+
+    try {
+      const response = await axios.get(url, {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: token
+        }
+      })
+
+      if (response.status === 200 || response.status === 204) {
+        setUsers(response.data.users)
+        setCount(response.data.count)
+      } else {
+        toast({
+          title: 'Oh no! Algo salió mal.',
+          description: response.statusText
+        })
+      }
+    } catch (error: any) {
+      toast({
+        variant: 'destructive',
+        title: 'Oh no! Algo salió mal.',
+        description: error.message
+      })
+    } finally {
+      setLoadingUsers(false)
+    }
+  }
+
+  async function getDrivers() {
+    setLoadingUsers(true)
+    try {
+      const response = await axios.get(`${BASE_URL}drivers`)
+
+      if (response.status === 200 || response.status === 204) {
+        return response.data
+      } else {
+        toast({
+          title: 'Oh no! Algo salió mal.',
+          description: response.statusText
+        })
+        return null
+      }
+    } catch (error: any) {
+      toast({
+        variant: 'destructive',
+        title: 'Oh no! Algo salió mal.',
+        description: error.message
+      })
+      return null
+    } finally {
+      setLoadingUsers(false)
+    }
+  }
+
   async function getFleets() {
     setLoadingFleet(true)
     try {
@@ -452,10 +577,12 @@ export default function UserContextProvider({
     <UserContext.Provider
       value={{
         user,
+        users,
         fleets,
         token,
         recoverState,
         loadingUser,
+        loadingUsers,
         loadingFleet,
         setRecoverState,
         login,
@@ -466,7 +593,9 @@ export default function UserContextProvider({
         getFleetById,
         updateFleet,
         getWorkingFleet,
-        updateWorkingFleet
+        updateWorkingFleet,
+        getUsers,
+        getDrivers
       }}
     >
       {children}
