@@ -30,6 +30,7 @@ type ShipmentsContextType = {
     id: string
     fleet_id: number
   }) => Promise<Shipment | null>
+  getOnProgressShipments: () => Promise<Shipment[]>
   addShipment: ({
     dataShipment,
     fleet_id
@@ -364,6 +365,40 @@ export default function ShipmentsContextProvider({
     }
   }
 
+  async function getOnProgressShipments(): Promise<Shipment[]> {
+    setLoadingShipment(true)
+    const url = `${BASE_URL}api/v1/on_progress_shipments`
+
+    try {
+      const response = await axios.get(url, {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: token
+        }
+      })
+
+      if (response.status === 200 || response.status === 204) {
+        return response.data.shipments
+      } else {
+        toast({
+          title: 'Oh no! Algo salió mal.',
+          description: response.statusText
+        })
+        return []
+      }
+    } catch (error: any) {
+      toast({
+        variant: 'destructive',
+        title: 'Oh no! Algo salió mal.',
+        description: error.message
+      })
+      return []
+    } finally {
+      setLoadingShipment(false)
+      return [initialShipments[1], initialShipments[2]]
+    }
+  }
+
   async function getShipmentById({
     id,
     fleet_id
@@ -567,6 +602,7 @@ export default function ShipmentsContextProvider({
         count,
         getAllShipments,
         getShipments,
+        getOnProgressShipments,
         getShipmentById,
         addShipment,
         updateShipment,
