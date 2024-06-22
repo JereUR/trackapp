@@ -1,7 +1,8 @@
-import { Shipment } from '@/components/types/Shipment'
-import { LatLngExpression } from 'leaflet'
-import React from 'react'
+import 'leaflet/dist/leaflet.css'
 import { MapContainer, Marker, Popup, TileLayer } from 'react-leaflet'
+import { LatLngExpression } from 'leaflet'
+
+import { Shipment } from '@/components/types/Shipment'
 
 const ShipmentMap = ({ shipment }: { shipment: Shipment }) => {
   if (!shipment.origin) return null

@@ -1,15 +1,16 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
-import 'leaflet/dist/leaflet.css'
+import dynamic from 'next/dynamic'
 
 import { Card, CardContent, CardTitle } from '../ui/card'
 import useUser from '../hooks/useUser'
 import useShipments from '../hooks/useShipments'
 import { Shipment } from '../types/Shipment'
-import { LatLngExpression } from 'leaflet'
-import ShipmentMap from './map/ShipmentMap'
+
+const ShipmentMap = dynamic(() => import('./map/ShipmentMap'), {
+  ssr: false
+})
 
 const AsideSection = () => {
   const [shipments, setShipments] = useState<Shipment[]>([])
