@@ -8,7 +8,7 @@ import useUser from '../hooks/useUser'
 import useShipments from '../hooks/useShipments'
 import { Shipment } from '../types/Shipment'
 
-const ShipmentMap = dynamic(() => import('./map/ShipmentMap'), {
+const ShipmentMap = dynamic(() => import('./ShipmentMap'), {
   ssr: false
 })
 
