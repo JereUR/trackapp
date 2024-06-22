@@ -11,9 +11,18 @@ export async function middleware(request: NextRequest) {
   }
 
   if (request.nextUrl.pathname.startsWith('/panel-de-control')) {
-    if (session.user.role !== 'admin') {
+    if (session.user.role === 'driver') {
       console.log('User is not admin, redirecting to /inicio')
       return NextResponse.redirect(new URL('/inicio', request.url))
+    }
+
+    if (
+      request.nextUrl.pathname.startsWith('/panel-de-control/usuarios') ||
+      request.nextUrl.pathname.startsWith('/panel-de-control/registros')
+    ) {
+      if (session.user.role !== 'admin') {
+        return NextResponse.redirect(new URL('/panel-de-control', request.url))
+      }
     }
   }
 
@@ -21,7 +30,7 @@ export async function middleware(request: NextRequest) {
     request.nextUrl.pathname.startsWith('/inicio') ||
     request.nextUrl.pathname.startsWith('/mis-envios')
   ) {
-    if (session.user.role === 'admin') {
+    if (session.user.role === 'admin' || session.user.role === 'staff') {
       return NextResponse.redirect(new URL('/panel-de-control', request.url))
     }
   }
@@ -30,11 +39,11 @@ export async function middleware(request: NextRequest) {
     request.nextUrl.pathname.startsWith('/iniciar-sesion') ||
     request.nextUrl.pathname.startsWith('/recover/edit')
   ) {
-    if (session.user.role !== 'admin') {
+    if (session.user.role === 'driver') {
       return NextResponse.redirect(new URL('/inicio', request.url))
     }
 
-    if (session.user.role === 'admin') {
+    if (session.user.role === 'admin' || session.user.role === 'staff') {
       return NextResponse.redirect(new URL('/panel-de-control', request.url))
     }
   }
