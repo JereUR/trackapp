@@ -106,7 +106,7 @@ export default function TopBarWithLinks() {
             </>
           )}
         </div>
-        <div className="flex items-center gap-4 mt-4 md:mt-0">
+        <div className="flex justify-end items-center gap-4 mt-4 md:mt-0 md:ml-4">
           {user && <UserMenu user={user} />}
           <ThemeSwitcher />
         </div>
