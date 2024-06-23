@@ -1,3 +1,5 @@
+'use client'
+
 import 'leaflet/dist/leaflet.css'
 import { useState, useEffect } from 'react'
 import { MapContainer, Marker, Popup, TileLayer, Polyline } from 'react-leaflet'
@@ -15,6 +17,10 @@ import {
   sendIcon,
   ZOOM_LEVEL
 } from './MapsInfo'
+
+const API_KEY = process.env.NEXT_PUBLIC_MAPBOX_KEY_API
+const mapboxClient = mapboxSdk({ accessToken: API_KEY })
+const directionsClient = directions(mapboxClient)
 
 const ModalMap = ({ shipment, onClose }) => {
   const [routes, setRoutes] = useState([])
@@ -61,7 +67,6 @@ const ModalMap = ({ shipment, onClose }) => {
             const decodedGeometry = polyline.decode(route.geometry)
             return decodedGeometry.map(([lat, lng]) => ({ lat, lng }))
           })
-
           setRoutes(newRoutes)
         } catch (error) {
           console.error('Error fetching routes', error)
@@ -70,7 +75,7 @@ const ModalMap = ({ shipment, onClose }) => {
 
       fetchRoutes()
     }
-  }, [shipment.origin, shipment.delivery_points])
+  }, [shipment.actual_position, shipment.delivery_points, onClose])
 
   if (!shipment.origin) return null
 
