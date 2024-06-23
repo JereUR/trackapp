@@ -43,7 +43,10 @@ const ShipmentMap = ({ shipment }) => {
                 profile: 'driving',
                 waypoints: [
                   {
-                    coordinates: [shipment.origin.lng, shipment.origin.lat]
+                    coordinates: [
+                      shipment.actual_position.lng,
+                      shipment.actual_position.lat
+                    ]
                   },
                   {
                     coordinates: [
@@ -76,7 +79,7 @@ const ShipmentMap = ({ shipment }) => {
 
   if (!shipment.origin) return null
 
-  const position = [shipment.origin.lat, shipment.origin.lng]
+  const position = [shipment.actual_position.lat, shipment.actual_position.lng]
 
   return (
     <MapContainer
@@ -84,6 +87,7 @@ const ShipmentMap = ({ shipment }) => {
       zoom={ZOOM_LEVEL}
       style={{ height: '350px', width: '100%' }}
       whenCreated={setMap}
+      className="z-0"
     >
       <TileLayer
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -91,7 +95,7 @@ const ShipmentMap = ({ shipment }) => {
       />
       <Marker icon={sendIcon} position={position}>
         <Popup>
-          {shipment.name}
+          {shipment.name} - {shipment.actual_position.time}hs
           <br />
           {shipment.description}
         </Popup>
