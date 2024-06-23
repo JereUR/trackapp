@@ -1,6 +1,6 @@
 import { divIcon, Icon, point } from 'leaflet'
 
-export const ZOOM_LEVEL = 13
+export const ZOOM_LEVEL = 12
 
 export const sendIcon = new Icon({
   iconUrl: 'https://cdn-icons-png.flaticon.com/512/9561/9561845.png',

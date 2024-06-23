@@ -13,7 +13,8 @@ import {
   destinationCompletedIcon,
   destinationIcon,
   destinationRefuseIcon,
-  sendIcon
+  sendIcon,
+  ZOOM_LEVEL
 } from './MapsInfo'
 
 const API_KEY = process.env.NEXT_PUBLIC_MAPBOX_KEY_API
@@ -80,8 +81,8 @@ const ShipmentMap = ({ shipment }) => {
   return (
     <MapContainer
       center={position}
-      zoom={11}
-      style={{ height: '300px', width: '100%' }}
+      zoom={ZOOM_LEVEL}
+      style={{ height: '350px', width: '100%' }}
       whenCreated={setMap}
     >
       <TileLayer
