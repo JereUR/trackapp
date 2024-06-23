@@ -43,7 +43,7 @@ const FleetItem: React.FC<Props> = ({ fleet }) => {
 
   return (
     <Card
-      className={`flex justify-between bg-card m-8 p-4 border-none dark:border-solid ${
+      className={`flex justify-between bg-card m-8 p-4  border-gray-400 dark:border-accent shadow-md ${
         !fleet.gps && 'opacity-60'
       }`}
     >

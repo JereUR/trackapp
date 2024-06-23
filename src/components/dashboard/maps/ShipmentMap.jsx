@@ -22,6 +22,15 @@ const directionsClient = directions(mapboxClient)
 
 const ShipmentMap = ({ shipment }) => {
   const [routes, setRoutes] = useState([])
+  const [map, setMap] = useState(null)
+
+  useEffect(() => {
+    if (map) {
+      setInterval(function () {
+        map.invalidateSize()
+      }, 100)
+    }
+  }, [map])
 
   useEffect(() => {
     if (shipment.origin && shipment.delivery_points.length > 0) {
@@ -69,7 +78,12 @@ const ShipmentMap = ({ shipment }) => {
   const position = [shipment.origin.lat, shipment.origin.lng]
 
   return (
-    <MapContainer center={position} zoom={11} className="h-48 w-full z-10">
+    <MapContainer
+      center={position}
+      zoom={11}
+      style={{ height: '300px', width: '100%' }}
+      whenCreated={setMap}
+    >
       <TileLayer
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'

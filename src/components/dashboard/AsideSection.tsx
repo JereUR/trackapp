@@ -14,7 +14,6 @@ const AsideSection = () => {
   const [shipments, setShipments] = useState<Shipment[]>([])
   const { token, fleets, getFleets, loadingFleet } = useUser()
   const { getOnProgressShipments, loadingShipment } = useShipments()
-  const [routes, setRoutes] = useState([])
 
   useEffect(() => {
     async function getShipments() {
@@ -37,14 +36,19 @@ const AsideSection = () => {
             (shipment) => shipment.fleet_id === fleet.id
           )
           return (
-            <Card key={fleet.id} className="bg-card p-4">
-              <CardTitle className="text-xl font-light">{fleet.name}</CardTitle>
+            <Card
+              key={fleet.id}
+              className="bg-card p-4 border-gray-400 dark:border-accent shadow-md"
+            >
+              <CardTitle className="text-2xl font-semibold">
+                {fleet.name}
+              </CardTitle>
               <CardContent>
                 {fleetShipments.length > 0 ? (
                   fleetShipments.map((shipment) => (
                     <div
                       key={shipment.id}
-                      className="my-2 py-4 px-6 bg-gray-100 dark:bg-gray-800 rounded-lg"
+                      className="mt-2 -mb-4 py-4 px-6 bg-gray-200 dark:bg-gray-800 rounded-lg"
                     >
                       <p>Envío: {shipment.name}</p>
                       <p>Descripción: {shipment.description}</p>
@@ -63,50 +67,3 @@ const AsideSection = () => {
 }
 
 export default AsideSection
-
-/* const Map = (
-  <MapContainer
-    center={[shipment.origin.lat, shipment.origin.lng]}
-    zoom={11}
-    className="h-48 w-full z-10"
-  >
-    <TileLayer
-      url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-      attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-    />
-    <Marker
-      icon={sendIcon}
-      position={[shipment.origin.lat, shipment.origin.lng]}
-    >
-      <Popup>
-        {shipment.name}
-        <br />
-        {shipment.description}
-      </Popup>
-    </Marker>
-    <MarkerClusterGroup>
-      {shipment.delivery_points.map((point) => {
-        const pointPosition = [point.destination.lat, point.destination.lng]
-        let icon = destinationIcon
-        if (point.status === 'Completado') {
-          icon = destinationCompletedIcon
-        } else if (point.status === 'Rechazado') {
-          icon = destinationRefuseIcon
-        }
-        return (
-          <Marker
-            key={point.id}
-            icon={icon}
-            position={[point.destination.lat, point.destination.lng]}
-          >
-            <Popup>
-              {point.name}
-              <br />
-              {point.status}
-            </Popup>
-          </Marker>
-        )
-      })}
-    </MarkerClusterGroup>
-  </MapContainer>
-) */
