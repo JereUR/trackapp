@@ -19,7 +19,10 @@ export default function UserMenu({ user }: UserMenuProps) {
   const menuRef = useRef<HTMLDivElement>(null)
   const { logout } = useUser()
 
-  const initials = user.first_name.charAt(0) + user.last_name.charAt(0)
+  const initials =
+    user && user.first_name && user.last_name
+      ? user.first_name.charAt(0) + user.last_name.charAt(0)
+      : ''
 
   const handleLogout = () => {
     console.log('Cerrar sesión')

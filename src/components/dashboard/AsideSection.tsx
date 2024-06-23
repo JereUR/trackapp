@@ -2,7 +2,6 @@
 
 import { useEffect, useMemo, useState } from 'react'
 import dynamic from 'next/dynamic'
-import 'leaflet/dist/leaflet.css'
 
 import { Card, CardContent, CardTitle } from '../ui/card'
 import useUser from '../hooks/useUser'

@@ -1,12 +1,10 @@
 'use client'
 
 import 'leaflet/dist/leaflet.css'
-import 'leaflet-defaulticon-compatibility'
-import 'leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.css'
-import 'tailwindcss/tailwind.css'
 import { useState, useEffect } from 'react'
 import { MapContainer, Marker, Popup, TileLayer, Polyline } from 'react-leaflet'
 import MarkerClusterGroup from 'react-leaflet-cluster'
+import 'tailwindcss/tailwind.css'
 import mapboxSdk from '@mapbox/mapbox-sdk'
 import directions from '@mapbox/mapbox-sdk/services/directions'
 import polyline from '@mapbox/polyline'
