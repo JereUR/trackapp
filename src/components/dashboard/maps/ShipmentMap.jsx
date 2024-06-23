@@ -4,9 +4,9 @@ import 'leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility
 import { useState, useEffect } from 'react'
 import { MapContainer, Marker, Popup, TileLayer, Polyline } from 'react-leaflet'
 import MarkerClusterGroup from 'react-leaflet-cluster'
-import mapboxSdk from '@mapbox/mapbox-sdk'
+/* import mapboxSdk from '@mapbox/mapbox-sdk'
 import directions from '@mapbox/mapbox-sdk/services/directions'
-import polyline from '@mapbox/polyline'
+import polyline from '@mapbox/polyline' */
 
 import {
   destinationCompletedIcon,
@@ -14,15 +14,15 @@ import {
   destinationRefuseIcon,
   sendIcon
 } from './MapsInfo'
-
+/* 
 const API_KEY = process.env.NEXT_PUBLIC_MAPBOX_KEY_API
 const mapboxClient = mapboxSdk({ accessToken: API_KEY })
-const directionsClient = directions(mapboxClient)
+const directionsClient = directions(mapboxClient) */
 
 const ShipmentMap = ({ shipment }) => {
   const [routes, setRoutes] = useState([])
 
-  useEffect(() => {
+  /* useEffect(() => {
     if (shipment.origin && shipment.delivery_points.length > 0) {
       const fetchRoutes = async () => {
         try {
@@ -61,7 +61,7 @@ const ShipmentMap = ({ shipment }) => {
 
       fetchRoutes()
     }
-  }, [shipment.origin, shipment.delivery_points])
+  }, [shipment.origin, shipment.delivery_points]) */
 
   if (!shipment.origin) return null
 
@@ -80,7 +80,7 @@ const ShipmentMap = ({ shipment }) => {
           {shipment.description}
         </Popup>
       </Marker>
-      <MarkerClusterGroup>
+      {/* <MarkerClusterGroup>
         {shipment.delivery_points.map((point) => {
           const pointPosition = [point.destination.lat, point.destination.lng]
           let icon = destinationIcon
@@ -99,10 +99,10 @@ const ShipmentMap = ({ shipment }) => {
             </Marker>
           )
         })}
-      </MarkerClusterGroup>
-      {routes.map((route, index) => (
+      </MarkerClusterGroup> */}
+      {/* {routes.map((route, index) => (
         <Polyline key={index} positions={route} color="blue" />
-      ))}
+      ))} */}
     </MapContainer>
   )
 }
