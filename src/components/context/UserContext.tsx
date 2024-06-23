@@ -127,7 +127,7 @@ export default function UserContextProvider({
   const [user, setUser] = useState<User | null>(initialUser)
   const [users, setUsers] = useState(initialUsers)
   const [fleets, setFleets] = useState<Fleet[]>(initialFleets)
-  const [token, setToken] = useState<string | null>(null)
+  const [token, setToken] = useState<string | null>('1234')
   const [count, setCount] = useState<number>(0)
   const [recoverState, setRecoverState] = useState<boolean>(false)
   const [loadingUser, setLoadingUser] = useState(false)
