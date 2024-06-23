@@ -1,7 +1,7 @@
 'use client'
 
 import 'leaflet/dist/leaflet.css'
-import { useRef, useState, useEffect } from 'react'
+import {useState, useEffect } from 'react'
 import { MapContainer, Marker, Popup, TileLayer, Polyline } from 'react-leaflet'
 import MarkerClusterGroup from 'react-leaflet-cluster'
 import 'tailwindcss/tailwind.css'
@@ -9,7 +9,6 @@ import mapboxSdk from '@mapbox/mapbox-sdk'
 import directions from '@mapbox/mapbox-sdk/services/directions'
 import polyline from '@mapbox/polyline'
 
-import { Shipment } from '@/components/types/Shipment'
 import {
   destinationCompletedIcon,
   destinationIcon,
