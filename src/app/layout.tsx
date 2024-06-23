@@ -2,6 +2,7 @@
 
 import { Inter as FontSans } from 'next/font/google'
 import './globals.css'
+import 'leaflet/dist/leaflet.css'
 import { cn } from '@/lib/utils'
 import { usePathname } from 'next/navigation'
 

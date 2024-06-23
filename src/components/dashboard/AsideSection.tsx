@@ -2,11 +2,14 @@
 
 import { useEffect, useState } from 'react'
 import dynamic from 'next/dynamic'
+import 'leaflet/dist/leaflet.css'
 
 import { Card, CardContent, CardTitle } from '../ui/card'
 import useUser from '../hooks/useUser'
 import useShipments from '../hooks/useShipments'
 import { Shipment } from '../types/Shipment'
+import { MapContainer, Marker, Popup, TileLayer } from 'react-leaflet'
+import { LatLngExpression } from 'leaflet'
 
 const ShipmentMap = dynamic(() => import('./maps/ShipmentMap'), {
   ssr: false
