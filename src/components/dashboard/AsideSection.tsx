@@ -8,7 +8,6 @@ import useUser from '../hooks/useUser'
 import useShipments from '../hooks/useShipments'
 import { Shipment } from '../types/Shipment'
 
-// Carga dinámica del componente ShipmentMap sin SSR
 const ShipmentMap = dynamic(() => import('./maps/ShipmentMap'), {
   ssr: false
 })

@@ -1,10 +1,9 @@
 'use client'
 
 import 'leaflet/dist/leaflet.css'
-import {useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import { MapContainer, Marker, Popup, TileLayer, Polyline } from 'react-leaflet'
 import MarkerClusterGroup from 'react-leaflet-cluster'
-import 'tailwindcss/tailwind.css'
 import mapboxSdk from '@mapbox/mapbox-sdk'
 import directions from '@mapbox/mapbox-sdk/services/directions'
 import polyline from '@mapbox/polyline'
@@ -27,7 +26,6 @@ const ShipmentMap = ({ shipment }) => {
     if (shipment.origin && shipment.delivery_points.length > 0) {
       const fetchRoutes = async () => {
         try {
-          console.log('Fetching routes for markers:', shipment.delivery_points)
           const routesPromises = shipment.delivery_points.map((marker) =>
             directionsClient
               .getDirections({
