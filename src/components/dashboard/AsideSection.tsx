@@ -33,8 +33,8 @@ const AsideSection = () => {
   }, [token])
 
   return (
-    <div className="flex flex-col gap-4">
-      <p>Envios en progreso</p>
+    <div className="flex flex-col gap-6">
+      <p className="text-2xl font-bold">Envios en progreso</p>
       {fleets &&
         fleets.map((fleet) => {
           const fleetShipments = shipments.filter(
@@ -42,7 +42,7 @@ const AsideSection = () => {
           )
           return (
             <Card key={fleet.id} className="bg-card p-4">
-              <CardTitle>{fleet.name}</CardTitle>
+              <CardTitle className="text-xl font-light">{fleet.name}</CardTitle>
               <CardContent>
                 {fleetShipments.length > 0 ? (
                   fleetShipments.map((shipment) => (
