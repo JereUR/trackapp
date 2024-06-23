@@ -1,5 +1,3 @@
-'use client'
-
 import 'leaflet/dist/leaflet.css'
 import 'leaflet-defaulticon-compatibility'
 import 'leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.css'
@@ -18,11 +16,11 @@ import {
 } from './MapsInfo'
 
 const API_KEY = process.env.NEXT_PUBLIC_MAPBOX_KEY_API
+const mapboxClient = mapboxSdk({ accessToken: API_KEY })
+const directionsClient = directions(mapboxClient)
 
 const ShipmentMap = ({ shipment }) => {
   const [routes, setRoutes] = useState([])
-  const mapboxClient = mapboxSdk({ accessToken: API_KEY })
-  const directionsClient = directions(mapboxClient)
 
   useEffect(() => {
     if (shipment.origin && shipment.delivery_points.length > 0) {
@@ -34,10 +32,7 @@ const ShipmentMap = ({ shipment }) => {
                 profile: 'driving',
                 waypoints: [
                   {
-                    coordinates: [
-                      shipment.origin && shipment.origin.lng,
-                      shipment.origin && shipment.origin.lat
-                    ]
+                    coordinates: [shipment.origin.lng, shipment.origin.lat]
                   },
                   {
                     coordinates: [
@@ -49,20 +44,24 @@ const ShipmentMap = ({ shipment }) => {
               })
               .send()
           )
+
           const routesResults = await Promise.all(routesPromises)
+
           const newRoutes = routesResults.map((result) => {
             const route = result.body.routes[0]
             const decodedGeometry = polyline.decode(route.geometry)
             return decodedGeometry.map(([lat, lng]) => ({ lat, lng }))
           })
+
           setRoutes(newRoutes)
         } catch (error) {
           console.error('Error fetching routes', error)
         }
       }
+
       fetchRoutes()
     }
-  }, [location, shipment.delivery_points])
+  }, [shipment.origin, shipment.delivery_points])
 
   if (!shipment.origin) return null
 
@@ -107,4 +106,5 @@ const ShipmentMap = ({ shipment }) => {
     </MapContainer>
   )
 }
+
 export default ShipmentMap
