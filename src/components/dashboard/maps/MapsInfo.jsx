@@ -12,6 +12,16 @@ export const destinationIcon = new Icon({
   iconSize: [38, 38]
 })
 
+export const destinationCompletedIcon = new Icon({
+  iconUrl: 'https://cdn-icons-png.flaticon.com/512/190/190411.png',
+  iconSize: [38, 38]
+})
+
+export const destinationRefuseIcon = new Icon({
+  iconUrl: 'https://cdn-icons-png.flaticon.com/512/10621/10621089.png',
+  iconSize: [38, 38]
+})
+
 export const createCustomClusterIcon = (cluster) => {
   return new divIcon({
     html: `<div class='h-12 w-12 rounded-full bg-white transform translate-x-[-50%] translate-y-[-50%] flex justify-center items-center font-[900] text-xl text-black'>${cluster.getChildCount()}</div>`,
