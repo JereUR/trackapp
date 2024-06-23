@@ -87,7 +87,7 @@ const ShipmentMap = ({ shipment }) => {
       zoom={ZOOM_LEVEL}
       style={{ height: '350px', width: '100%' }}
       whenCreated={setMap}
-      className="z-0"
+      className="z-10"
     >
       <TileLayer
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
