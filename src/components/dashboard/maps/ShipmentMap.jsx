@@ -75,7 +75,7 @@ const ShipmentMap = ({ shipment }) => {
 
       fetchRoutes()
     }
-  }, [shipment.origin, shipment.delivery_points])
+  }, [shipment.actual_position, shipment.delivery_points])
 
   if (!shipment.origin) return null
 
