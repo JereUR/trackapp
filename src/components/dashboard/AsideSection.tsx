@@ -23,13 +23,10 @@ const AsideSection = () => {
       setShipments(onProgressShipments)
     }
 
-    /* if (token) {
+    if (token) {
       getFleets()
       getShipments()
-    } */
-
-    getFleets()
-    getShipments()
+    }
   }, [token])
 
   return (
@@ -46,10 +43,12 @@ const AsideSection = () => {
               <CardContent>
                 {fleetShipments.length > 0 ? (
                   fleetShipments.map((shipment) => (
-                    <div key={shipment.id} className="mb-4">
-                      <p>Envío ID: {shipment.id}</p>
+                    <div
+                      key={shipment.id}
+                      className="my-2 py-4 px-6 bg-gray-100 dark:bg-gray-800 rounded-lg"
+                    >
+                      <p>Envío: {shipment.name}</p>
                       <p>Descripción: {shipment.description}</p>
-                      <p>Status: {shipment.status}</p>
                       {shipment.origin && <ShipmentMap shipment={shipment} />}
                     </div>
                   ))
