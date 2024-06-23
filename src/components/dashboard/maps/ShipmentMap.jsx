@@ -21,6 +21,7 @@ const ShipmentMap = ({ shipment }) => {
   const [routes, setRoutes] = useState([])
   const mapboxClient = mapboxSdk({ accessToken: API_KEY })
   const directionsClient = directions(mapboxClient)
+  console.log(API_KEY)
 
   useEffect(() => {
     if (shipment.origin && shipment.delivery_points.length > 0) {
