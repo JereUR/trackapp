@@ -214,8 +214,8 @@ export const initialShipments: Shipment[] = [
     time_end: '12:30',
     origin: { lat: -34.872314829415, lng: -58.02926980686927 },
     actual_position: {
-      lat: -34.882076032903484,
-      lng: -57.91418921004188,
+      lat: -34.900053983042916,
+      lng: -57.95588709709627,
       time: '10:21:30'
     }
   },
