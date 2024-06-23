@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import dynamic from 'next/dynamic'
 import 'leaflet/dist/leaflet.css'
 
@@ -8,17 +8,20 @@ import { Card, CardContent, CardTitle } from '../ui/card'
 import useUser from '../hooks/useUser'
 import useShipments from '../hooks/useShipments'
 import { Shipment } from '../types/Shipment'
-import { MapContainer, Marker, Popup, TileLayer } from 'react-leaflet'
-import { LatLngExpression } from 'leaflet'
-
-const ShipmentMap = dynamic(() => import('./maps/ShipmentMap'), {
-  ssr: false
-})
 
 const AsideSection = () => {
   const [shipments, setShipments] = useState<Shipment[]>([])
   const { token, fleets, getFleets, loadingFleet } = useUser()
   const { getOnProgressShipments, loadingShipment } = useShipments()
+
+  const ShipmentMap = useMemo(
+    () =>
+      dynamic(() => import('@/components/dashboard/maps/ShipmentMap'), {
+        loading: () => <p>A map is loading</p>,
+        ssr: false
+      }),
+    []
+  )
 
   useEffect(() => {
     async function getShipments() {

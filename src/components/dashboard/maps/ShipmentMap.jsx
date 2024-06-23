@@ -1,18 +1,24 @@
 'use client'
+
 import 'leaflet/dist/leaflet.css'
+import 'leaflet-defaulticon-compatibility'
+import 'leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.css'
 import { useState, useEffect } from 'react'
 import { MapContainer, Marker, Popup, TileLayer, Polyline } from 'react-leaflet'
 import MarkerClusterGroup from 'react-leaflet-cluster'
 import mapboxSdk from '@mapbox/mapbox-sdk'
 import directions from '@mapbox/mapbox-sdk/services/directions'
 import polyline from '@mapbox/polyline'
+
 import {
   destinationCompletedIcon,
   destinationIcon,
   destinationRefuseIcon,
   sendIcon
 } from './MapsInfo'
+
 const API_KEY = process.env.NEXT_PUBLIC_MAPBOX_KEY_API
+
 const ShipmentMap = ({ shipment }) => {
   const [routes, setRoutes] = useState([])
   const mapboxClient = mapboxSdk({ accessToken: API_KEY })
@@ -57,8 +63,11 @@ const ShipmentMap = ({ shipment }) => {
       fetchRoutes()
     }
   }, [location, shipment.delivery_points])
+
   if (!shipment.origin) return null
+
   const position = [shipment.origin.lat, shipment.origin.lng]
+
   return (
     <MapContainer center={position} zoom={11} className="h-48 w-full z-10">
       <TileLayer
