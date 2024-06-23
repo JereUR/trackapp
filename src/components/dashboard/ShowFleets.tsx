@@ -4,7 +4,6 @@ import { useEffect } from 'react'
 
 import useUser from '../hooks/useUser'
 import FleetItem from './FleetItem'
-import { Card, CardContent } from '../ui/card'
 
 const ShowFleets = () => {
   const { token, fleets, getFleets } = useUser()
