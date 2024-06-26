@@ -457,8 +457,7 @@ export default function ShipmentsContextProvider({
       description: dataShipment.description,
       date: dataShipment.date,
       time_start: dataShipment.time_start,
-      time_end: dataShipment.time_end,
-      origin: dataShipment.origin ? dataShipment.origin : undefined
+      time_end: dataShipment.time_end
     }
 
     const url = `${BASE_URL}api/v1/shipment`
@@ -515,7 +514,6 @@ export default function ShipmentsContextProvider({
       date: dataShipment.date,
       time_start: dataShipment.time_start,
       time_end: dataShipment.time_end,
-      origin: dataShipment.origin ? dataShipment.origin : undefined
     }
 
     const url = `${BASE_URL}api/v1/shipment`

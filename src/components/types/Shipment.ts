@@ -35,7 +35,6 @@ export interface PropsAddShipment {
   date: Date
   time_start: string
   time_end: string
-  origin?: { lat: number; lng: number }
 }
 
 export const posibleStatus = [
