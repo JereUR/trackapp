@@ -25,7 +25,15 @@ type UserContextType = {
   loadingUser: boolean
   setLoadingUser: Dispatch<SetStateAction<boolean>>
   setRecoverState: Dispatch<SetStateAction<boolean>>
-  userLogin: ({ user, userToken }: { user: User; userToken: string }) => void
+  userLogin: ({
+    user,
+    authToken,
+    error
+  }: {
+    user: User
+    authToken: string
+    error: string
+  }) => void
   userLogout: () => void
   signUp: ({ dataRegister }: { dataRegister: Register }) => Promise<void>
   recover: ({ email }: { email: string }) => Promise<void>
@@ -157,15 +165,26 @@ export default function UserContextProvider({
 
   async function userLogin({
     user,
-    userToken
+    authToken,
+    error
   }: {
     user: User
-    userToken: string
+    authToken: string
+    error: string
   }) {
-    localStorage.setItem('token', userToken)
+    if (error) {
+      toast({
+        variant: 'destructive',
+        title: 'Oh no! Algo salió mal.',
+        description: error
+      })
+      return
+    }
+
+    localStorage.setItem('token', authToken)
     localStorage.setItem('user', JSON.stringify(user))
 
-    setToken(userToken)
+    setToken(authToken)
     setUser(user)
     setTimeout(() => {
       router.push('/panel-de-control')

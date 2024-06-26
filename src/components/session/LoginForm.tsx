@@ -18,6 +18,7 @@ import ErrorText from '../ErrorText'
 import useUser from '../hooks/useUser'
 import Loader from '../Loader'
 import { EyeClosedIcon, EyeOpenIcon } from '@radix-ui/react-icons'
+import { signIn } from '../actions/authActions'
 
 const LoginForm = () => {
   const [dataLogin, setDataLogin] = useState<Login>(initialData)
@@ -26,7 +27,7 @@ const LoginForm = () => {
   const [showModal, setShowModal] = useState<boolean>(false)
   const [formErrors, setFormErrors] = useState<FormErrorsLogin>(initialErrors)
 
-  const { login, loadingUser } = useUser()
+  const { userLogin, loadingUser,setLoadingUser } = useUser()
 
   const validations = () => {
     const errorsForm: FormErrorsLogin = {}
@@ -76,7 +77,17 @@ const LoginForm = () => {
     setFormErrors(err)
 
     if (Object.keys(err).length === 0) {
-      await login({ dataLogin })
+      setLoadingUser(true)
+
+      const { authToken, data, error } = await signIn({ dataLogin })
+
+      userLogin({
+        authToken,
+        user: data.user,
+        error
+      })
+
+      setLoadingUser(false)
       setFormErrors(initialErrors)
     }
   }
