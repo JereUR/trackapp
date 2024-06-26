@@ -95,26 +95,67 @@ const ShipmentMap = ({ shipment }) => {
       />
       <Marker icon={sendIcon} position={position}>
         <Popup>
-          {shipment.name} - {shipment.actual_position.time}hs
-          <br />
-          {shipment.description}
+          <div
+            style={{
+              fontSize: '1.125rem',
+              fontWeight: 'bold',
+              marginBottom: '0.5rem'
+            }}
+          >
+            {shipment.name}
+          </div>
+          <div style={{ fontSize: '0.875rem', color: '#4a5568' }}>
+            Última actualización - {shipment.actual_position.time}hs
+          </div>
         </Popup>
       </Marker>
       <MarkerClusterGroup>
         {shipment.delivery_points.map((point) => {
           const pointPosition = [point.destination.lat, point.destination.lng]
           let icon = destinationIcon
+          let statusColor = '#d69e2e'
           if (point.status === 'Completado') {
             icon = destinationCompletedIcon
+            statusColor = '#48bb78'
           } else if (point.status === 'Rechazado') {
             icon = destinationRefuseIcon
+            statusColor = '#f56565'
           }
           return (
             <Marker key={point.id} icon={icon} position={pointPosition}>
               <Popup>
-                {point.name}
-                <br />
-                {point.status}
+                <div style={{ fontSize: '1.125rem', fontWeight: 'bold' }}>
+                  {point.name}
+                </div>
+                <div style={{ fontSize: '0.875rem', color: statusColor }}>
+                  Estado: {point.status}
+                </div>
+                {point.cargo.length > 0 && (
+                  <div style={{ marginTop: '0.5rem' }}>
+                    <div style={{ fontSize: '1rem', fontWeight: 'bold' }}>
+                      Cargos:
+                    </div>
+                    <ul
+                      style={{
+                        listStyleType: 'disc',
+                        paddingLeft: '1.25rem',
+                        marginTop: '0.25rem'
+                      }}
+                    >
+                      {point.cargo.map((cargo, index) => (
+                        <li
+                          key={index}
+                          style={{ fontSize: '0.875rem', color: '#2d3748' }}
+                        >
+                          <span style={{ fontWeight: 'bold' }}>
+                            {cargo.product}
+                          </span>
+                          : {cargo.quantity}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
               </Popup>
             </Marker>
           )
