@@ -4,6 +4,8 @@ import { useState, useRef, useEffect } from 'react'
 import Link from 'next/link'
 
 import useUser from '../hooks/useUser'
+import Loader from '../Loader'
+import { signOut } from '../actions/authActions'
 
 interface User {
   first_name: string
@@ -17,16 +19,24 @@ interface UserMenuProps {
 export default function UserMenu({ user }: UserMenuProps) {
   const [menuOpen, setMenuOpen] = useState(false)
   const menuRef = useRef<HTMLDivElement>(null)
-  const { logout } = useUser()
+  const { userLogout, token, setLoadingUser, loadingUser } = useUser()
 
   const initials =
     user && user.first_name && user.last_name
       ? user.first_name.charAt(0) + user.last_name.charAt(0)
       : ''
 
-  const handleLogout = () => {
-    console.log('Cerrar sesión')
-    logout()
+  async function handleLogout() {
+    if (token) {
+      setLoadingUser(true)
+      const response = await signOut({ token })
+
+      if (response) {
+        userLogout()
+      }
+
+      setLoadingUser(false)
+    }
   }
 
   useEffect(() => {
@@ -62,7 +72,7 @@ export default function UserMenu({ user }: UserMenuProps) {
             onClick={handleLogout}
             className="block w-full text-left px-4 py-2 text-foreground rounded-lg dark:text-gray-200 transition duration-300 ease-in-out hover:bg-blue-500 dark:hover:bg-blue-800"
           >
-            Cerrar Sesión
+            {!loadingUser ? 'Cerrar Sesión' : <Loader />}
           </button>
         </div>
       )}
