@@ -85,7 +85,7 @@ const ModalMap = ({ shipment, onClose }) => {
       id="modalBackdrop"
       className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50"
     >
-      <div className="bg-white dark:bg-gray-800 p-2 md:p-4 m-2 md:m-8 rounded shadow-lg w-full max-w-lg mx-2">
+      <div className="bg-white dark:bg-gray-800 p-2 md:p-4 m-2 md:m-8 rounded shadow-lg w-full max-w-lg mx-2 z-50">
         <div className="flex justify-end">
           <button
             onClick={onClose}
