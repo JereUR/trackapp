@@ -12,9 +12,8 @@ import { usePathname } from 'next/navigation'
 import { useRouter } from 'next/navigation'
 import axios from 'axios'
 
-import { Login, Register, User } from '../types/User'
+import { Register, User } from '../types/User'
 import { useToast } from '../ui/use-toast'
-import { setCookies } from '../actions/setCookies'
 import { removeCookies } from '../actions/removeCookies'
 import { Fleet, PropsUpdateFleet } from '../types/Fleet'
 
@@ -24,9 +23,10 @@ type UserContextType = {
   count: number
   recoverState: boolean
   loadingUser: boolean
+  setLoadingUser: Dispatch<SetStateAction<boolean>>
   setRecoverState: Dispatch<SetStateAction<boolean>>
-  login: ({ dataLogin }: { dataLogin: Login }) => Promise<void>
-  logout: () => Promise<void>
+  userLogin: ({ user, userToken }: { user: User; userToken: string }) => void
+  userLogout: () => void
   signUp: ({ dataRegister }: { dataRegister: Register }) => Promise<void>
   recover: ({ email }: { email: string }) => Promise<void>
   users: User[]
@@ -155,94 +155,34 @@ export default function UserContextProvider({
     }
   }, [])
 
-  async function login({ dataLogin }: { dataLogin: Login }) {
-    setLoadingUser(true)
-    try {
-      const response = await axios.post(
-        `${BASE_URL}login`,
-        {
-          user: {
-            email: dataLogin.email,
-            password: dataLogin.password
-          }
-        },
-        {
-          headers: {
-            'Content-Type': 'application/json'
-          }
-        }
-      )
+  async function userLogin({
+    user,
+    userToken
+  }: {
+    user: User
+    userToken: string
+  }) {
+    localStorage.setItem('token', userToken)
+    localStorage.setItem('user', JSON.stringify(user))
 
-      if (response.status === 200 || response.status === 204) {
-        const userToken = response.headers.Userorization
-        setCookies(userToken)
-        localStorage.setItem('token', userToken)
-        localStorage.setItem('user', JSON.stringify(response.data.user))
-
-        setToken(userToken)
-        setUser(response.data.user)
-        setTimeout(() => {
-          router.push('/panel-de-control')
-        }, 100)
-      } else {
-        toast({
-          title: 'Oh no! Algo salió mal.',
-          description: response.statusText
-        })
-      }
-    } catch (error: any) {
-      if (error.response && error.response.status === 401) {
-        toast({
-          title: 'Oh no! Algo salió mal.',
-          description: 'Credenciales incorrectas.'
-        })
-      } else {
-        toast({
-          variant: 'destructive',
-          title: 'Oh no! Algo salió mal.',
-          description: error.message
-        })
-      }
-    } finally {
-      setLoadingUser(false)
-    }
+    setToken(userToken)
+    setUser(user)
+    setTimeout(() => {
+      router.push('/panel-de-control')
+    }, 100)
   }
 
-  async function logout() {
-    setLoadingUser(true)
-    try {
-      const response = await axios.delete(`${BASE_URL}logout`, {
-        headers: {
-          Authorization: token
-        }
-      })
-
-      if (response.status === 200 || response.status === 204) {
-        removeCookies()
-        setUser(null)
-        localStorage.removeItem('token')
-        localStorage.removeItem('user')
-        if (pathname === '/') {
-          window.location.reload()
-          return
-        }
-        localStorage.setItem('isLoggedOut', 'true')
-        router.push('/')
-      } else {
-        toast({
-          title: 'Oh no! Algo salió mal.',
-          description: response.statusText
-        })
-      }
-    } catch (error: any) {
-      toast({
-        variant: 'destructive',
-        title: 'Oh no! Algo salió mal.',
-        description: error.message
-      })
-    } finally {
-      setLoadingUser(false)
+  async function userLogout() {
+    removeCookies()
+    setUser(null)
+    localStorage.removeItem('token')
+    localStorage.removeItem('user')
+    if (pathname === '/') {
+      window.location.reload()
+      return
     }
+    localStorage.setItem('isLoggedOut', 'true')
+    router.push('/')
   }
 
   async function signUp({
@@ -584,11 +524,12 @@ export default function UserContextProvider({
         token,
         recoverState,
         loadingUser,
+        setLoadingUser,
         loadingUsers,
         loadingFleet,
         setRecoverState,
-        login,
-        logout,
+        userLogin,
+        userLogout,
         signUp,
         recover,
         getFleets,
