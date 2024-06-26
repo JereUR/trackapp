@@ -86,7 +86,7 @@ const AsideSection = () => {
               <CardTitle className="text-2xl font-semibold">
                 {fleet.name}
               </CardTitle>
-              <CardContent>
+              <CardContent className="p-0 ">
                 {fleetShipments.length > 0 ? (
                   fleetShipments.map((shipment) => {
                     const expand = expandMap.find(
@@ -95,17 +95,32 @@ const AsideSection = () => {
                     return (
                       <div
                         key={shipment.id}
-                        className="mt-2 -mb-4 py-4 px-6 bg-gray-200 dark:bg-gray-800 rounded-lg"
+                        className="mt-2 mb-4 py-4 px-6 bg-gray-100 dark:bg-gray-700 rounded-lg shadow-inner"
                       >
-                        <p>Envío: {shipment.name}</p>
-                        <p>Descripción: {shipment.description}</p>
-                        <button
-                          onClick={() => changeState(expand?.shipment_id)}
-                        >
-                          {expand?.state ? <IoContract /> : <IoExpand />}
-                        </button>
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <p className="text-lg font-medium text-gray-800 dark:text-gray-200">
+                              Envío: {shipment.name}
+                            </p>
+                            <p className="text-sm text-gray-600 dark:text-gray-400">
+                              Descripción: {shipment.description}
+                            </p>
+                          </div>
+                          <button
+                            onClick={() => changeState(expand?.shipment_id)}
+                            className="text-gray-500 dark:text-gray-300 hover:text-gray-700 dark:hover:text-gray-100 transition-colors"
+                          >
+                            {expand?.state ? (
+                              <IoContract size={24} />
+                            ) : (
+                              <IoExpand size={24} />
+                            )}
+                          </button>
+                        </div>
                         {shipment.origin && !isAnyMapExpanded && (
-                          <ShipmentMap shipment={shipment} />
+                          <div className="mt-4">
+                            <ShipmentMap shipment={shipment} />
+                          </div>
                         )}
                       </div>
                     )

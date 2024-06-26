@@ -43,21 +43,21 @@ const FleetItem: React.FC<Props> = ({ fleet }) => {
 
   return (
     <Card
-      className={`flex justify-between bg-card m-8 p-4  border-gray-400 dark:border-accent shadow-md ${
+      className={`flex flex-col md:flex-row justify-between bg-card m-2 md:m-8 p-2 md:p-4  border-gray-400 dark:border-accent shadow-md ${
         !fleet.gps && 'opacity-60'
       }`}
     >
       <div>
         <CardHeader>
           <CardTitle className="flex gap-6 items-center">
-            <p className="text-2xl font-bold">{fleet.name}</p>
+            <p className="text-lg md:text-2xl font-bold">{fleet.name}</p>
             {fleet.on_working_area ? (
-              <p className="text-foreground font-normal py-2 px-4 rounded-full bg-orange-500 opacity-90">
+              <p className="text-sm md:text-base text-foreground font-normal py-2 px-4 rounded-full bg-orange-500 opacity-90">
                 Area de trabajo activa
               </p>
             ) : (
               <p
-                className="text-foreground font-normal py-2 px-4 rounded-full bg-gray-500 opacity-90"
+                className="text-sm md:text-base text-foreground font-normal py-2 px-4 rounded-full bg-gray-500 opacity-90"
                 style={{ textShadow: '2px 2px 4px rgba(0, 0, 0, 0.3)' }}
               >
                 Area de trabajo inactiva
@@ -66,7 +66,7 @@ const FleetItem: React.FC<Props> = ({ fleet }) => {
           </CardTitle>
         </CardHeader>
         <CardContent className="flex">
-          <div className="flex flex-col gap-6">
+          <div className="flex flex-col gap-6 justify-start">
             <p className="text-sm italic text-gray-400">
               {fleet.description ? fleet.description : 'Sin descripción'}
             </p>
@@ -76,9 +76,9 @@ const FleetItem: React.FC<Props> = ({ fleet }) => {
           </div>
         </CardContent>
       </div>
-      <div className="flex flex-col gap-6 my-auto mr-10">
+      <div className="flex flex-col gap-4 md:gap-6 mx-4 mb-2 md:my-auto md:mr-10">
         <Button
-          className="flex items-center gap-2 border-none bg-sky-500 hover:bg-sky-600 dark:bg-sky-600 dark:hover:bg-sky-700 text-base text-foreground font-bold"
+          className="text-sm md:text-base flex items-center gap-2 border-none bg-sky-500 hover:bg-sky-600 dark:bg-sky-600 dark:hover:bg-sky-700  text-foreground font-bold"
           disabled={!fleet.gps}
           onClick={handleEditClick}
         >
@@ -124,7 +124,7 @@ const FleetItem: React.FC<Props> = ({ fleet }) => {
           </div>
         )}
         <Button
-          className={`border-none text-base font-bold text-foreground ${
+          className={`border-none text-sm md:text-base font-bold text-foreground ${
             fleet.on_working_area
               ? 'transition duration-300 ease-in-out bg-red-500 hover:bg-red-600 dark:bg-red-600 dark:hover:bg-red-700'
               : 'transition duration-300 ease-in-out bg-green-500 hover:bg-green-600 dark:bg-green-600  dark:hover:bg-green-700'
