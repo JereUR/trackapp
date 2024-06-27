@@ -20,7 +20,7 @@ type UserSession = {
   gender?: string
   birthdate?: string
   role: string | null
-  created_at: string
+  created_at?: string
 }
 
 export type Session = {

@@ -132,10 +132,10 @@ export default function UserContextProvider({
 }: {
   children: ReactNode
 }) {
-  const [user, setUser] = useState<User | null>(null)
+  const [user, setUser] = useState<User | null>(initialUser)
   const [users, setUsers] = useState<User[]>([])
-  const [fleets, setFleets] = useState<Fleet[]>([])
-  const [token, setToken] = useState<string | null>(null)
+  const [fleets, setFleets] = useState<Fleet[]>(initialFleets)
+  const [token, setToken] = useState<string | null>('1234')
   const [count, setCount] = useState<number>(0)
   const [recoverState, setRecoverState] = useState<boolean>(false)
   const [loadingUser, setLoadingUser] = useState(false)
