@@ -18,7 +18,7 @@ import ErrorText from '../ErrorText'
 import useUser from '../hooks/useUser'
 import Loader from '../Loader'
 import { EyeClosedIcon, EyeOpenIcon } from '@radix-ui/react-icons'
-import { signIn } from '../actions/authActions'
+import { useToast } from '../ui/use-toast'
 
 const LoginForm = () => {
   const [dataLogin, setDataLogin] = useState<Login>(initialData)
@@ -27,7 +27,8 @@ const LoginForm = () => {
   const [showModal, setShowModal] = useState<boolean>(false)
   const [formErrors, setFormErrors] = useState<FormErrorsLogin>(initialErrors)
 
-  const { userLogin, loadingUser,setLoadingUser } = useUser()
+  const { userLogin, loadingUser, setLoadingUser } = useUser()
+  const { toast } = useToast()
 
   const validations = () => {
     const errorsForm: FormErrorsLogin = {}
@@ -79,16 +80,34 @@ const LoginForm = () => {
     if (Object.keys(err).length === 0) {
       setLoadingUser(true)
 
-      const { authToken, data, error } = await signIn({ dataLogin })
+      try {
+        const response = await fetch('/api/signin', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ dataLogin })
+        })
+        const result = await response.json()
 
-      userLogin({
-        authToken,
-        user: data.user,
-        error
-      })
-
-      setLoadingUser(false)
-      setFormErrors(initialErrors)
+        if (response.ok) {
+          userLogin({
+            authToken: result.authToken,
+            user: result.data.user,
+            error: null
+          })
+          setDataLogin(initialData)
+          setFormErrors(initialErrors)
+        }
+      } catch (error: any) {
+        toast({
+          variant: 'destructive',
+          title: 'Oh no! Algo salió mal.',
+          description: error.message
+        })
+      } finally {
+        setLoadingUser(false)
+      }
     }
   }
 

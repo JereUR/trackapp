@@ -32,7 +32,7 @@ type UserContextType = {
   }: {
     user: User
     authToken: string
-    error: string
+    error: string | null
   }) => void
   userLogout: () => void
   signUp: ({ dataRegister }: { dataRegister: Register }) => Promise<void>
@@ -132,10 +132,10 @@ export default function UserContextProvider({
 }: {
   children: ReactNode
 }) {
-  const [user, setUser] = useState<User | null>(initialUser)
-  const [users, setUsers] = useState(initialUsers)
-  const [fleets, setFleets] = useState<Fleet[]>(initialFleets)
-  const [token, setToken] = useState<string | null>('1234')
+  const [user, setUser] = useState<User | null>(null)
+  const [users, setUsers] = useState<User[]>([])
+  const [fleets, setFleets] = useState<Fleet[]>([])
+  const [token, setToken] = useState<string | null>(null)
   const [count, setCount] = useState<number>(0)
   const [recoverState, setRecoverState] = useState<boolean>(false)
   const [loadingUser, setLoadingUser] = useState(false)
@@ -170,7 +170,7 @@ export default function UserContextProvider({
   }: {
     user: User
     authToken: string
-    error: string
+    error: string | null
   }) {
     if (error) {
       toast({

@@ -12,6 +12,21 @@ export type User = {
   role?: string
 }
 
+type UserSession = {
+  id: number
+  email: string
+  first_name: string
+  last_name: string
+  gender?: string
+  birthdate?: string
+  role: string | null
+  created_at: string
+}
+
+export type Session = {
+  user: UserSession
+}
+
 /* Login info */
 
 export interface Login {

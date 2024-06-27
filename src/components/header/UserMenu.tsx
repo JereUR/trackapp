@@ -5,7 +5,7 @@ import Link from 'next/link'
 
 import useUser from '../hooks/useUser'
 import Loader from '../Loader'
-import { signOut } from '../actions/authActions'
+import { useToast } from '../ui/use-toast'
 
 interface User {
   first_name: string
@@ -20,6 +20,7 @@ export default function UserMenu({ user }: UserMenuProps) {
   const [menuOpen, setMenuOpen] = useState(false)
   const menuRef = useRef<HTMLDivElement>(null)
   const { userLogout, token, setLoadingUser, loadingUser } = useUser()
+  const { toast } = useToast()
 
   const initials =
     user && user.first_name && user.last_name
@@ -29,13 +30,37 @@ export default function UserMenu({ user }: UserMenuProps) {
   async function handleLogout() {
     if (token) {
       setLoadingUser(true)
-      const response = await signOut({ token })
+      try {
+        const response = await fetch('/api/signout', {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(token)
+        })
 
-      if (response) {
-        userLogout()
+        const result = await response.json()
+        console.log(result)
+        if (result.status) {
+          userLogout()
+        } else {
+          toast({
+            variant: 'destructive',
+            title: 'Oh no! Algo salió mal.',
+            description: result.error
+          })
+        }
+      } catch (error: any) {
+        console.error('Error during sign out:', error)
+        toast({
+          variant: 'destructive',
+          title: 'Oh no! Algo salió mal.',
+          description: error
+        })
+        return false
+      } finally {
+        setLoadingUser(false)
       }
-
-      setLoadingUser(false)
     }
   }
 

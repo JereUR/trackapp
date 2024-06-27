@@ -2,8 +2,8 @@
 
 import { NextRequest } from 'next/server'
 import { cookies } from 'next/headers'
-/* import { Session } from '../types/User' */
 import { setCookies } from './setCookies'
+import { Session } from '../types/User'
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_BACKEND_URL
 
@@ -11,21 +11,23 @@ const BASE_URL = process.env.NEXT_PUBLIC_BASE_BACKEND_URL
   [key: string]: { session: Session | null; timestamp: number }
 } = {} */
 
-export default async function getSession(req: NextRequest) {
+export default async function getSession(
+  req: NextRequest
+): Promise<Session | null> {
   const sessionToken = cookies().get('session')?.value
   let session = null
 
-  /* if (!sessionToken) {
+  if (!sessionToken) {
     return null
-  } */
+  }
 
-  session = {
+  /* session = {
     user: {
       id: 4,
       email: 'jeremias.jdv@gmail.com',
       role: 'admin'
     }
-  }
+  }*/
 
   return session
 
