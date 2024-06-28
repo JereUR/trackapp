@@ -64,9 +64,11 @@ const Calendar: React.FC<CalendarProps> = ({ shipmentGroup }) => {
                     marginLeft: shouldApplyMarginLeft ? '16px' : '0px'
                   }}
                 >
-                  {isInTimeRange && time === shipment.time_start
-                    ? shipment.name
-                    : ''}
+                  {isInTimeRange && time === shipment.time_start ? (
+                    <p className="text-card font-medium p-1">{shipment.name}</p>
+                  ) : (
+                    ''
+                  )}
                 </div>
               )
             })}
