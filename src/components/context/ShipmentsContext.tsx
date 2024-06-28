@@ -6,23 +6,14 @@ import axios from 'axios'
 import { Shipment, PropsAddShipment } from '../types/Shipment'
 import { useToast } from '../ui/use-toast'
 import useUser from '../hooks/useUser'
+import { initialShipments, onProgressShipments } from '../db/ShipmentsData'
 
 type ShipmentsContextType = {
   shipments: Shipment[] | []
   loadingShipment: boolean
   count: number
   getAllShipments: (fleet_id: number) => Promise<Shipment[] | []>
-  getShipments: ({
-    q,
-    page,
-    fleet_id,
-    ITEMS_PER_PAGE
-  }: {
-    q: string
-    page: string
-    fleet_id: number
-    ITEMS_PER_PAGE: number
-  }) => Promise<void>
+  getShipments: ({ q }: { q: string }) => Promise<void>
   getShipmentById: ({
     id,
     fleet_id
@@ -49,229 +40,6 @@ type ShipmentsContextType = {
 }
 
 export const ShipmentsContext = createContext<ShipmentsContextType | null>(null)
-
-export const initialShipments: Shipment[] = [
-  {
-    id: 1,
-    fleet_id: 2,
-    assigned_driver: {
-      id: 2,
-      email: 'leanlibutti@gmail.com',
-      first_name: 'Leandro',
-      last_name: 'Libutti'
-    },
-    delivery_points: [
-      {
-        id: 1,
-        name: 'Punto 1',
-        destination: { lat: -34.88204962931506, lng: -57.91417848120565 },
-        cargo: [
-          { quantity: 2, product: 'Vianda normal' },
-          { quantity: 2, product: 'Vianda especial' }
-        ],
-        status: 'Completado'
-      },
-      {
-        id: 2,
-        name: 'Punto 2',
-        destination: { lat: -34.88183840030232, lng: -57.91396390448096 },
-        cargo: [
-          { quantity: 3, product: 'Vianda normal' },
-          { quantity: 2, product: 'Vianda especial' }
-        ],
-        status: 'Completado'
-      },
-      {
-        id: 3,
-        name: 'Punto 3',
-        destination: { lat: -34.88173718620799, lng: -57.91377614984685 },
-        cargo: [
-          { quantity: 2, product: 'Vianda normal' },
-          { quantity: 4, product: 'Vianda especial' }
-        ],
-        status: 'Completado'
-      }
-    ],
-    name: 'Envío 1',
-    description: 'Descripción de envío',
-    status: 'Completado',
-    created_at: '19-06-2024',
-    updated_at: '19-06-2024',
-    date: '20-06-2024',
-    time_start: '08:30',
-    time_end: '12:30',
-    origin: { lat: -34.872314829415, lng: -58.02926980686927 },
-    actual_position: {
-      lat: -34.88177239112451,
-      lng: -57.91270326622338,
-      time: '12:30:30'
-    }
-  },
-  {
-    id: 2,
-    fleet_id: 1,
-    assigned_driver: {
-      id: 1,
-      email: 'jeremias.jdv@gmail.com',
-      first_name: 'Jeremías',
-      last_name: 'Dominguez Vega'
-    },
-    delivery_points: [
-      {
-        id: 1,
-        name: 'Punto 1',
-        destination: { lat: -34.88204962931506, lng: -57.91417848120565 },
-        cargo: [
-          { quantity: 2, product: 'Vianda normal' },
-          { quantity: 2, product: 'Vianda especial' }
-        ],
-        status: 'En progreso'
-      },
-      {
-        id: 2,
-        name: 'Punto 2',
-        destination: { lat: -34.88183840030232, lng: -57.91396390448096 },
-        cargo: [
-          { quantity: 3, product: 'Vianda normal' },
-          { quantity: 2, product: 'Vianda especial' }
-        ],
-        status: 'Pendiente'
-      },
-      {
-        id: 3,
-        name: 'Punto 3',
-        destination: { lat: -34.88173718620799, lng: -57.91377614984685 },
-        cargo: [
-          { quantity: 2, product: 'Vianda normal' },
-          { quantity: 4, product: 'Vianda especial' }
-        ],
-        status: 'Pendiente'
-      }
-    ],
-    name: 'Envío 2',
-    description: 'Descripción de envío',
-    status: 'En progreso',
-    created_at: '20-06-2024',
-    updated_at: '20-06-2024',
-    date: '21-06-2024',
-    time_start: '08:30',
-    time_end: '12:30',
-    origin: { lat: -34.872314829415, lng: -58.02926980686927 },
-    actual_position: {
-      lat: -34.88788927113821,
-      lng: -57.9997714415257,
-      time: '10:21:30'
-    }
-  },
-  {
-    id: 3,
-    fleet_id: 2,
-    assigned_driver: {
-      id: 2,
-      email: 'leanlibutti@gmail.com',
-      first_name: 'Leandro',
-      last_name: 'Libutti'
-    },
-    delivery_points: [
-      {
-        id: 1,
-        name: 'Punto 1',
-        destination: { lat: -34.88204962931506, lng: -57.91417848120565 },
-        cargo: [
-          { quantity: 2, product: 'Vianda normal' },
-          { quantity: 2, product: 'Vianda especial' }
-        ],
-        status: 'Completado'
-      },
-      {
-        id: 2,
-        name: 'Punto 2',
-        destination: { lat: -34.88183840030232, lng: -57.91396390448096 },
-        cargo: [
-          { quantity: 3, product: 'Vianda normal' },
-          { quantity: 2, product: 'Vianda especial' }
-        ],
-        status: 'En progreso'
-      },
-      {
-        id: 3,
-        name: 'Punto 3',
-        destination: { lat: -34.88173718620799, lng: -57.91377614984685 },
-        cargo: [
-          { quantity: 2, product: 'Vianda normal' },
-          { quantity: 4, product: 'Vianda especial' }
-        ],
-        status: 'Pendiente'
-      }
-    ],
-    name: 'Envío 3',
-    description: 'Descripción de envío',
-    status: 'En progreso',
-    created_at: '20-06-2024',
-    updated_at: '20-06-2024',
-    date: '21-06-2024',
-    time_start: '08:30',
-    time_end: '12:30',
-    origin: { lat: -34.872314829415, lng: -58.02926980686927 },
-    actual_position: {
-      lat: -34.900053983042916,
-      lng: -57.95588709709627,
-      time: '10:21:30'
-    }
-  },
-  {
-    id: 4,
-    fleet_id: 2,
-    assigned_driver: {
-      id: 2,
-      email: 'jeremias.jdv@gmail.com',
-      first_name: 'Jeremias',
-      last_name: 'Dominguez Vega'
-    },
-    delivery_points: [
-      {
-        id: 1,
-        name: 'Punto 1',
-        destination: { lat: -34.88204962931506, lng: -57.91417848120565 },
-        cargo: [
-          { quantity: 2, product: 'Vianda normal' },
-          { quantity: 2, product: 'Vianda especial' }
-        ],
-        status: 'Programado'
-      },
-      {
-        id: 2,
-        name: 'Punto 2',
-        destination: { lat: -34.88183840030232, lng: -57.91396390448096 },
-        cargo: [
-          { quantity: 3, product: 'Vianda normal' },
-          { quantity: 2, product: 'Vianda especial' }
-        ],
-        status: 'Programado'
-      },
-      {
-        id: 3,
-        name: 'Punto 3',
-        destination: { lat: -34.88173718620799, lng: -57.91377614984685 },
-        cargo: [
-          { quantity: 2, product: 'Vianda normal' },
-          { quantity: 4, product: 'Vianda especial' }
-        ],
-        status: 'Programado'
-      }
-    ],
-    name: 'Envío 4',
-    description: 'Descripción de envío',
-    status: 'Programado',
-    created_at: '20-06-2024',
-    updated_at: '20-06-2024',
-    date: '22-06-2024',
-    time_start: '08:30',
-    time_end: '12:30',
-    origin: { lat: -34.872314829415, lng: -58.02926980686927 },
-    actual_position: undefined
-  }
-]
 
 export default function ShipmentsContextProvider({
   children
@@ -315,26 +83,14 @@ export default function ShipmentsContextProvider({
       return []
     } finally {
       setLoadingShipment(false)
+      return initialShipments
     }
   }
 
-  async function getShipments({
-    q,
-    page,
-    fleet_id,
-    ITEMS_PER_PAGE
-  }: {
-    q: string
-    page: string
-    fleet_id: number
-    ITEMS_PER_PAGE: number
-  }): Promise<void> {
+  async function getShipments({ q }: { q: string }): Promise<void> {
     setLoadingShipment(true)
     const params = new URLSearchParams()
     params.append('regex', q)
-    params.append('page', page)
-    params.append('items_per_page', ITEMS_PER_PAGE.toString())
-    params.append('fleet_id', fleet_id.toString())
     const url = `${BASE_URL}api/v1/shipments?${params.toString()}`
 
     try {
@@ -362,6 +118,7 @@ export default function ShipmentsContextProvider({
       })
     } finally {
       setLoadingShipment(false)
+      setShipments(initialShipments)
     }
   }
 
@@ -395,7 +152,7 @@ export default function ShipmentsContextProvider({
       return []
     } finally {
       setLoadingShipment(false)
-      return [initialShipments[1], initialShipments[2]]
+      return onProgressShipments
     }
   }
 
@@ -513,7 +270,7 @@ export default function ShipmentsContextProvider({
       description: dataShipment.description,
       date: dataShipment.date,
       time_start: dataShipment.time_start,
-      time_end: dataShipment.time_end,
+      time_end: dataShipment.time_end
     }
 
     const url = `${BASE_URL}api/v1/shipment`

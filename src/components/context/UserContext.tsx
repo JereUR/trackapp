@@ -16,6 +16,8 @@ import { Register, User } from '../types/User'
 import { useToast } from '../ui/use-toast'
 import { removeCookies } from '../actions/removeCookies'
 import { Fleet, PropsUpdateFleet } from '../types/Fleet'
+import { initialFleets } from '../db/FleetsData'
+import { initialUser } from '../db/UsersData'
 
 type UserContextType = {
   user: User | null
@@ -65,67 +67,6 @@ type UserContextType = {
 }
 
 export const UserContext = createContext<UserContextType | null>(null)
-
-const initialUser = {
-  id: 1,
-  email: 'jeremias.jdv@gmail.com',
-  first_name: 'Jeremias',
-  last_name: 'Dominguez Vega',
-  gender: 'male',
-  role: 'admin'
-}
-
-const initialUsers = [
-  {
-    id: 1,
-    email: 'jeremias.jdv@gmail.com',
-    first_name: 'Jeremias',
-    last_name: 'Dominguez Vega',
-    gender: 'male',
-    role: 'driver'
-  },
-  {
-    id: 2,
-    email: 'leanlibutti@gmail.com',
-    first_name: 'Leandro',
-    last_name: 'Libutti',
-    gender: 'male',
-    role: 'driver'
-  },
-  {
-    id: 3,
-    email: 'pepito@gmail.com',
-    first_name: 'Pepito',
-    last_name: 'Perez',
-    gender: 'male',
-    role: 'staff'
-  },
-  {
-    id: 4,
-    email: 'ana@gmail.com',
-    first_name: 'Ana',
-    last_name: 'Gonzalez',
-    gender: 'female',
-    role: 'staff'
-  }
-]
-
-const initialFleets: Fleet[] = [
-  {
-    id: 1,
-    name: 'Fleet 1',
-    description: 'Fleet 1 description',
-    gps: 1,
-    on_working_area: true
-  },
-  {
-    id: 2,
-    name: 'Fleet 2',
-    description: 'Fleet 2 description',
-    gps: 2,
-    on_working_area: false
-  }
-]
 
 export default function UserContextProvider({
   children
@@ -497,7 +438,6 @@ export default function UserContextProvider({
       return null
     } finally {
       setLoadingFleet(false)
-      /* return initialFleets[0] */
     }
   }
 
