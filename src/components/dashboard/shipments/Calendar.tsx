@@ -15,13 +15,15 @@ const Calendar: React.FC<CalendarProps> = ({ shipmentGroup }) => {
 
   return (
     <div className="container mx-auto p-4 space-y-8">
-      <div className="border border-gray-300 p-4 rounded-lg">
-        <h3 className="text-lg font-semibold mb-4">{shipmentGroup.date}</h3>
-        <div className="flex">
+      <div className="border border-gray-300 p-4 rounded-lg shadow-lg bg-card">
+        <h3 className="text-xl font-semibold mb-4 text-foreground">
+          {shipmentGroup.date}
+        </h3>
+        <div className="flex border-b border-gray-300 mb-2">
           {times.map((time, index) => (
-            <div key={time} className="flex-1 text-center">
+            <div key={time} className="flex-1 text-center py-2">
               <div
-                className={`text-sm font-semibold ${
+                className={`text-sm font-semibold text-foreground ${
                   index === 12 ? '-mr-4' : ''
                 }${index === 13 ? 'ml-8' : ''}`}
               >
@@ -54,9 +56,9 @@ const Calendar: React.FC<CalendarProps> = ({ shipmentGroup }) => {
               return (
                 <div
                   key={time}
-                  className={`flex-1 text-center p-2 border ${
+                  className={`flex-1 text-center py-2 border ${
                     isInTimeRange ? fleetColor : 'border-gray-300'
-                  }`}
+                  } rounded-lg`}
                   style={{
                     marginRight: shouldApplyMarginRight ? '16px' : '0px',
                     marginLeft: shouldApplyMarginLeft ? '16px' : '0px'
