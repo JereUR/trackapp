@@ -2,12 +2,12 @@
 
 import dynamic from 'next/dynamic'
 
-const ShowFleets = dynamic(() => import('@/components/dashboard/ShowFleets'), {
+const ShowFleets = dynamic(() => import('@/components/dashboard/home/ShowFleets'), {
   ssr: false
 })
 
 const AsideSection = dynamic(
-  () => import('@/components/dashboard/AsideSection'),
+  () => import('@/components/dashboard/home/AsideSection'),
   {
     ssr: false
   }

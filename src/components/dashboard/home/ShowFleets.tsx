@@ -2,7 +2,7 @@
 
 import { useEffect } from 'react'
 
-import useUser from '../hooks/useUser'
+import useUser from '../../hooks/useUser'
 import FleetItem from './FleetItem'
 
 const ShowFleets = () => {

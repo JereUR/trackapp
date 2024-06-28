@@ -5,11 +5,11 @@ import { RxPinBottom, RxPinTop } from 'react-icons/rx'
 import { useState } from 'react'
 import { MdExpandLess, MdExpandMore } from 'react-icons/md'
 
-import { Fleet, initialDataUpdate, PropsUpdateFleet } from '../types/Fleet'
-import { Card, CardContent, CardHeader, CardTitle } from '../ui/card'
-import { Button } from '../ui/button'
-import useUser from '../hooks/useUser'
-import ErrorText from '../ErrorText'
+import { Fleet, initialDataUpdate, PropsUpdateFleet } from '../../types/Fleet'
+import { Card, CardContent, CardHeader, CardTitle } from '../../ui/card'
+import { Button } from '../../ui/button'
+import useUser from '../../hooks/useUser'
+import ErrorText from '../../ErrorText'
 
 interface Props {
   fleet: Fleet

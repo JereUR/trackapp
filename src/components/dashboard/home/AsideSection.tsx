@@ -4,13 +4,13 @@ import { useEffect, useState } from 'react'
 import 'leaflet/dist/leaflet.css'
 import 'tailwindcss/tailwind.css'
 
-import { Card, CardContent, CardTitle } from '../ui/card'
-import useUser from '../hooks/useUser'
-import useShipments from '../hooks/useShipments'
-import { Shipment } from '../types/Shipment'
-import ShipmentMap from './maps/ShipmentMap'
+import { Card, CardContent, CardTitle } from '../../ui/card'
+import useUser from '../../hooks/useUser'
+import useShipments from '../../hooks/useShipments'
+import { Shipment } from '../../types/Shipment'
+import ShipmentMap from '../maps/ShipmentMap'
 import { IoContract, IoExpand } from 'react-icons/io5'
-import ModalMap from './maps/ModalMap'
+import ModalMap from '../maps/ModalMap'
 
 const AsideSection = () => {
   const [shipments, setShipments] = useState<Shipment[]>([])
