@@ -6,9 +6,11 @@ interface CalendarProps {
 }
 
 const Calendar: React.FC<CalendarProps> = ({ shipmentGroup }) => {
+  // Mapeo de fleet_id a colores
   const fleetIdToColor: Record<number, string> = {
-    1: 'bg-red-500 text-white',
-    2: 'bg-green-500 text-white'
+    1: 'bg-red-500 text-white', // Rojo para fleet_id: 1
+    2: 'bg-green-500 text-white' // Verde para fleet_id: 2
+    // Añadir más colores para otros fleet_id según sea necesario
   }
 
   return (
@@ -34,7 +36,7 @@ const Calendar: React.FC<CalendarProps> = ({ shipmentGroup }) => {
           let hasPrintedName = false // Bandera para verificar si el nombre ya se imprimió
           return (
             <div key={shipment.id} className="flex mt-2">
-              {times.map((time) => {
+              {times.map((time, index) => {
                 const isMorningSlot = time >= '07:30' && time < '10:30'
                 const isEveningSlot = time >= '19:30' && time < '23:30'
 
@@ -50,24 +52,50 @@ const Calendar: React.FC<CalendarProps> = ({ shipmentGroup }) => {
                 const isInTimeRange = isInMorningRange || isInEveningRange
                 const fleetColor = fleetIdToColor[shipment.fleet_id]
 
-                const shouldApplyMarginRight = time === '10:30'
-                const shouldApplyMarginLeft = time === '19:30'
+                const prevTime = times[index - 1]
+                const nextTime = times[index + 1]
+                const isPrevInTimeRange =
+                  prevTime &&
+                  ((isMorningSlot &&
+                    prevTime >= shipment.time_start &&
+                    prevTime < shipment.time_end) ||
+                    (isEveningSlot &&
+                      prevTime >= shipment.time_start &&
+                      prevTime < shipment.time_end))
+                const isNextInTimeRange =
+                  nextTime &&
+                  ((isMorningSlot &&
+                    nextTime >= shipment.time_start &&
+                    nextTime < shipment.time_end) ||
+                    (isEveningSlot &&
+                      nextTime >= shipment.time_start &&
+                      nextTime < shipment.time_end))
+
+                // Aplicar borde redondeado solo cuando el casillero anterior o el siguiente no estén coloreados
+                const borderRadiusLeft =
+                  isInTimeRange && !isPrevInTimeRange ? 'rounded-l-lg' : ''
+                const borderRadiusRight =
+                  isInTimeRange && !isNextInTimeRange ? 'rounded-r-lg' : ''
+
+                // Restaurar el margen entre 10:30 y 19:30
+                const marginRight = time === '10:30' ? '16px' : '0px'
+                const marginLeft = time === '19:30' ? '16px' : '0px'
 
                 const shouldPrintName = !hasPrintedName && isInTimeRange
 
                 if (shouldPrintName) {
-                  hasPrintedName = true
+                  hasPrintedName = true // Marca que el nombre ya se imprimió
                 }
 
                 return (
                   <div
                     key={time}
                     className={`flex-1 text-center py-2 border ${
-                      isInTimeRange ? fleetColor : 'border-gray-300'
-                    } rounded-lg`}
+                      isInTimeRange ? fleetColor : 'border-gray-500'
+                    } ${borderRadiusLeft} ${borderRadiusRight}`}
                     style={{
-                      marginRight: shouldApplyMarginRight ? '16px' : '0px',
-                      marginLeft: shouldApplyMarginLeft ? '16px' : '0px'
+                      marginRight: marginRight,
+                      marginLeft: marginLeft
                     }}
                   >
                     {shouldPrintName ? (
