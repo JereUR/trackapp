@@ -48,7 +48,7 @@ export const initialShipments: Shipment[] = [
     created_at: '19-06-2024',
     updated_at: '19-06-2024',
     date: '20-07-2024',
-    time_start: '07:30',
+    time_start: '07:31',
     time_end: '10:30',
     origin: { lat: -34.872314829415, lng: -58.02926980686927 },
     actual_position: {
@@ -160,8 +160,8 @@ export const initialShipments: Shipment[] = [
     created_at: '20-06-2024',
     updated_at: '20-06-2024',
     date: '21-07-2024',
-    time_start: '19:30',
-    time_end: '22:30',
+    time_start: '19:37',
+    time_end: '21:12',
     origin: { lat: -34.872314829415, lng: -58.02926980686927 },
     actual_position: {
       lat: -34.900053983042916,
