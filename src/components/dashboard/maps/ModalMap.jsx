@@ -81,15 +81,12 @@ const ModalMap = ({ shipment, onClose }) => {
 
   const position = [shipment.actual_position.lat, shipment.actual_position.lng]
   return (
-    <div
-      id="modalBackdrop"
-      className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50"
-    >
-      <div className="bg-white dark:bg-gray-800 p-2 md:p-4 m-2 md:m-8 rounded shadow-lg w-full max-w-lg mx-2 z-50">
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+      <div className="bg-white dark:bg-gray-800 p-2 md:p-4 m-2 md:m-8 rounded shadow-lg w-full max-w-lg mx-2">
         <div className="flex justify-end mb-2">
           <button
             onClick={onClose}
-            className="bg-gray-700 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 transition-colors p-2 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600"
+            className="bg-gray-700 text-gray-200 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 p-2 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600"
           >
             <IoContract size={24} />
           </button>
