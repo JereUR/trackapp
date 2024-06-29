@@ -1,4 +1,5 @@
 'use client'
+/* import { initialShipments, onProgressShipments } from '../db/ShipmentsData' */
 
 import { createContext, ReactNode, useState } from 'react'
 import axios from 'axios'
@@ -6,14 +7,19 @@ import axios from 'axios'
 import { Shipment, PropsAddShipment } from '../types/Shipment'
 import { useToast } from '../ui/use-toast'
 import useUser from '../hooks/useUser'
-import { initialShipments, onProgressShipments } from '../db/ShipmentsData'
 
 type ShipmentsContextType = {
   shipments: Shipment[] | []
   loadingShipment: boolean
   count: number
   getAllShipments: (fleet_id: number) => Promise<Shipment[] | []>
-  getShipments: ({ q }: { q: string }) => Promise<void>
+  getShipments: ({
+    q,
+    fleets_id
+  }: {
+    q: string
+    fleets_id: number[]
+  }) => Promise<void>
   getShipmentById: ({
     id,
     fleet_id
@@ -83,14 +89,21 @@ export default function ShipmentsContextProvider({
       return []
     } finally {
       setLoadingShipment(false)
-      return initialShipments
+      /* return initialShipments */
     }
   }
 
-  async function getShipments({ q }: { q: string }): Promise<void> {
+  async function getShipments({
+    q,
+    fleets_id
+  }: {
+    q: string
+    fleets_id: number[]
+  }): Promise<void> {
     setLoadingShipment(true)
     const params = new URLSearchParams()
     params.append('regex', q)
+    params.append('fleet_ids', fleets_id.toString())
     const url = `${BASE_URL}api/v1/shipments?${params.toString()}`
 
     try {
@@ -118,7 +131,7 @@ export default function ShipmentsContextProvider({
       })
     } finally {
       setLoadingShipment(false)
-      setShipments(initialShipments)
+      /* setShipments(initialShipments) */
     }
   }
 
@@ -152,7 +165,7 @@ export default function ShipmentsContextProvider({
       return []
     } finally {
       setLoadingShipment(false)
-      return onProgressShipments
+      /* return onProgressShipments */
     }
   }
 
