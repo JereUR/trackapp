@@ -1,5 +1,5 @@
 'use client'
-/* import { initialShipments, onProgressShipments } from '../db/ShipmentsData' */
+import { initialShipments, onProgressShipments } from '../db/ShipmentsData'
 
 import { createContext, ReactNode, useState } from 'react'
 import axios from 'axios'
@@ -100,6 +100,8 @@ export default function ShipmentsContextProvider({
     q: string
     fleets_id: number[]
   }): Promise<void> {
+    setShipments(initialShipments)
+    return
     setLoadingShipment(true)
     const params = new URLSearchParams()
     params.append('regex', q)
@@ -131,11 +133,11 @@ export default function ShipmentsContextProvider({
       })
     } finally {
       setLoadingShipment(false)
-      /* setShipments(initialShipments) */
     }
   }
 
   async function getOnProgressShipments(): Promise<Shipment[]> {
+    return onProgressShipments
     setLoadingShipment(true)
     const url = `${BASE_URL}api/v1/on_progress_shipments`
 
@@ -165,7 +167,6 @@ export default function ShipmentsContextProvider({
       return []
     } finally {
       setLoadingShipment(false)
-      /* return onProgressShipments */
     }
   }
 
