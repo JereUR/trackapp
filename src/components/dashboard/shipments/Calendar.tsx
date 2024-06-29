@@ -8,8 +8,8 @@ interface CalendarProps {
 const Calendar: React.FC<CalendarProps> = ({ shipmentGroup }) => {
   // Mapeo de fleet_id a colores
   const fleetIdToColor: Record<number, string> = {
-    1: 'bg-red-500 text-white', // Rojo para fleet_id: 1
-    2: 'bg-green-500 text-white' // Verde para fleet_id: 2
+    1: 'bg-red-500 border-gray-500', // Rojo para fleet_id: 1
+    2: 'bg-green-500 border-gray-500' // Verde para fleet_id: 2
     // Añadir más colores para otros fleet_id según sea necesario
   }
 
