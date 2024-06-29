@@ -6,11 +6,9 @@ interface CalendarProps {
 }
 
 const Calendar: React.FC<CalendarProps> = ({ shipmentGroup }) => {
-  // Mapeo de fleet_id a colores
   const fleetIdToColor: Record<number, string> = {
-    1: 'bg-red-500 border-gray-500', // Rojo para fleet_id: 1
-    2: 'bg-green-500 border-gray-500' // Verde para fleet_id: 2
-    // Añadir más colores para otros fleet_id según sea necesario
+    1: 'bg-red-500 border-gray-400',
+    2: 'bg-green-500 border-gray-400'
   }
 
   return (
@@ -33,7 +31,7 @@ const Calendar: React.FC<CalendarProps> = ({ shipmentGroup }) => {
           ))}
         </div>
         {shipmentGroup.shipments.map((shipment) => {
-          let hasPrintedName = false // Bandera para verificar si el nombre ya se imprimió
+          let hasPrintedName = false
           return (
             <div key={shipment.id} className="flex mt-2">
               {times.map((time, index) => {
