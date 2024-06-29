@@ -86,7 +86,7 @@ const LoginForm = () => {
           headers: {
             'Content-Type': 'application/json'
           },
-          body: JSON.stringify({ dataLogin })
+          body: JSON.stringify(dataLogin)
         })
         const result = await response.json()
 
@@ -98,6 +98,12 @@ const LoginForm = () => {
           })
           setDataLogin(initialData)
           setFormErrors(initialErrors)
+        } else {
+          toast({
+            variant: 'destructive',
+            title: 'Error al iniciar sesión',
+            description: result.error || 'Error desconocido'
+          })
         }
       } catch (error: any) {
         toast({
