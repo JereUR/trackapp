@@ -39,15 +39,27 @@ export type ShipmentGroup = {
 }
 
 export interface PropsAddShipment {
-  id?: number
-  fleet_id?: number
-  assigned_driver: User
+  id?: number | null
+  fleet_id?: number | null
+  assigned_driver: User | null
   delivery_points: DeliveryPoint[]
   name: string
   description?: string
   date: Date
   time_start: string
   time_end: string
+}
+
+export const initialData: PropsAddShipment = {
+  id: null,
+  fleet_id: null,
+  assigned_driver: null,
+  delivery_points: [],
+  name: '',
+  description: '',
+  date: new Date(),
+  time_start: '',
+  time_end: ''
 }
 
 export const posibleStatus = [
