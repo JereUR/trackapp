@@ -5,9 +5,9 @@ const FleetLegend: React.FC = () => {
   }
 
   return (
-    <div className="mb-4">
+    <div className="m-4">
       <h3 className="text-lg font-semibold mb-2">
-        Índice de Colores por Flota
+        Índice de colores por flota
       </h3>
       <div className="flex space-x-2">
         {Object.entries(fleetColors).map(([fleetId, color]) => (
