@@ -1,4 +1,6 @@
 'use client'
+import { initialFleets } from '../db/FleetsData'
+import { initialUser } from '../db/UsersData'
 
 import {
   createContext,
@@ -16,8 +18,6 @@ import { Register, User } from '../types/User'
 import { useToast } from '../ui/use-toast'
 import { removeCookies } from '../actions/removeCookies'
 import { Fleet, PropsUpdateFleet } from '../types/Fleet'
-import { initialFleets } from '../db/FleetsData'
-import { initialUser } from '../db/UsersData'
 
 type UserContextType = {
   user: User | null
@@ -128,6 +128,7 @@ export default function UserContextProvider({
     setToken(authToken)
     setUser(user)
     setTimeout(() => {
+      console.log('test')
       router.push('/panel-de-control')
     }, 100)
   }
