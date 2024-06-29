@@ -9,9 +9,9 @@ import { Session } from '../types/User'
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_BACKEND_URL
 
-/* let sessionCache: {
+let sessionCache: {
   [key: string]: { session: Session | null; timestamp: number }
-} = {} */
+} = {}
 
 export default async function getSession(
   req: NextRequest
@@ -21,7 +21,6 @@ export default async function getSession(
   /* if (!sessionToken) {
     return null
   } */
-
   return session
 
   /* const CACHE_EXPIRATION_TIME = 5 * 60 * 1000
@@ -38,6 +37,7 @@ export default async function getSession(
     'X-Requested-With': 'XMLHttpRequest',
     Authorization: sessionToken
   }
+  console.log(sessionToken)
 
   try {
     const response = await fetch(`${BASE_URL}api/v1/currentuser`, {
