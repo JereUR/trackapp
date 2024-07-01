@@ -1,6 +1,6 @@
 'use client'
 import { initialFleets } from '../db/FleetsData'
-import { initialUser } from '../db/UsersData'
+import { initialDrivers, initialUser } from '../db/UsersData'
 
 import {
   createContext,
@@ -283,6 +283,7 @@ export default function UserContextProvider({
   }
 
   async function getDrivers() {
+    return initialDrivers
     setLoadingUsers(true)
     try {
       const response = await axios.get(`${BASE_URL}drivers`)
@@ -309,6 +310,8 @@ export default function UserContextProvider({
   }
 
   async function getFleets() {
+    setFleets(initialFleets)
+    return
     setLoadingFleet(true)
     try {
       const response = await axios.get(`${BASE_URL}fleets`)
