@@ -53,6 +53,7 @@ const ShipmentForm: React.FC<Props> = ({ type, shipment }) => {
   const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const { name, value } = event.target
     setDataShipment({ ...dataShipment, [name]: value })
+    setFormErrors({ ...formErrors, [name]: '' })
   }
 
   const handleTextAreaChange = (
@@ -69,6 +70,7 @@ const ShipmentForm: React.FC<Props> = ({ type, shipment }) => {
     } else {
       setDataShipment({ ...dataShipment, [name]: value })
     }
+    setFormErrors({ ...formErrors, [name]: '' })
   }
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
