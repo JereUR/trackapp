@@ -77,40 +77,40 @@
 
 @keyframes pulse {
   100% {
-    opacity: 0.25;
+    opacity: 0.2;
   }
   90% {
-    opacity: 0.4;
+    opacity: 0.36;
   }
   80% {
-    opacity: 0.55;
+    opacity: 0.52;
   }
   70% {
-    opacity: 0.7;
+    opacity: 0.68;
   }
   60% {
-    opacity: 0.85;
+    opacity: 0.84;
   }
   50% {
     opacity: 1;
   }
   40% {
-    opacity: 0.85;
+    opacity: 0.84;
   }
   30% {
-    opacity: 0.7;
+    opacity: 0.68;
   }
   20% {
-    opacity: 0.55;
+    opacity: 0.52;
   }
   10% {
-    opacity: 0.4;
+    opacity: 0.36;
   }
   0% {
-    opacity: 0.25;
+    opacity: 0.2;
   }
 }
 
 .animate-custom-pulse {
-  animation: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  animation: pulse 2.5s cubic-bezier(0.4, 0, 0.6, 1) infinite !important;
 }
