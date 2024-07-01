@@ -1,6 +1,9 @@
 'use client'
 
 import React, { useEffect, useRef, useState } from 'react'
+import { Cross2Icon } from '@radix-ui/react-icons'
+import { BsCheck2 } from 'react-icons/bs'
+
 import ErrorText from '@/components/ErrorText'
 import useUser from '@/components/hooks/useUser'
 import {
@@ -81,17 +84,14 @@ const ShipmentForm: React.FC<Props> = ({ type, shipment }) => {
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label
-                  htmlFor="fleet"
-                  className="block text-sm font-medium text-gray-700"
-                >
+                <label htmlFor="fleet" className="font-light text-foreground">
                   Flota
                 </label>
                 <select
                   id="fleet"
                   name="fleet_id"
                   onChange={handleSelectChange}
-                  className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm cursor-pointer"
+                  className="mt-1 block w-full p-2 border border-gray-400 dark:border-gray-700 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm cursor-pointer"
                 >
                   <option value="" selected={dataShipment.fleet_id === null}>
                     -- Seleccione flota --
@@ -108,17 +108,14 @@ const ShipmentForm: React.FC<Props> = ({ type, shipment }) => {
                 </select>
               </div>
               <div>
-                <label
-                  htmlFor="driver"
-                  className="block text-sm font-medium text-gray-700"
-                >
+                <label htmlFor="driver" className="font-light text-foreground">
                   Conductor
                 </label>
                 <select
                   id="driver"
                   name="assigned_driver_id"
                   onChange={handleSelectChange}
-                  className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm cursor-pointer"
+                  className="mt-1 block w-full p-2 border border-gray-400 dark:border-gray-700 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm cursor-pointer"
                 >
                   <option
                     value=""
@@ -138,10 +135,7 @@ const ShipmentForm: React.FC<Props> = ({ type, shipment }) => {
                 </select>
               </div>
               <div>
-                <label
-                  htmlFor="name"
-                  className="block text-sm font-medium text-gray-700"
-                >
+                <label htmlFor="name" className="font-light text-foreground">
                   Nombre
                 </label>
                 <input
@@ -150,21 +144,18 @@ const ShipmentForm: React.FC<Props> = ({ type, shipment }) => {
                   name="name"
                   value={dataShipment.name}
                   onChange={handleInputChange}
-                  className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                  className="mt-1 block w-full p-2 border border-gray-400 dark:border-gray-700 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                 />
               </div>
               <div>
-                <label
-                  htmlFor="date"
-                  className="block text-sm font-medium text-gray-700"
-                >
+                <label htmlFor="date" className="font-light text-foreground">
                   Fecha
                 </label>
                 {formErrors.date && <ErrorText text={formErrors.date} />}
                 <input
                   type="date"
                   name="date"
-                  className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm cursor-pointer"
+                  className="mt-1 block w-full p-2 border border-gray-400 dark:border-gray-700 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm cursor-pointer"
                   min={today}
                   value={dataShipment.date.toISOString().split('T')[0]}
                   onChange={handleInputChange}
@@ -173,7 +164,7 @@ const ShipmentForm: React.FC<Props> = ({ type, shipment }) => {
               <div>
                 <label
                   htmlFor="time_start"
-                  className="block text-sm font-medium text-gray-700"
+                  className="font-light text-foreground"
                 >
                   Hora de inicio
                 </label>
@@ -181,7 +172,7 @@ const ShipmentForm: React.FC<Props> = ({ type, shipment }) => {
                   id="time_start"
                   name="time_start"
                   onChange={handleSelectChange}
-                  className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm cursor-pointer"
+                  className="mt-1 block w-full p-2 border border-gray-400 dark:border-gray-700 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm cursor-pointer"
                 >
                   <option value="" selected={dataShipment.time_start === ''}>
                     -- Seleccione hora de inicio --
@@ -200,7 +191,7 @@ const ShipmentForm: React.FC<Props> = ({ type, shipment }) => {
               <div>
                 <label
                   htmlFor="time_end"
-                  className="block text-sm font-medium text-gray-700"
+                  className="font-light text-foreground"
                 >
                   Hora estimada de fin
                 </label>
@@ -208,7 +199,7 @@ const ShipmentForm: React.FC<Props> = ({ type, shipment }) => {
                   id="time_end"
                   name="time_end"
                   onChange={handleSelectChange}
-                  className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm cursor-pointer"
+                  className="mt-1 block w-full p-2 border border-gray-400 dark:border-gray-700 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm cursor-pointer"
                 >
                   <option value="" selected={dataShipment.time_end === ''}>
                     -- Seleccione hora estimada de fin --
@@ -228,7 +219,7 @@ const ShipmentForm: React.FC<Props> = ({ type, shipment }) => {
             <div>
               <label
                 htmlFor="description"
-                className="block text-sm font-medium text-gray-700"
+                className="font-light text-foreground"
               >
                 Descripción
               </label>
@@ -237,7 +228,7 @@ const ShipmentForm: React.FC<Props> = ({ type, shipment }) => {
                 name="description"
                 value={dataShipment.description}
                 onChange={handleTextAreaChange}
-                className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                className="mt-1 block w-full p-2 border border-gray-400 dark:border-gray-700 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
               />
             </div>
             <DeliveryPointsForm
@@ -245,9 +236,18 @@ const ShipmentForm: React.FC<Props> = ({ type, shipment }) => {
               setDataShipment={setDataShipment}
               mapRef={mapRef}
             />
-            <div className="mt-4">
-              <Button type="submit" className="w-full">
-                Agregar
+            <div className="flex justify-end gap-2 mt-4">
+              <Button
+                type="button"
+                className="flex gap-2 items-center text-foreground bg-red-500 hover:bg-red-600"
+              >
+                <Cross2Icon className="h-5 w-5" /> Cerrar
+              </Button>
+              <Button
+                type="submit"
+                className="flex gap-2 items-center text-foreground bg-green-500 hover:bg-green-600"
+              >
+                <BsCheck2 className="h-5 w-5" /> Agregar envío
               </Button>
             </div>
           </form>
@@ -256,7 +256,7 @@ const ShipmentForm: React.FC<Props> = ({ type, shipment }) => {
           {/* Aquí va el mapa */}
           <div
             id="map"
-            className="h-full w-full border border-gray-300 rounded-md"
+            className="h-full w-full border border-gray-400 dark:border-gray-700 rounded-md"
           ></div>
         </div>
       </div>
