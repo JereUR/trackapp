@@ -41,3 +41,22 @@ export const initialUsers = [
     role: 'staff'
   }
 ]
+
+export const initialDrivers = [
+  {
+    id: 1,
+    email: 'jeremias.jdv@gmail.com',
+    first_name: 'Jeremias',
+    last_name: 'Dominguez Vega',
+    gender: 'male',
+    role: 'driver'
+  },
+  {
+    id: 2,
+    email: 'leanlibutti@gmail.com',
+    first_name: 'Leandro',
+    last_name: 'Libutti',
+    gender: 'male',
+    role: 'driver'
+  }
+]
