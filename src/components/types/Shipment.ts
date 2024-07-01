@@ -5,7 +5,9 @@ export type DeliveryPoint = {
   name: string
   destination: { lat: number; lng: number }
   cargo: { quantity: number; product: string }[]
+  description?: string
   status: string
+  observations?: string
 }
 
 export type Shipment = {
@@ -38,26 +40,99 @@ export type ShipmentGroup = {
   shipments: ShipmentItem[]
 }
 
+interface Cargo {
+  quantity: number
+  product: string
+}
+
+interface Coords {
+  lat: number
+  lng: number
+}
+
+export interface PropsAddCargo {
+  quantity: number
+  product: string
+}
+
+export const initialCargo: PropsAddCargo = {
+  quantity: 0,
+  product: ''
+}
+
+export interface PropsAddDeliveryPoint {
+  id?: number | null
+  name: string
+  destination: Coords | null
+  description?: string
+  cargo: Cargo[]
+  [key: string]: number | null | Coords | string | Cargo[] | undefined
+}
+
 export interface PropsAddShipment {
   id?: number | null
   fleet_id?: number | null
-  assigned_driver: User | null
-  delivery_points: DeliveryPoint[]
+  assigned_driver_id: number | null
+  delivery_points: PropsAddDeliveryPoint[]
   name: string
   description?: string
   date: Date
   time_start: string
   time_end: string
+  [key: string]:
+    | number
+    | null
+    | PropsAddDeliveryPoint[]
+    | string
+    | Date
+    | undefined
+}
+
+export const initialDeliveryData = {
+  id: null,
+  name: '',
+  destination: null,
+  cargo: [],
+  description: ''
 }
 
 export const initialData: PropsAddShipment = {
   id: null,
   fleet_id: null,
-  assigned_driver: null,
+  assigned_driver_id: null,
   delivery_points: [],
   name: '',
   description: '',
   date: new Date(),
+  time_start: '',
+  time_end: ''
+}
+
+export interface FormErrorsShipment {
+  fleet_id: string
+  assigned_driver_id: string
+  delivery_point_name: string
+  delivery_point_destination: string
+  delivery_point_cargo_quantity: string
+  delivery_point_cargo_product: string
+  name: string
+  description: string
+  date: string
+  time_start: string
+  time_end: string
+  [key: string]: string | undefined
+}
+
+export const initialErrorsShipment: FormErrorsShipment = {
+  fleet_id: '',
+  assigned_driver_id: '',
+  delivery_point_name: '',
+  delivery_point_destination: '',
+  delivery_point_cargo_quantity: '',
+  delivery_point_cargo_product: '',
+  name: '',
+  description: '',
+  date: '',
   time_start: '',
   time_end: ''
 }
