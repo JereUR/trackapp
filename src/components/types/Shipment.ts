@@ -109,27 +109,41 @@ export const initialData: PropsAddShipment = {
 }
 
 export interface FormErrorsShipment {
-  fleet_id: string
-  assigned_driver_id: string
-  delivery_point_name: string
-  delivery_point_destination: string
-  delivery_point_cargo_quantity: string
-  delivery_point_cargo_product: string
-  name: string
-  description: string
-  date: string
-  time_start: string
-  time_end: string
+  fleet_id?: string
+  assigned_driver_id?: string
+  name?: string
+  description?: string
+  date?: string
+  time_start?: string
+  time_end?: string
   [key: string]: string | undefined
+}
+
+export interface FormErrorsDeliveryPoint {
+  delivery_point?: string
+  name?: string
+  destination?: string
+}
+
+export const initialErrorsDeliveryPoint: FormErrorsDeliveryPoint = {
+  delivery_point: '',
+  name: '',
+  destination: ''
+}
+
+export interface FormErrorsCargo {
+  quantity?: string
+  product?: string
+}
+
+export const initialErrorsCargo: FormErrorsCargo = {
+  quantity: '',
+  product: ''
 }
 
 export const initialErrorsShipment: FormErrorsShipment = {
   fleet_id: '',
   assigned_driver_id: '',
-  delivery_point_name: '',
-  delivery_point_destination: '',
-  delivery_point_cargo_quantity: '',
-  delivery_point_cargo_product: '',
   name: '',
   description: '',
   date: '',
