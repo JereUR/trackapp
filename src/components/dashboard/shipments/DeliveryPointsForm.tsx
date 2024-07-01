@@ -1,19 +1,26 @@
 import { useState, Dispatch, SetStateAction } from 'react'
 import { Button } from '@/components/ui/button'
 import { CgAdd } from 'react-icons/cg'
+import { BiEdit, BiTrash } from 'react-icons/bi'
+import { Cross1Icon } from '@radix-ui/react-icons'
 
 import {
+  FormErrorsCargo,
+  FormErrorsDeliveryPoint,
   initialCargo,
   initialDeliveryData,
+  initialErrorsCargo,
+  initialErrorsDeliveryPoint,
   PropsAddCargo,
   PropsAddDeliveryPoint,
   PropsAddShipment
 } from '@/components/types/Shipment'
+import ErrorText from '@/components/ErrorText'
 
 interface Props {
   dataShipment: PropsAddShipment
   setDataShipment: Dispatch<SetStateAction<PropsAddShipment>>
-  mapRef: React.RefObject<undefined>
+  mapRef: React.RefObject<any>
 }
 
 const DeliveryPointsForm: React.FC<Props> = ({
@@ -24,27 +31,99 @@ const DeliveryPointsForm: React.FC<Props> = ({
   const [dataDeliveryPoint, setDataDeliveryPoint] =
     useState<PropsAddDeliveryPoint>(initialDeliveryData)
   const [dataCargo, setDataCargo] = useState<PropsAddCargo>(initialCargo)
+  const [editIndex, setEditIndex] = useState<number | null>(null)
+  const [editCargoIndex, setEditCargoIndex] = useState<number | null>(null)
   const [showDeliveryForm, setShowDeliveryForm] = useState<boolean>(false)
   const [showCargoForm, setShowCargoForm] = useState<boolean>(false)
-  const [error, setError] = useState<string>('')
+
+  const [formErrorsDeliveryPoint, setFormErrorsDeliveryPoint] =
+    useState<FormErrorsDeliveryPoint>(initialErrorsDeliveryPoint)
+  const [formErrorsCargo, setFormErrorsCargo] =
+    useState<FormErrorsCargo>(initialErrorsCargo)
+
+  /* Cargo handlers */
+
+  const validationsCargo = () => {
+    const errorsForm: FormErrorsCargo = {}
+
+    if (!dataCargo.product.trim()) {
+      errorsForm.product = 'Debe ingresar un producto.'
+    }
+
+    if (!dataCargo.quantity) {
+      errorsForm.quantity = `Este campo no debe ser vacío o igual a 0.`
+    } else if (dataCargo.quantity <= 0) {
+      errorsForm.quantity = 'Este valor debe ser mayor a 0.'
+    }
+
+    return errorsForm
+  }
 
   const handleCargoInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
     setDataCargo({ ...dataCargo, [name]: value })
+    setFormErrorsCargo({ ...formErrorsCargo, [name]: '' })
   }
 
   const handleAddCargoToDeliveryPoint = () => {
+    const err = validationsCargo()
+    setFormErrorsCargo(err)
+
+    if (Object.keys(err).length === 0) {
+      if (editCargoIndex !== null) {
+        const updatedCargo = [...dataDeliveryPoint.cargo]
+        updatedCargo[editCargoIndex] = dataCargo
+
+        setDataDeliveryPoint({
+          ...dataDeliveryPoint,
+          cargo: updatedCargo
+        })
+      } else {
+        setDataDeliveryPoint({
+          ...dataDeliveryPoint,
+          cargo: [...dataDeliveryPoint.cargo, dataCargo]
+        })
+      }
+
+      setDataCargo(initialCargo)
+      setShowCargoForm(false)
+      setEditCargoIndex(null)
+    }
+  }
+
+  const handleEditCargo = (index: number) => {
+    setDataCargo(dataDeliveryPoint.cargo[index])
+    setShowCargoForm(true)
+    setEditCargoIndex(index)
+  }
+
+  const handleDeleteCargo = (index: number) => {
     setDataDeliveryPoint({
       ...dataDeliveryPoint,
-      cargo: [...dataDeliveryPoint.cargo, dataCargo]
+      cargo: dataDeliveryPoint.cargo.filter((_, i) => i !== index)
     })
-    setDataCargo(initialCargo)
-    setShowCargoForm(false)
+  }
+
+  /* Delivery point handlers */
+
+  const validationsDeliveryPoint = () => {
+    const errorsForm: FormErrorsDeliveryPoint = {}
+
+    if (!dataDeliveryPoint.name.trim()) {
+      errorsForm.name = 'Debe ingresar un nombre.'
+    }
+
+    /* if (!dataDeliveryPoint.destination) {
+      errorsForm.destination = 'Debe seleccionar una ubicación.'
+    } */
+
+    return errorsForm
   }
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
     setDataDeliveryPoint({ ...dataDeliveryPoint, [name]: value })
+    setFormErrorsDeliveryPoint({ ...formErrorsDeliveryPoint, [name]: '' })
   }
 
   const handleTextAreaChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -52,58 +131,102 @@ const DeliveryPointsForm: React.FC<Props> = ({
     setDataDeliveryPoint({ ...dataDeliveryPoint, [name]: value })
   }
 
-  const handleAddDeliveryPoint = () => {
-    if (dataDeliveryPoint.cargo.length === 0) {
-      setError('No se puede agregar un punto de entrega sin cargas.')
-      return
-    }
+  const handleEditDeliveryPoint = (index: number) => {
+    setDataDeliveryPoint(dataShipment.delivery_points[index])
+    setShowDeliveryForm(true)
+    setEditIndex(index)
+  }
 
+  const handleDeleteDeliveryPoint = (index: number) => {
     setDataShipment({
       ...dataShipment,
-      delivery_points: [...dataShipment.delivery_points, dataDeliveryPoint]
+      delivery_points: dataShipment.delivery_points.filter(
+        (_, i) => i !== index
+      )
     })
-    setDataDeliveryPoint(initialDeliveryData)
-    setShowDeliveryForm(false)
-    setError('')
+  }
+
+  const handleAddDeliveryPoint = () => {
+    const err = validationsDeliveryPoint()
+    setFormErrorsDeliveryPoint(err)
+
+    if (Object.keys(err).length === 0) {
+      if (dataDeliveryPoint.cargo.length === 0) {
+        setFormErrorsDeliveryPoint({
+          ...formErrorsDeliveryPoint,
+          delivery_point: 'No se puede agregar un punto de entrega sin cargas.'
+        })
+        return
+      }
+
+      if (editIndex !== null) {
+        const updatedDeliveryPoints = [...dataShipment.delivery_points]
+        updatedDeliveryPoints[editIndex] = dataDeliveryPoint
+
+        setDataShipment({
+          ...dataShipment,
+          delivery_points: updatedDeliveryPoints
+        })
+      } else {
+        setDataShipment({
+          ...dataShipment,
+          delivery_points: [...dataShipment.delivery_points, dataDeliveryPoint]
+        })
+      }
+
+      setDataDeliveryPoint(initialDeliveryData)
+      setShowDeliveryForm(false)
+      setFormErrorsDeliveryPoint(initialErrorsDeliveryPoint)
+      setEditIndex(null)
+    }
   }
 
   return (
     <div className="">
       <h1 className="text-2xl font-bold mb-6">Puntos de entrega</h1>
-      <div
-        className="w-full border mb-4 p-4 rounded-md cursor-pointer"
-        onClick={() => setShowDeliveryForm(true)}
-      >
-        <div className="flex items-center justify-center">
-          <p>
-            <CgAdd className="h-8 w-8" />
-          </p>
-          <p className="ml-2">Agregar punto de entrega</p>
+      {!showDeliveryForm ? (
+        <div
+          className="w-full border border-gray-400 dark:border-gray-700 mb-2 p-2 rounded-md cursor-pointer animate-custom-pulse transition ease-in-out duration-700 hover:scale-[1.02]"
+          onClick={() => setShowDeliveryForm(true)}
+        >
+          <div className="flex items-center justify-center">
+            <p>
+              <CgAdd className="h-8 w-8" />
+            </p>
+            <p className="ml-2">Agregar punto de entrega</p>
+          </div>
         </div>
-      </div>
-      {showDeliveryForm && (
-        <div className="p-4 border w-full rounded-md">
-          <div className="grid grid-cols-2 gap-4">
-            <div className="mb-4">
-              <label
-                htmlFor="name"
-                className="block text-sm font-medium text-gray-700"
-              >
-                Nombre
-              </label>
+      ) : (
+        <div className="p-4 border border-gray-400 dark:border-gray-700 w-full rounded-md ">
+          <div className="flex justify-end">
+            <Cross1Icon
+              className="h-5 w-5 text-red-700 cursor-pointer"
+              onClick={() => setShowDeliveryForm(false)}
+            />
+          </div>
+          <div className="grid grid-cols-2 gap-4 mb-6">
+            <div>
+              <div className="flex gap-4 items-center">
+                <label htmlFor="name" className="font-light text-foreground">
+                  Nombre
+                </label>
+                {formErrorsDeliveryPoint.name && (
+                  <ErrorText text={formErrorsDeliveryPoint.name} />
+                )}
+              </div>
               <input
                 type="text"
                 id="name"
                 name="name"
                 value={dataDeliveryPoint.name}
                 onChange={handleInputChange}
-                className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                className="mt-1 block w-full p-2 border border-gray-400 dark:border-gray-700 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
               />
             </div>
-            <div className="mb-4">
+            <div>
               <label
                 htmlFor="description"
-                className="block text-sm font-medium text-gray-700"
+                className="font-light text-foreground"
               >
                 Descripción
               </label>
@@ -112,82 +235,124 @@ const DeliveryPointsForm: React.FC<Props> = ({
                 name="description"
                 value={dataDeliveryPoint.description}
                 onChange={handleTextAreaChange}
-                className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                rows={1}
+                className="mt-1 block w-full p-2 border border-gray-400 dark:border-gray-700 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
               />
             </div>
           </div>
-          <div className="mb-4">
-            <p className="block text-sm font-medium text-gray-700">Cargas:</p>
-            <ul className="list-disc list-inside">
-              {dataDeliveryPoint.cargo.map((cargo, index) => (
-                <li key={index}>
-                  {cargo.product} - {cargo.quantity}
-                </li>
-              ))}
-            </ul>
-          </div>
-          <div className="mb-4">
-            <div
-              className="w-full border mb-2 p-2 rounded-md cursor-pointer"
-              onClick={() => setShowCargoForm(true)}
-            >
-              <div className="flex items-center justify-center">
-                <p>
-                  <CgAdd className="h-8 w-8" />
-                </p>
-                <p className="ml-2">Agregar carga</p>
+          <div className="p-4 border border-gray-400 dark:border-gray-700 rounded-lg mb-4">
+            <div className="mb-4">
+              <div className="flex gap-4 items-center mb-4">
+                <p className="font-light text-foreground">Cargas</p>
+                {formErrorsDeliveryPoint.delivery_point && (
+                  <ErrorText text={formErrorsDeliveryPoint.delivery_point} />
+                )}
+              </div>
+              <div className="flex flex-col gap-2">
+                {dataDeliveryPoint.cargo.map((cargo, index) => (
+                  <div
+                    key={index}
+                    className="flex justify-between items-center border border-green-200 dark:border-green-900 p-2 mx-8 rounded-md mb-2"
+                  >
+                    <p>
+                      {cargo.product} - {cargo.quantity}
+                    </p>
+                    <div className="flex gap-2 max-w-fit mr-4">
+                      <BiEdit
+                        className="h-5 w-5 cursor-pointer text-blue-500 transition duration-300 ease-in-out hover:text-blue-700"
+                        onClick={() => handleEditCargo(index)}
+                      />
+                      <BiTrash
+                        className="h-5 w-5 cursor-pointer text-red-500 transition duration-300 ease-in-out hover:text-red-700"
+                        onClick={() => handleDeleteCargo(index)}
+                      />
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
-            {showCargoForm && (
-              <div className="p-4 border w-full rounded-md">
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="mb-2">
-                    <label
-                      htmlFor="cargo"
-                      className="block text-sm font-medium text-gray-700"
-                    >
-                      Tipo de carga
-                    </label>
-                    <input
-                      type="text"
-                      id="cargo"
-                      name="product"
-                      value={dataCargo.product}
-                      onChange={handleCargoInputChange}
-                      className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                    />
-                  </div>
-                  <div className="mb-2">
-                    <label
-                      htmlFor="quantity"
-                      className="block text-sm font-medium text-gray-700"
-                    >
-                      Cantidad
-                    </label>
-                    <input
-                      type="number"
-                      id="quantity"
-                      name="quantity"
-                      value={dataCargo.quantity}
-                      onChange={handleCargoInputChange}
-                      className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                    />
+            <div className="mb-4">
+              {!showCargoForm ? (
+                <div
+                  className="w-full border border-gray-400 dark:border-gray-700 mb-2 p-2 rounded-md cursor-pointer animate-custom-pulse transition ease-in-out duration-700 hover:scale-[1.02]"
+                  onClick={() => setShowCargoForm(true)}
+                >
+                  <div className="flex items-center justify-center">
+                    <p>
+                      <CgAdd className="h-8 w-8" />
+                    </p>
+                    <p className="ml-2">Agregar carga</p>
                   </div>
                 </div>
-                <div>
-                  <Button
-                    onClick={handleAddCargoToDeliveryPoint}
-                    className="w-full"
-                  >
-                    Agregar carga
-                  </Button>
+              ) : (
+                <div className="p-4 border border-gray-400 dark:border-gray-700 w-full rounded-md">
+                  <div className="flex justify-end">
+                    <Cross1Icon
+                      className="h-5 w-5 text-red-700 cursor-pointer"
+                      onClick={() => setShowCargoForm(false)}
+                    />
+                  </div>
+                  <div className="grid grid-cols-2 gap-4 mb-4">
+                    <div className="mb-2">
+                      <div className="flex gap-4 items-center">
+                        <label
+                          htmlFor="quantity"
+                          className="font-light text-foreground"
+                        >
+                          Cantidad
+                        </label>
+                        {formErrorsCargo.quantity && (
+                          <ErrorText text={formErrorsCargo.quantity} />
+                        )}
+                      </div>
+                      <input
+                        type="number"
+                        id="quantity"
+                        name="quantity"
+                        value={dataCargo.quantity}
+                        onChange={handleCargoInputChange}
+                        className="mt-1 block w-full p-2 border border-gray-400 dark:border-gray-700 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                      />
+                    </div>
+                    <div className="mb-2">
+                      <div className="flex gap-4 items-center">
+                        <label
+                          htmlFor="cargo"
+                          className="font-light text-foreground"
+                        >
+                          Tipo de carga (producto)
+                        </label>
+                        {formErrorsCargo.product && (
+                          <ErrorText text={formErrorsCargo.product} />
+                        )}
+                      </div>
+                      <input
+                        type="text"
+                        id="cargo"
+                        name="product"
+                        value={dataCargo.product}
+                        onChange={handleCargoInputChange}
+                        className="mt-1 block w-full p-2 border border-gray-400 dark:border-gray-700 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                      />
+                    </div>
+                  </div>
+                  <div className="flex justify-end">
+                    <Button
+                      onClick={handleAddCargoToDeliveryPoint}
+                      className="text-foreground bg-green-500 transition duration-300 ease-in-out hover:bg-green-600"
+                    >
+                      Agregar carga
+                    </Button>
+                  </div>
                 </div>
-              </div>
-            )}
+              )}
+            </div>
           </div>
-          {error && <p className="text-red-500 mb-2">{error}</p>}
-          <div>
-            <Button onClick={handleAddDeliveryPoint} className="w-full">
+          <div className="flex justify-end">
+            <Button
+              onClick={handleAddDeliveryPoint}
+              className="text-foreground bg-green-500 transition duration-300 ease-in-out hover:bg-green-600"
+            >
               Agregar punto de entrega
             </Button>
           </div>
@@ -196,23 +361,34 @@ const DeliveryPointsForm: React.FC<Props> = ({
       {dataShipment.delivery_points.length > 0 && (
         <div className="mt-4">
           {dataShipment.delivery_points.map((point, index) => (
-            <div key={index} className="border p-2 rounded-md mb-2">
-              <p>
-                {index + 1}. {point.name}
-              </p>
+            <div
+              key={index}
+              className="flex justify-between items-center border p-2 rounded-md mb-2"
+            >
               <div>
+                <p>
+                  {index + 1}. {point.name}
+                </p>
+                <p>{point.description}</p>
+                <p>Cargas:</p>
+                {point.cargo.map((cargo, i) => (
+                  <p key={i}>
+                    {i + 1}. {cargo.product} - {cargo.quantity}
+                  </p>
+                ))}
+              </div>
+              <div className="flex flex-col gap-2 max-w-fit mr-4">
                 <Button
-                  className="text-white bg-red-500 hover:bg-red-700"
-                  onClick={() => {
-                    setDataShipment({
-                      ...dataShipment,
-                      delivery_points: dataShipment.delivery_points.filter(
-                        (p, i) => i !== index
-                      )
-                    })
-                  }}
+                  className="text-white bg-blue-500 transition duration-300 ease-in-out hover:bg-blue-700"
+                  onClick={() => handleEditDeliveryPoint(index)}
                 >
-                  Eliminar
+                  <BiEdit className="h-5 w-5" />
+                </Button>
+                <Button
+                  className="text-white bg-red-500 transition duration-300 ease-in-out hover:bg-red-700"
+                  onClick={() => handleDeleteDeliveryPoint(index)}
+                >
+                  <BiTrash className="h-5 w-5" />
                 </Button>
               </div>
             </div>
