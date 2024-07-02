@@ -16,25 +16,31 @@ import {
   PropsAddShipment
 } from '@/components/types/Shipment'
 import ErrorText from '@/components/ErrorText'
+import { MdEditLocationAlt } from 'react-icons/md'
+import { TbMapPinCheck } from 'react-icons/tb'
 
 interface Props {
   dataShipment: PropsAddShipment
   setDataShipment: Dispatch<SetStateAction<PropsAddShipment>>
+  dataDeliveryPoint: PropsAddDeliveryPoint
+  setDataDeliveryPoint: Dispatch<SetStateAction<PropsAddDeliveryPoint>>
   mapRef: React.RefObject<any>
 }
 
 const DeliveryPointsForm: React.FC<Props> = ({
   dataShipment,
   setDataShipment,
+  dataDeliveryPoint,
+  setDataDeliveryPoint,
   mapRef
 }) => {
-  const [dataDeliveryPoint, setDataDeliveryPoint] =
-    useState<PropsAddDeliveryPoint>(initialDeliveryData)
   const [dataCargo, setDataCargo] = useState<PropsAddCargo>(initialCargo)
   const [editIndex, setEditIndex] = useState<number | null>(null)
   const [editCargoIndex, setEditCargoIndex] = useState<number | null>(null)
   const [showDeliveryForm, setShowDeliveryForm] = useState<boolean>(false)
   const [showCargoForm, setShowCargoForm] = useState<boolean>(false)
+  const [markerOnEdit, setMarkerOnEdit] = useState<boolean>(false)
+  const [locationConfirm, setLocationConfirm] = useState<boolean>(false)
 
   const [formErrorsDeliveryPoint, setFormErrorsDeliveryPoint] =
     useState<FormErrorsDeliveryPoint>(initialErrorsDeliveryPoint)
@@ -88,6 +94,10 @@ const DeliveryPointsForm: React.FC<Props> = ({
       setDataCargo(initialCargo)
       setShowCargoForm(false)
       setEditCargoIndex(null)
+      setFormErrorsDeliveryPoint({
+        ...formErrorsDeliveryPoint,
+        delivery_point: ''
+      })
     }
   }
 
@@ -113,9 +123,9 @@ const DeliveryPointsForm: React.FC<Props> = ({
       errorsForm.name = 'Debe ingresar un nombre.'
     }
 
-    /* if (!dataDeliveryPoint.destination) {
+    if (!locationConfirm || !dataDeliveryPoint.destination) {
       errorsForm.destination = 'Debe seleccionar una ubicación.'
-    } */
+    }
 
     return errorsForm
   }
@@ -135,6 +145,7 @@ const DeliveryPointsForm: React.FC<Props> = ({
     setDataDeliveryPoint(dataShipment.delivery_points[index])
     setShowDeliveryForm(true)
     setEditIndex(index)
+    setLocationConfirm(true)
   }
 
   const handleDeleteDeliveryPoint = (index: number) => {
@@ -144,6 +155,26 @@ const DeliveryPointsForm: React.FC<Props> = ({
         (_, i) => i !== index
       )
     })
+  }
+
+  const handleAddMarker = () => {
+    setDataDeliveryPoint({
+      ...dataDeliveryPoint,
+      destination: mapRef.current.getCenter()
+    })
+    setMarkerOnEdit(true)
+  }
+
+  const handleCancel = () => {
+    setMarkerOnEdit(false)
+    setLocationConfirm(false)
+    setDataDeliveryPoint({ ...dataDeliveryPoint, destination: null })
+  }
+
+  const handleConfirm = () => {
+    setMarkerOnEdit(false)
+    setLocationConfirm(true)
+    setFormErrorsDeliveryPoint({ ...formErrorsDeliveryPoint, destination: '' })
   }
 
   const handleAddDeliveryPoint = () => {
@@ -178,6 +209,8 @@ const DeliveryPointsForm: React.FC<Props> = ({
       setShowDeliveryForm(false)
       setFormErrorsDeliveryPoint(initialErrorsDeliveryPoint)
       setEditIndex(null)
+      setMarkerOnEdit(false)
+      setLocationConfirm(false)
     }
   }
 
@@ -239,6 +272,51 @@ const DeliveryPointsForm: React.FC<Props> = ({
                 className="mt-1 block w-full p-2 border border-gray-400 dark:border-gray-700 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
               />
             </div>
+          </div>
+          <div className="flex gap-4 items-center">
+            <label htmlFor="destination" className="font-light text-foreground">
+              Ubicación destino
+            </label>
+            {formErrorsDeliveryPoint.destination && (
+              <ErrorText text={formErrorsDeliveryPoint.destination} />
+            )}
+          </div>
+          <div className="flex w-full justify-between items-center mt-2 mb-6">
+            <div className="flex gap-4">
+              <Button
+                type="button"
+                disabled={markerOnEdit}
+                className="flex gap-2 items-center bg-sky-500 text-foreground transition duration-300 ease-in-out hover:bg-sky-600"
+                onClick={handleAddMarker}
+              >
+                <MdEditLocationAlt className="h-5 w-5" /> Marcar en el mapa
+              </Button>
+              {markerOnEdit && (
+                <div className="flex gap-2">
+                  <Button
+                    type="button"
+                    onClick={handleCancel}
+                    className="p-2 bg-red-600 text-foreground mb-4 transition duration-300 ease-in-out hover:bg-red-700"
+                  >
+                    Cancelar
+                  </Button>
+                  <Button
+                    type="button"
+                    className="bg-green-500 text-foreground mb-4 transition duration-300 ease-in-out hover:bg-green-600"
+                    onClick={handleConfirm}
+                  >
+                    Confirmar
+                  </Button>
+                </div>
+              )}
+            </div>
+
+            {locationConfirm && (
+              <div className="flex items-center gap-2 p-4 border border-gray-400 dark:border-gray-700 rounded-md">
+                <TbMapPinCheck className="h-5 w-5 text-green-500" />
+                <p>Ubicación agregada</p>
+              </div>
+            )}
           </div>
           <div className="p-4 border border-gray-400 dark:border-gray-700 rounded-lg mb-4">
             <div className="mb-4">
