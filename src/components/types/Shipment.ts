@@ -108,6 +108,51 @@ export const initialData: PropsAddShipment = {
   time_end: ''
 }
 
+export const initialDataEdit: PropsAddShipment = {
+  id: 3,
+  fleet_id: 2,
+  assigned_driver_id: 2,
+  delivery_points: [
+    {
+      id: 1,
+      name: 'Punto 1',
+      destination: { lat: -34.88204962931506, lng: -57.91417848120565 },
+      cargo: [
+        { quantity: 2, product: 'Vianda normal' },
+        { quantity: 2, product: 'Vianda especial' }
+      ],
+      status: 'Completado'
+    },
+    {
+      id: 2,
+      name: 'Punto 2',
+      destination: { lat: -34.88183840030232, lng: -57.91396390448096 },
+      cargo: [
+        { quantity: 3, product: 'Vianda normal' },
+        { quantity: 2, product: 'Vianda especial' }
+      ],
+      status: 'En progreso'
+    },
+    {
+      id: 3,
+      name: 'Punto 3',
+      destination: { lat: -34.88173718620799, lng: -57.91377614984685 },
+      cargo: [
+        { quantity: 2, product: 'Vianda normal' },
+        { quantity: 4, product: 'Vianda especial' }
+      ],
+      status: 'Pendiente'
+    }
+  ],
+  name: 'Envío 3',
+  description: 'Descripción de envío',
+  date: new Date(
+    'Mon Jul 01 2024 21:13:44 GMT-0300 (hora estándar de Argentina)'
+  ),
+  time_start: '19:30',
+  time_end: '21:15'
+}
+
 export interface FormErrorsShipment {
   fleet_id?: string
   assigned_driver_id?: string
