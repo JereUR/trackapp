@@ -50,6 +50,7 @@ const MapForm = ({
       zoom={ZOOM_LEVEL_FORM}
       style={{ height: '80vh', width: '100%' }}
       whenCreated={setMap}
+      className="z-20"
       ref={mapRef}
     >
       <TileLayer
