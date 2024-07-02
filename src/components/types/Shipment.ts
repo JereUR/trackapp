@@ -156,6 +156,7 @@ export const initialDataEdit: PropsAddShipment = {
 export interface FormErrorsShipment {
   fleet_id?: string
   assigned_driver_id?: string
+  delivery_points?:string
   name?: string
   description?: string
   date?: string
@@ -189,6 +190,7 @@ export const initialErrorsCargo: FormErrorsCargo = {
 export const initialErrorsShipment: FormErrorsShipment = {
   fleet_id: '',
   assigned_driver_id: '',
+  delivery_points:'',
   name: '',
   description: '',
   date: '',
