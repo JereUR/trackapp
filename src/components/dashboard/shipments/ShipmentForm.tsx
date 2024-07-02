@@ -8,13 +8,20 @@ import ErrorText from '@/components/ErrorText'
 import useUser from '@/components/hooks/useUser'
 import {
   FormErrorsShipment,
+  initialDeliveryData,
   initialErrorsShipment,
+  PropsAddDeliveryPoint,
   PropsAddShipment,
   times
 } from '@/components/types/Shipment'
 import { User } from '@/components/types/User'
 import { Button } from '@/components/ui/button'
 import DeliveryPointsForm from './DeliveryPointsForm'
+import dynamic from 'next/dynamic'
+
+const MapForm = dynamic(() => import('@/components/dashboard/maps/MapForm'), {
+  ssr: false
+})
 
 interface Props {
   type: string
@@ -23,6 +30,8 @@ interface Props {
 
 const ShipmentForm: React.FC<Props> = ({ type, shipment }) => {
   const [dataShipment, setDataShipment] = useState<PropsAddShipment>(shipment)
+  const [dataDeliveryPoint, setDataDeliveryPoint] =
+    useState<PropsAddDeliveryPoint>(initialDeliveryData)
   const [formErrors, setFormErrors] = useState<FormErrorsShipment>(
     initialErrorsShipment
   )
@@ -80,9 +89,9 @@ const ShipmentForm: React.FC<Props> = ({ type, shipment }) => {
 
   return (
     <div className="">
-      <h1 className="text-2xl font-bold mb-6">Agregar Envío</h1>
       <div className="flex">
         <div className="flex-1 pr-4">
+          <h1 className="text-2xl font-bold mb-6">Agregar Envío</h1>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
               <div>
@@ -236,6 +245,8 @@ const ShipmentForm: React.FC<Props> = ({ type, shipment }) => {
             <DeliveryPointsForm
               dataShipment={dataShipment}
               setDataShipment={setDataShipment}
+              dataDeliveryPoint={dataDeliveryPoint}
+              setDataDeliveryPoint={setDataDeliveryPoint}
               mapRef={mapRef}
             />
             <div className="flex justify-end gap-2 mt-4">
@@ -255,11 +266,12 @@ const ShipmentForm: React.FC<Props> = ({ type, shipment }) => {
           </form>
         </div>
         <div className="flex-1 pl-4">
-          {/* Aquí va el mapa */}
-          <div
-            id="map"
-            className="h-full w-full border border-gray-400 dark:border-gray-700 rounded-md"
-          ></div>
+          <MapForm
+            dataShipment={dataShipment}
+            dataDeliveryPoint={dataDeliveryPoint}
+            setDataDeliveryPoint={setDataDeliveryPoint}
+            mapRef={mapRef}
+          />
         </div>
       </div>
     </div>
