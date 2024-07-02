@@ -20,29 +20,19 @@ type ShipmentsContextType = {
     q: string
     fleets_id: number[]
   }) => Promise<void>
-  getShipmentById: ({
-    id,
-    fleet_id
-  }: {
-    id: string
-    fleet_id: number
-  }) => Promise<Shipment | null>
+  getShipmentById: ({ id }: { id: string }) => Promise<Shipment | null>
   getOnProgressShipments: () => Promise<Shipment[]>
   addShipment: ({
-    dataShipment,
-    fleet_id
+    dataShipment
   }: {
     dataShipment: PropsAddShipment
-    fleet_id: number
   }) => Promise<boolean>
   updateShipment: ({
-    dataShipment,
-    fleet_id
+    dataShipment
   }: {
     dataShipment: PropsAddShipment
-    fleet_id: number
   }) => Promise<boolean>
-  deleteShipmentsById: (Shipments: number[]) => Promise<boolean>
+  deleteShipmentsById: (shipments: number[]) => Promise<boolean>
 }
 
 export const ShipmentsContext = createContext<ShipmentsContextType | null>(null)
@@ -171,16 +161,13 @@ export default function ShipmentsContextProvider({
   }
 
   async function getShipmentById({
-    id,
-    fleet_id
+    id
   }: {
     id: string
-    fleet_id: number
   }): Promise<Shipment | null> {
     setLoadingShipment(true)
     const params = new URLSearchParams()
     params.append('id', id)
-    params.append('fleet_id', fleet_id.toString())
     const url = `${BASE_URL}api/v1/shipment?${params.toString()}`
     try {
       const response = await axios.get(url, {
@@ -212,16 +199,14 @@ export default function ShipmentsContextProvider({
   }
 
   async function addShipment({
-    dataShipment,
-    fleet_id
+    dataShipment
   }: {
     dataShipment: PropsAddShipment
-    fleet_id: number
   }): Promise<boolean> {
     setLoadingShipment(true)
 
     const newShipment = {
-      fleet_id,
+      fleet_id: dataShipment.fleet_id,
       assigned_driver: dataShipment.assigned_driver,
       delivery_points: dataShipment.delivery_points,
       name: dataShipment.name,
@@ -268,16 +253,14 @@ export default function ShipmentsContextProvider({
   }
 
   async function updateShipment({
-    dataShipment,
-    fleet_id
+    dataShipment
   }: {
     dataShipment: PropsAddShipment
-    fleet_id: number
   }): Promise<boolean> {
     setLoadingShipment(true)
     const newShipment = {
       id: dataShipment.id,
-      fleet_id,
+      fleet_id: dataShipment.fleet_id,
       assigned_driver: dataShipment.assigned_driver,
       delivery_points: dataShipment.delivery_points,
       name: dataShipment.name,
