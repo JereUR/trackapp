@@ -108,10 +108,16 @@ const DeliveryPointsForm: React.FC<Props> = ({
   }
 
   const handleDeleteCargo = (index: number) => {
-    setDataDeliveryPoint({
-      ...dataDeliveryPoint,
-      cargo: dataDeliveryPoint.cargo.filter((_, i) => i !== index)
-    })
+    if (
+      window.confirm(
+        `¿Estás seguro de que deseas eliminar la carga del producto '${dataDeliveryPoint.cargo[index].product}'?`
+      )
+    ) {
+      setDataDeliveryPoint({
+        ...dataDeliveryPoint,
+        cargo: dataDeliveryPoint.cargo.filter((_, i) => i !== index)
+      })
+    }
   }
 
   /* Delivery point handlers */
@@ -149,12 +155,18 @@ const DeliveryPointsForm: React.FC<Props> = ({
   }
 
   const handleDeleteDeliveryPoint = (index: number) => {
-    setDataShipment({
-      ...dataShipment,
-      delivery_points: dataShipment.delivery_points.filter(
-        (_, i) => i !== index
+    if (
+      window.confirm(
+        `¿Estás seguro de que deseas eliminar el punto de entrega '${dataShipment.delivery_points[index].name}'?`
       )
-    })
+    ) {
+      setDataShipment({
+        ...dataShipment,
+        delivery_points: dataShipment.delivery_points.filter(
+          (_, i) => i !== index
+        )
+      })
+    }
   }
 
   const handleAddMarker = () => {
@@ -215,8 +227,7 @@ const DeliveryPointsForm: React.FC<Props> = ({
   }
 
   return (
-    <div className="">
-      <h1 className="text-2xl font-bold mb-6">Puntos de entrega</h1>
+    <div>
       {!showDeliveryForm ? (
         <div
           className="w-full border border-gray-400 dark:border-gray-700 mb-2 p-2 rounded-md cursor-pointer animate-custom-pulse transition ease-in-out duration-700 hover:scale-[1.02]"
@@ -414,7 +425,7 @@ const DeliveryPointsForm: React.FC<Props> = ({
                       />
                     </div>
                   </div>
-                  <div className="flex justify-end">
+                  <div className="flex justify-start">
                     <Button
                       onClick={handleAddCargoToDeliveryPoint}
                       className="text-foreground bg-green-500 transition duration-300 ease-in-out hover:bg-green-600"
@@ -426,7 +437,7 @@ const DeliveryPointsForm: React.FC<Props> = ({
               )}
             </div>
           </div>
-          <div className="flex justify-end">
+          <div className="flex justify-start">
             <Button
               onClick={handleAddDeliveryPoint}
               className="text-foreground bg-green-500 transition duration-300 ease-in-out hover:bg-green-600"
@@ -443,14 +454,17 @@ const DeliveryPointsForm: React.FC<Props> = ({
               key={index}
               className="flex justify-between items-center border p-2 rounded-md mb-2"
             >
-              <div>
-                <p>
-                  {index + 1}. {point.name}
+              <div className="flex flex-col gap-2">
+                <p className="flex gap-1 items-center">
+                  <p className="text-green-600">{index + 1}.</p>
+                  <p className="text-lg font-medium">{point.name}</p>
                 </p>
-                <p>{point.description}</p>
-                <p>Cargas:</p>
+                <p className="text-gray-500 italic text-sm">
+                  {point.description}
+                </p>
+                <p className="underline font-semibold ml-2">Cargas:</p>
                 {point.cargo.map((cargo, i) => (
-                  <p key={i}>
+                  <p key={i} className="text-sm ml-4">
                     {i + 1}. {cargo.product} - {cargo.quantity}
                   </p>
                 ))}

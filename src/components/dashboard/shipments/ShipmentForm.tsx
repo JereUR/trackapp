@@ -8,6 +8,7 @@ import ErrorText from '@/components/ErrorText'
 import useUser from '@/components/hooks/useUser'
 import {
   FormErrorsShipment,
+  initialData,
   initialDeliveryData,
   initialErrorsShipment,
   PropsAddDeliveryPoint,
@@ -18,6 +19,9 @@ import { User } from '@/components/types/User'
 import { Button } from '@/components/ui/button'
 import DeliveryPointsForm from './DeliveryPointsForm'
 import dynamic from 'next/dynamic'
+import useShipments from '@/components/hooks/useShipments'
+import Loader from '@/components/Loader'
+import { useRouter } from 'next/navigation'
 
 const MapForm = dynamic(() => import('@/components/dashboard/maps/MapForm'), {
   ssr: false
@@ -37,11 +41,13 @@ const ShipmentForm: React.FC<Props> = ({ type, shipment }) => {
   )
   const [drivers, setDrivers] = useState<User[]>([])
   const { token, getDrivers, fleets, getFleets } = useUser()
+  const { addShipment, loadingShipment } = useShipments()
 
   const today = new Date().toISOString().split('T')[0]
   const filteredStartTimes = times.filter((time) => time !== '23:30')
   const filteredEndTimes = times.filter((time) => time !== '07:30')
   const mapRef = useRef()
+  const router = useRouter()
 
   useEffect(() => {
     setDataShipment(shipment)
@@ -58,6 +64,40 @@ const ShipmentForm: React.FC<Props> = ({ type, shipment }) => {
       getFleets()
     }
   }, [token])
+
+  const validations = () => {
+    const errors: FormErrorsShipment = {}
+
+    if (!dataShipment.fleet_id) {
+      errors.fleet_id = 'Debe seleccionar una flota.'
+    }
+
+    if (!dataShipment.assigned_driver_id) {
+      errors.assigned_driver_id = 'Debe seleccionar un conductor.'
+    }
+
+    if (!dataShipment.name.trim()) {
+      errors.name = 'Este campo no puede ser vacío.'
+    }
+
+    if (!dataShipment.time_start.trim()) {
+      errors.time_start = 'Debe seleccionar una hora de inicio.'
+    }
+
+    if (!dataShipment.time_end.trim()) {
+      errors.time_end = 'Debe seleccionar una hora estimada de finalización.'
+    }
+
+    if (!dataShipment.date) {
+      errors.date = 'Debe seleccionar una fecha'
+    }
+
+    if (dataShipment.delivery_points.length === 0) {
+      errors.delivery_points = 'Debe agregar al menos un punto de entrega.'
+    }
+
+    return errors
+  }
 
   const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const { name, value } = event.target
@@ -82,9 +122,30 @@ const ShipmentForm: React.FC<Props> = ({ type, shipment }) => {
     setFormErrors({ ...formErrors, [name]: '' })
   }
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleClose = () => {
+    if (
+      window.confirm(
+        '¿Estás seguro que quieres cerrar el formulario? Se perderán todos los cambios'
+      )
+    ) {
+      router.push('/panel-de-control/envios')
+    }
+  }
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
-    // Submit form
+
+    const err = validations()
+    setFormErrors(err)
+
+    if (Object.keys(err).length === 0) {
+      const res = await addShipment({ dataShipment })
+      if (res) {
+        setDataShipment(initialData)
+        setDataDeliveryPoint(initialDeliveryData)
+        setFormErrors(initialErrorsShipment)
+      }
+    }
   }
 
   return (
@@ -95,9 +156,14 @@ const ShipmentForm: React.FC<Props> = ({ type, shipment }) => {
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label htmlFor="fleet" className="font-light text-foreground">
-                  Flota
-                </label>
+                <div className="flex gap-2 items-center">
+                  <label htmlFor="fleet" className="font-light text-foreground">
+                    Flota
+                  </label>
+                  {formErrors.fleet_id && (
+                    <ErrorText text={formErrors.fleet_id} />
+                  )}
+                </div>
                 <select
                   id="fleet"
                   name="fleet_id"
@@ -119,9 +185,17 @@ const ShipmentForm: React.FC<Props> = ({ type, shipment }) => {
                 </select>
               </div>
               <div>
-                <label htmlFor="driver" className="font-light text-foreground">
-                  Conductor
-                </label>
+                <div className="flex gap-2 items-center">
+                  <label
+                    htmlFor="driver"
+                    className="font-light text-foreground"
+                  >
+                    Conductor
+                  </label>
+                  {formErrors.assigned_driver_id && (
+                    <ErrorText text={formErrors.assigned_driver_id} />
+                  )}
+                </div>
                 <select
                   id="driver"
                   name="assigned_driver_id"
@@ -146,9 +220,12 @@ const ShipmentForm: React.FC<Props> = ({ type, shipment }) => {
                 </select>
               </div>
               <div>
-                <label htmlFor="name" className="font-light text-foreground">
-                  Nombre
-                </label>
+                <div className="flex gap-2 items-center">
+                  <label htmlFor="name" className="font-light text-foreground">
+                    Nombre
+                  </label>
+                  {formErrors.name && <ErrorText text={formErrors.name} />}
+                </div>
                 <input
                   type="text"
                   id="name"
@@ -159,9 +236,12 @@ const ShipmentForm: React.FC<Props> = ({ type, shipment }) => {
                 />
               </div>
               <div>
-                <label htmlFor="date" className="font-light text-foreground">
-                  Fecha
-                </label>
+                <div className="flex gap-2 items-center">
+                  <label htmlFor="date" className="font-light text-foreground">
+                    Fecha
+                  </label>
+                  {formErrors.date && <ErrorText text={formErrors.date} />}
+                </div>
                 {formErrors.date && <ErrorText text={formErrors.date} />}
                 <input
                   type="date"
@@ -173,12 +253,17 @@ const ShipmentForm: React.FC<Props> = ({ type, shipment }) => {
                 />
               </div>
               <div>
-                <label
-                  htmlFor="time_start"
-                  className="font-light text-foreground"
-                >
-                  Hora de inicio
-                </label>
+                <div className="flex gap-2 items-center">
+                  <label
+                    htmlFor="time_start"
+                    className="font-light text-foreground"
+                  >
+                    Hora de inicio
+                  </label>
+                  {formErrors.time_start && (
+                    <ErrorText text={formErrors.time_start} />
+                  )}
+                </div>
                 <select
                   id="time_start"
                   name="time_start"
@@ -200,12 +285,17 @@ const ShipmentForm: React.FC<Props> = ({ type, shipment }) => {
                 </select>
               </div>
               <div>
-                <label
-                  htmlFor="time_end"
-                  className="font-light text-foreground"
-                >
-                  Hora estimada de fin
-                </label>
+                <div className="flex gap-2 items-center">
+                  <label
+                    htmlFor="time_end"
+                    className="font-light text-foreground"
+                  >
+                    Hora estimada de fin
+                  </label>
+                  {formErrors.time_end && (
+                    <ErrorText text={formErrors.time_end} />
+                  )}
+                </div>
                 <select
                   id="time_end"
                   name="time_end"
@@ -242,6 +332,12 @@ const ShipmentForm: React.FC<Props> = ({ type, shipment }) => {
                 className="mt-1 block w-full p-2 border border-gray-400 dark:border-gray-700 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
               />
             </div>
+            <div className="flex gap-2 items-center">
+              <p className="text-lg font-light">Puntos de entrega</p>
+              {formErrors.delivery_points && (
+                <ErrorText text={formErrors.delivery_points} />
+              )}
+            </div>
             <DeliveryPointsForm
               dataShipment={dataShipment}
               setDataShipment={setDataShipment}
@@ -253,14 +349,21 @@ const ShipmentForm: React.FC<Props> = ({ type, shipment }) => {
               <Button
                 type="button"
                 className="flex gap-2 items-center text-foreground bg-red-500 hover:bg-red-600"
+                onClick={handleClose}
               >
                 <Cross2Icon className="h-5 w-5" /> Cerrar
               </Button>
               <Button
                 type="submit"
-                className="flex gap-2 items-center text-foreground bg-green-500 hover:bg-green-600"
+                className=" text-foreground bg-green-500 hover:bg-green-600"
               >
-                <BsCheck2 className="h-5 w-5" /> Agregar envío
+                {loadingShipment ? (
+                  <p className="flex gap-2 items-center">
+                    <BsCheck2 className="h-5 w-5" /> Agregar envío
+                  </p>
+                ) : (
+                  <Loader className="bg-green-500" />
+                )}
               </Button>
             </div>
           </form>
