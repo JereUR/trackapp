@@ -362,7 +362,7 @@ const ShipmentForm: React.FC<Props> = ({ type, shipment }) => {
                     <BsCheck2 className="h-5 w-5" /> Agregar envío
                   </p>
                 ) : (
-                  <Loader className="bg-green-500" />
+                  <Loader color="border-t-green-500" />
                 )}
               </Button>
             </div>

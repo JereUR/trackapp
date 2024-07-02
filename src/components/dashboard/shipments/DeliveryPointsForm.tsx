@@ -459,15 +459,17 @@ const DeliveryPointsForm: React.FC<Props> = ({
                   <p className="text-green-600">{index + 1}.</p>
                   <p className="text-lg font-medium">{point.name}</p>
                 </p>
-                <p className="text-gray-500 italic text-sm">
-                  {point.description}
-                </p>
-                <p className="underline font-semibold ml-2">Cargas:</p>
-                {point.cargo.map((cargo, i) => (
-                  <p key={i} className="text-sm ml-4">
-                    {i + 1}. {cargo.product} - {cargo.quantity}
+                <div className="flex flex-col gap-2 ml-4">
+                  <p className="text-gray-500 italic text-sm">
+                    {point.description}
                   </p>
-                ))}
+                  <p className="underline font-semibold ml-2">Cargas:</p>
+                  {point.cargo.map((cargo, i) => (
+                    <p key={i} className="text-sm ml-4">
+                      {i + 1}. {cargo.product} - {cargo.quantity}
+                    </p>
+                  ))}
+                </div>
               </div>
               <div className="flex flex-col gap-2 max-w-fit mr-4">
                 <Button
