@@ -22,6 +22,7 @@ import dynamic from 'next/dynamic'
 import useShipments from '@/components/hooks/useShipments'
 import Loader from '@/components/Loader'
 import { useRouter } from 'next/navigation'
+import { useToast } from '@/components/ui/use-toast'
 
 const MapForm = dynamic(() => import('@/components/dashboard/maps/MapForm'), {
   ssr: false
@@ -41,17 +42,18 @@ const ShipmentForm: React.FC<Props> = ({ type, shipment }) => {
   )
   const [drivers, setDrivers] = useState<User[]>([])
   const { token, getDrivers, fleets, getFleets } = useUser()
-  const { addShipment, loadingShipment } = useShipments()
+  const { addShipment, updateShipment, loadingShipment } = useShipments()
 
   const today = new Date().toISOString().split('T')[0]
   const filteredStartTimes = times.filter((time) => time !== '23:30')
   const filteredEndTimes = times.filter((time) => time !== '07:30')
   const mapRef = useRef()
   const router = useRouter()
+  const { toast } = useToast()
 
   useEffect(() => {
     setDataShipment(shipment)
-  }, [])
+  }, [shipment])
 
   useEffect(() => {
     const getDataDrivers = async () => {
@@ -78,6 +80,10 @@ const ShipmentForm: React.FC<Props> = ({ type, shipment }) => {
 
     if (!dataShipment.name.trim()) {
       errors.name = 'Este campo no puede ser vacío.'
+    } else {
+      if (dataShipment.name.length > 20) {
+        errors.name = 'El nombre no puede tener más de 20 caracteres.'
+      }
     }
 
     if (!dataShipment.time_start.trim()) {
@@ -139,12 +145,36 @@ const ShipmentForm: React.FC<Props> = ({ type, shipment }) => {
     setFormErrors(err)
 
     if (Object.keys(err).length === 0) {
-      const res = await addShipment({ dataShipment })
-      if (res) {
-        setDataShipment(initialData)
-        setDataDeliveryPoint(initialDeliveryData)
-        setFormErrors(initialErrorsShipment)
+      if (type === 'add') {
+        const res = await addShipment({ dataShipment })
+        if (res) {
+          toast({
+            title: 'Envío agregado.',
+            description: 'Redireccionando...',
+            className: 'bg-green-600'
+          })
+
+          setTimeout(() => {
+            router.replace('/panel-de-control/envios')
+          }, 1000)
+        }
+      } else {
+        const res = await updateShipment({ dataShipment })
+        if (res) {
+          toast({
+            title: 'Envío actualizado.',
+            description: 'Redireccionando...',
+            className: 'bg-green-600'
+          })
+
+          setTimeout(() => {
+            router.replace('/panel-de-control/envios')
+          }, 1000)
+        }
       }
+      setDataShipment(initialData)
+      setDataDeliveryPoint(initialDeliveryData)
+      setFormErrors(initialErrorsShipment)
     }
   }
 
