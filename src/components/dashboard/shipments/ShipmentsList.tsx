@@ -75,7 +75,7 @@ const ShipmentsList = () => {
       const q = searchParams.get('q') || ''
       getShipments({ q, fleets_id })
     }
-  }, [])
+  }, [token, fleets])
 
   useEffect(() => {
     if (shipments.length > 0) {
@@ -93,15 +93,16 @@ const ShipmentsList = () => {
           <Button className="bg-green-500 mr-8 transition duration-300 ease-in-out hover:bg-green-600 hover:scale-[1.05] text-foreground">
             <Link href={'/panel-de-control/envios/agregar'}>
               <p className="flex gap-2 items-center text-lg font-semibold">
-              <CgAdd className="h-6 w-6" />Agregar
+                <CgAdd className="h-6 w-6" />
+                Agregar
               </p>
             </Link>
           </Button>
           <Button className="bg-purple-500 mr-8 transition duration-300 ease-in-out hover:bg-purple-600 hover:scale-[1.05] text-foreground">
             <Link href={'/panel-de-control/envios/predeterminados'}>
               <p className="flex gap-2 items-center text-lg font-semibold">
-              <MdOutlineDashboardCustomize className="h-6 w-6" />Envíos predeterminados{' '}
-                
+                <MdOutlineDashboardCustomize className="h-6 w-6" />
+                Envíos predeterminados{' '}
               </p>
             </Link>
           </Button>
