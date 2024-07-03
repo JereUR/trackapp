@@ -1,4 +1,5 @@
 import { Metadata } from 'next'
+import { Suspense } from 'react'
 
 import CustomShipmentsList from '@/components/dashboard/shipments/custom/CustomShipmentsList'
 
@@ -7,7 +8,13 @@ export const metadata: Metadata = {
 }
 
 const CustomShipmentsPage = () => {
-  return <CustomShipmentsList />
+  return (
+    <div className="m-10">
+      <Suspense fallback={<div>Loading...</div>}>
+        <CustomShipmentsList />
+      </Suspense>
+    </div>
+  )
 }
 
 export default CustomShipmentsPage
