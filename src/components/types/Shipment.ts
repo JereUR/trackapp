@@ -30,6 +30,8 @@ export type Shipment = {
 export type ShipmentItem = {
   id: number
   fleet_id: number
+  assigned_driver: { first_name: string; last_name: string }
+  delivery_points: DeliveryPoint[]
   name: string
   time_start: string
   time_end: string
@@ -156,7 +158,7 @@ export const initialDataEdit: PropsAddShipment = {
 export interface FormErrorsShipment {
   fleet_id?: string
   assigned_driver_id?: string
-  delivery_points?:string
+  delivery_points?: string
   name?: string
   description?: string
   date?: string
@@ -190,7 +192,7 @@ export const initialErrorsCargo: FormErrorsCargo = {
 export const initialErrorsShipment: FormErrorsShipment = {
   fleet_id: '',
   assigned_driver_id: '',
-  delivery_points:'',
+  delivery_points: '',
   name: '',
   description: '',
   date: '',
