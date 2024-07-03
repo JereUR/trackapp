@@ -1,4 +1,8 @@
-const FleetLegend: React.FC = () => {
+const FleetLegend: React.FC<{
+  fleets: { id: number; name: string }[]
+  selectedFleets: number[]
+  onFleetSelection: (fleetId: number) => void
+}> = ({ fleets, selectedFleets, onFleetSelection }) => {
   const fleetColors: Record<number, string> = {
     1: 'bg-red-500',
     2: 'bg-green-500'
@@ -9,11 +13,21 @@ const FleetLegend: React.FC = () => {
       <h3 className="text-lg font-semibold mb-2">
         Índice de colores por flota
       </h3>
-      <div className="flex space-x-2">
-        {Object.entries(fleetColors).map(([fleetId, color]) => (
-          <div key={fleetId} className="flex items-center">
-            <div className={`w-4 h-4 ${color} rounded-full mr-2`} />
-            <span>Fleet {fleetId}</span>
+      <div className="flex gap-4 items-center ml-4">
+        {fleets.map((fleet) => (
+          <div key={fleet.id} className="flex items-center">
+            <div
+              className={`w-4 h-4 ${
+                fleetColors[fleet.id] || 'bg-gray-500'
+              } rounded-full mr-2`}
+            />
+            <span>{fleet.name}</span>
+            <input
+              type="checkbox"
+              className="ml-2 cursor-pointer"
+              checked={selectedFleets.includes(fleet.id)}
+              onChange={() => onFleetSelection(fleet.id)}
+            />
           </div>
         ))}
       </div>
