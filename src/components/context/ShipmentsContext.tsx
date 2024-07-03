@@ -165,6 +165,7 @@ export default function ShipmentsContextProvider({
   }: {
     id: string
   }): Promise<Shipment | null> {
+    return initialShipments[0]
     setLoadingShipment(true)
     const params = new URLSearchParams()
     params.append('id', id)
