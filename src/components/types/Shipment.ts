@@ -27,6 +27,60 @@ export type Shipment = {
   actual_position?: { lat: number; lng: number; time: string }
 }
 
+export interface PropsAddShipment {
+  id?: number | null
+  fleet_id?: number | null
+  assigned_driver_id: number | null
+  delivery_points: PropsAddDeliveryPoint[]
+  name: string
+  description?: string
+  date: Date
+  time_start: string
+  time_end: string
+  [key: string]:
+    | number
+    | null
+    | PropsAddDeliveryPoint[]
+    | string
+    | Date
+    | undefined
+}
+
+export const initialData: PropsAddShipment = {
+  id: null,
+  fleet_id: null,
+  assigned_driver_id: null,
+  delivery_points: [],
+  name: '',
+  description: '',
+  date: new Date(),
+  time_start: '',
+  time_end: ''
+}
+
+export interface FormErrorsShipment {
+  fleet_id?: string
+  assigned_driver_id?: string
+  delivery_points?: string
+  name?: string
+  description?: string
+  date?: string
+  time_start?: string
+  time_end?: string
+  [key: string]: string | undefined
+}
+
+export const initialErrorsShipment: FormErrorsShipment = {
+  fleet_id: '',
+  assigned_driver_id: '',
+  delivery_points: '',
+  name: '',
+  description: '',
+  date: '',
+  time_start: '',
+  time_end: ''
+}
+
 export type ShipmentItem = {
   id: number
   fleet_id: number
@@ -52,16 +106,6 @@ interface Coords {
   lng: number
 }
 
-export interface PropsAddCargo {
-  quantity: number
-  product: string
-}
-
-export const initialCargo: PropsAddCargo = {
-  quantity: 0,
-  product: ''
-}
-
 export interface PropsAddDeliveryPoint {
   id?: number | null
   name: string
@@ -71,100 +115,12 @@ export interface PropsAddDeliveryPoint {
   [key: string]: number | null | Coords | string | Cargo[] | undefined
 }
 
-export interface PropsAddShipment {
-  id?: number | null
-  fleet_id?: number | null
-  assigned_driver_id: number | null
-  delivery_points: PropsAddDeliveryPoint[]
-  name: string
-  description?: string
-  date: Date
-  time_start: string
-  time_end: string
-  [key: string]:
-    | number
-    | null
-    | PropsAddDeliveryPoint[]
-    | string
-    | Date
-    | undefined
-}
-
-export const initialDeliveryData = {
+export const initialDeliveryData: PropsAddDeliveryPoint = {
   id: null,
   name: '',
   destination: null,
   cargo: [],
   description: ''
-}
-
-export const initialData: PropsAddShipment = {
-  id: null,
-  fleet_id: null,
-  assigned_driver_id: null,
-  delivery_points: [],
-  name: '',
-  description: '',
-  date: new Date(),
-  time_start: '',
-  time_end: ''
-}
-
-export const initialDataEdit: PropsAddShipment = {
-  id: 3,
-  fleet_id: 2,
-  assigned_driver_id: 2,
-  delivery_points: [
-    {
-      id: 1,
-      name: 'Punto 1',
-      destination: { lat: -34.88204962931506, lng: -57.91417848120565 },
-      cargo: [
-        { quantity: 2, product: 'Vianda normal' },
-        { quantity: 2, product: 'Vianda especial' }
-      ],
-      status: 'Completado'
-    },
-    {
-      id: 2,
-      name: 'Punto 2',
-      destination: { lat: -34.88183840030232, lng: -57.91396390448096 },
-      cargo: [
-        { quantity: 3, product: 'Vianda normal' },
-        { quantity: 2, product: 'Vianda especial' }
-      ],
-      status: 'En progreso'
-    },
-    {
-      id: 3,
-      name: 'Punto 3',
-      destination: { lat: -34.88173718620799, lng: -57.91377614984685 },
-      cargo: [
-        { quantity: 2, product: 'Vianda normal' },
-        { quantity: 4, product: 'Vianda especial' }
-      ],
-      status: 'Pendiente'
-    }
-  ],
-  name: 'Envío 3',
-  description: 'Descripción de envío',
-  date: new Date(
-    'Mon Jul 01 2024 21:13:44 GMT-0300 (hora estándar de Argentina)'
-  ),
-  time_start: '19:30',
-  time_end: '21:15'
-}
-
-export interface FormErrorsShipment {
-  fleet_id?: string
-  assigned_driver_id?: string
-  delivery_points?: string
-  name?: string
-  description?: string
-  date?: string
-  time_start?: string
-  time_end?: string
-  [key: string]: string | undefined
 }
 
 export interface FormErrorsDeliveryPoint {
@@ -179,6 +135,16 @@ export const initialErrorsDeliveryPoint: FormErrorsDeliveryPoint = {
   destination: ''
 }
 
+export interface PropsAddCargo {
+  quantity: number
+  product: string
+}
+
+export const initialCargo: PropsAddCargo = {
+  quantity: 0,
+  product: ''
+}
+
 export interface FormErrorsCargo {
   quantity?: string
   product?: string
@@ -187,17 +153,6 @@ export interface FormErrorsCargo {
 export const initialErrorsCargo: FormErrorsCargo = {
   quantity: '',
   product: ''
-}
-
-export const initialErrorsShipment: FormErrorsShipment = {
-  fleet_id: '',
-  assigned_driver_id: '',
-  delivery_points: '',
-  name: '',
-  description: '',
-  date: '',
-  time_start: '',
-  time_end: ''
 }
 
 export const posibleStatus = [
