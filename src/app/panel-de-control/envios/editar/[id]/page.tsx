@@ -1,3 +1,4 @@
+import EditShipment from '@/components/dashboard/shipments/EditShipment'
 import ShipmentForm from '@/components/dashboard/shipments/ShipmentForm'
 import { initialDataEdit } from '@/components/types/Shipment'
 import { Metadata } from 'next'
@@ -7,11 +8,7 @@ export const metadata: Metadata = {
 }
 
 const EditShipmentPage = () => {
-  return (
-    <div className="m-10">
-      <ShipmentForm type="edit" shipment={initialDataEdit} />
-    </div>
-  )
+  return <EditShipment />
 }
 
 export default EditShipmentPage
