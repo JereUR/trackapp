@@ -1,7 +1,6 @@
-import EditShipment from '@/components/dashboard/shipments/EditShipment'
-import ShipmentForm from '@/components/dashboard/shipments/ShipmentForm'
-import { initialDataEdit } from '@/components/types/Shipment'
 import { Metadata } from 'next'
+
+import EditShipment from '@/components/dashboard/shipments/EditShipment'
 
 export const metadata: Metadata = {
   title: 'TrackApp - Editar envío'
