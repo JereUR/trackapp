@@ -3,6 +3,8 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { Cross2Icon } from '@radix-ui/react-icons'
 import { BsCheck2 } from 'react-icons/bs'
+import { useRouter } from 'next/navigation'
+import dynamic from 'next/dynamic'
 
 import ErrorText from '@/components/ErrorText'
 import useUser from '@/components/hooks/useUser'
@@ -18,10 +20,8 @@ import {
 import { User } from '@/components/types/User'
 import { Button } from '@/components/ui/button'
 import DeliveryPointsForm from './DeliveryPointsForm'
-import dynamic from 'next/dynamic'
 import useShipments from '@/components/hooks/useShipments'
 import Loader from '@/components/Loader'
-import { useRouter } from 'next/navigation'
 import { useToast } from '@/components/ui/use-toast'
 
 const MapForm = dynamic(() => import('@/components/dashboard/maps/MapForm'), {

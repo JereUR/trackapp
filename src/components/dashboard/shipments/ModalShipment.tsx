@@ -1,7 +1,8 @@
-import { ShipmentItem } from '@/components/types/Shipment'
 import { Cross1Icon } from '@radix-ui/react-icons'
 import { useRouter } from 'next/navigation'
 import React, { Dispatch, SetStateAction } from 'react'
+
+import { ShipmentItem } from '@/components/types/Shipment'
 
 interface Props {
   activeShipment: ShipmentItem | null

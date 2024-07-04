@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
+
 import { ShipmentGroup, times, ShipmentItem } from '@/components/types/Shipment'
-import { Cross1Icon } from '@radix-ui/react-icons'
 import ModalShipment from './ModalShipment'
 
 interface CalendarProps {

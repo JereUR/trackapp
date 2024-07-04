@@ -1,8 +1,9 @@
 import { useState, Dispatch, SetStateAction } from 'react'
-import { Button } from '@/components/ui/button'
 import { CgAdd } from 'react-icons/cg'
 import { BiEdit, BiTrash } from 'react-icons/bi'
 import { Cross1Icon } from '@radix-ui/react-icons'
+import { MdEditLocationAlt } from 'react-icons/md'
+import { TbMapPinCheck } from 'react-icons/tb'
 
 import {
   FormErrorsCargo,
@@ -15,9 +16,8 @@ import {
   PropsAddDeliveryPoint,
   PropsAddShipment
 } from '@/components/types/Shipment'
+import { Button } from '@/components/ui/button'
 import ErrorText from '@/components/ErrorText'
-import { MdEditLocationAlt } from 'react-icons/md'
-import { TbMapPinCheck } from 'react-icons/tb'
 
 interface Props {
   dataShipment: PropsAddShipment

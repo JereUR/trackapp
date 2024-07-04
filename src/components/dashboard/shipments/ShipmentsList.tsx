@@ -2,6 +2,9 @@
 
 import { useSearchParams } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
+import { CgAdd } from 'react-icons/cg'
+import Link from 'next/link'
+import { MdOutlineDashboardCustomize } from 'react-icons/md'
 
 import useShipments from '@/components/hooks/useShipments'
 import useUser from '@/components/hooks/useUser'
@@ -13,9 +16,6 @@ import {
 } from '@/components/types/Shipment'
 import FleetLegend from './FleetLegend'
 import { Button } from '@/components/ui/button'
-import { CgAdd } from 'react-icons/cg'
-import Link from 'next/link'
-import { MdOutlineDashboardCustomize } from 'react-icons/md'
 
 const groupShipmentsByDate = (shipments: Shipment[]): ShipmentGroup[] => {
   const shipmentGroups: { [date: string]: ShipmentGroup } = {}
