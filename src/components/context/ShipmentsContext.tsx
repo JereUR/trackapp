@@ -693,8 +693,10 @@ export default function ShipmentsContextProvider({
 
     const newCustomPoint = {
       name: dataCustomPoint.name,
-      lat: dataCustomPoint.lat,
-      lng: dataCustomPoint.lng
+      location: {
+        lat: dataCustomPoint.location?.lat,
+        lng: dataCustomPoint.location?.lng
+      }
     }
 
     const url = `${BASE_URL}api/v1/custom-point`
@@ -742,8 +744,10 @@ export default function ShipmentsContextProvider({
     const newCustomPoint = {
       id: dataCustomPoint.id,
       name: dataCustomPoint.name,
-      lat: dataCustomPoint.lat,
-      lng: dataCustomPoint.lng
+      location: {
+        lat: dataCustomPoint.location?.lat,
+        lng: dataCustomPoint.location?.lng
+      }
     }
 
     const url = `${BASE_URL}api/v1/custom-point`
