@@ -6,7 +6,7 @@ export type DeliveryPoint = {
   destination: { lat: number; lng: number }
   cargo: { quantity: number; product: string }[]
   description?: string
-  status: string
+  status?: string
   observations?: string
 }
 
@@ -153,6 +153,41 @@ export interface FormErrorsCargo {
 export const initialErrorsCargo: FormErrorsCargo = {
   quantity: '',
   product: ''
+}
+
+export type CustomShipment = {
+  id: number
+  name: string
+  description?: string
+  delivery_points: DeliveryPoint[]
+}
+
+export interface PropsAddCustomShipment {
+  id?: number | null
+  name: string
+  description?: string
+  delivery_points: PropsAddDeliveryPoint[]
+  [key: string]: number | null | PropsAddDeliveryPoint[] | string | undefined
+}
+
+export const initialDataCustomShipment: PropsAddCustomShipment = {
+  id: null,
+  description: '',
+  name: '',
+  delivery_points: []
+}
+
+export interface FormErrorsCustomShipment {
+  name?: string
+  description?: string
+  delivery_points?: string
+  [key: string]: string | undefined
+}
+
+export const initialErrorsCustomShipment: FormErrorsCustomShipment = {
+  name: '',
+  description: '',
+  delivery_points: ''
 }
 
 export type CustomPoint = {

@@ -1,4 +1,9 @@
-import { CustomPoint, DeliveryPoint, Shipment } from '../types/Shipment'
+import {
+  CustomPoint,
+  CustomShipment,
+  DeliveryPoint,
+  Shipment
+} from '../types/Shipment'
 
 export const initialShipments: Shipment[] = [
   {
@@ -338,39 +343,42 @@ export const onProgressShipments: Shipment[] = [
   }
 ]
 
-export const initialCustomShipments: DeliveryPoint[] = [
+export const initialCustomShipments: CustomShipment[] = [
   {
     id: 1,
-    name: 'Punto 1',
-    description: 'Descripción del Punto 1',
-    destination: { lat: -34.88204962931506, lng: -57.91417848120565 },
-    cargo: [
-      { quantity: 2, product: 'Vianda normal' },
-      { quantity: 2, product: 'Vianda especial' }
-    ],
-    status: 'Programado'
-  },
-  {
-    id: 2,
-    name: 'Punto 2',
-    description: 'Descripción del Punto 2',
-    destination: { lat: -34.88183840030232, lng: -57.91396390448096 },
-    cargo: [
-      { quantity: 3, product: 'Vianda normal' },
-      { quantity: 2, product: 'Vianda especial' }
-    ],
-    status: 'Programado'
-  },
-  {
-    id: 3,
-    name: 'Punto 3',
-    description: 'Descripción del Punto 3',
-    destination: { lat: -34.88173718620799, lng: -57.91377614984685 },
-    cargo: [
-      { quantity: 2, product: 'Vianda normal' },
-      { quantity: 4, product: 'Vianda especial' }
-    ],
-    status: 'Programado'
+    name: 'Envío 1',
+    delivery_points: [
+      {
+        id: 1,
+        name: 'Punto 1',
+        description: 'Descripción del Punto 1',
+        destination: { lat: -34.88204962931506, lng: -57.91417848120565 },
+        cargo: [
+          { quantity: 2, product: 'Vianda normal' },
+          { quantity: 2, product: 'Vianda especial' }
+        ]
+      },
+      {
+        id: 2,
+        name: 'Punto 2',
+        description: 'Descripción del Punto 2',
+        destination: { lat: -34.88183840030232, lng: -57.91396390448096 },
+        cargo: [
+          { quantity: 3, product: 'Vianda normal' },
+          { quantity: 2, product: 'Vianda especial' }
+        ]
+      },
+      {
+        id: 3,
+        name: 'Punto 3',
+        description: 'Descripción del Punto 3',
+        destination: { lat: -34.88173718620799, lng: -57.91377614984685 },
+        cargo: [
+          { quantity: 2, product: 'Vianda normal' },
+          { quantity: 4, product: 'Vianda especial' }
+        ]
+      }
+    ]
   }
 ]
 

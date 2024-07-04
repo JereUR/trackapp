@@ -12,14 +12,13 @@ import axios from 'axios'
 import {
   Shipment,
   PropsAddShipment,
-  DeliveryPoint,
-  PropsAddDeliveryPoint,
   CustomPoint,
-  PropsAddCustomPoint
+  PropsAddCustomPoint,
+  CustomShipment,
+  PropsAddCustomShipment
 } from '../types/Shipment'
 import { useToast } from '../ui/use-toast'
 import useUser from '../hooks/useUser'
-import CustomShipmentsList from './../dashboard/shipments/custom/CustomShipmentsList'
 
 type ShipmentsContextType = {
   shipments: Shipment[] | []
@@ -46,7 +45,7 @@ type ShipmentsContextType = {
     dataShipment: PropsAddShipment
   }) => Promise<boolean>
   deleteShipmentById: (id: number) => Promise<boolean>
-  customShipments: DeliveryPoint[]
+  customShipments: CustomShipment[]
   loadingCustomShipment: boolean
   countCustomShipment: number
   getCustomShipments: ({ q }: { q: string }) => Promise<void>
@@ -54,16 +53,16 @@ type ShipmentsContextType = {
     id
   }: {
     id: string
-  }) => Promise<DeliveryPoint | null>
+  }) => Promise<CustomShipment | null>
   addCustomShipment: ({
     dataCustomShipment
   }: {
-    dataCustomShipment: PropsAddDeliveryPoint
+    dataCustomShipment: PropsAddCustomShipment
   }) => Promise<boolean>
   updateCustomShipment: ({
     dataCustomShipment
   }: {
-    dataCustomShipment: PropsAddDeliveryPoint
+    dataCustomShipment: PropsAddCustomShipment
   }) => Promise<boolean>
   deleteCustomShipmentById: (id: number) => Promise<boolean>
   customPoints: CustomPoint[]
@@ -92,7 +91,7 @@ export default function ShipmentsContextProvider({
   children: ReactNode
 }) {
   const [shipments, setShipments] = useState<Shipment[]>([])
-  const [customShipments, setCustomShipments] = useState<DeliveryPoint[]>([])
+  const [customShipments, setCustomShipments] = useState<CustomShipment[]>([])
   const [customPoints, setCustomPoints] = useState<CustomPoint[]>([])
   const [loadingShipment, setLoadingShipment] = useState<boolean>(true)
   const [loadingCustomShipment, setLoadingCustomShipment] =
@@ -441,7 +440,7 @@ export default function ShipmentsContextProvider({
     id
   }: {
     id: string
-  }): Promise<DeliveryPoint | null> {
+  }): Promise<CustomShipment | null> {
     return initialCustomShipments[0]
     setLoadingCustomShipment(true)
     const params = new URLSearchParams()
@@ -479,15 +478,14 @@ export default function ShipmentsContextProvider({
   async function addCustomShipment({
     dataCustomShipment
   }: {
-    dataCustomShipment: PropsAddDeliveryPoint
+    dataCustomShipment: PropsAddCustomShipment
   }): Promise<boolean> {
     setLoadingCustomShipment(true)
 
     const newCustomShipment = {
       name: dataCustomShipment.name,
-      destination: dataCustomShipment.destination,
-      description: dataCustomShipment.description,
-      cargo: dataCustomShipment.cargo
+      delivery_points: dataCustomShipment.delivery_points,
+      description: dataCustomShipment.description
     }
 
     const url = `${BASE_URL}api/v1/custom-shipment`
@@ -529,15 +527,14 @@ export default function ShipmentsContextProvider({
   async function updateCustomShipment({
     dataCustomShipment
   }: {
-    dataCustomShipment: PropsAddDeliveryPoint
+    dataCustomShipment: PropsAddCustomShipment
   }): Promise<boolean> {
     setLoadingCustomShipment(true)
     const newCustomShipment = {
       id: dataCustomShipment.id,
       name: dataCustomShipment.name,
-      destination: dataCustomShipment.destination,
-      description: dataCustomShipment.description,
-      cargo: dataCustomShipment.cargo
+      delivery_points: dataCustomShipment.delivery_points,
+      description: dataCustomShipment.description
     }
 
     const url = `${BASE_URL}api/v1/custom-shipment`

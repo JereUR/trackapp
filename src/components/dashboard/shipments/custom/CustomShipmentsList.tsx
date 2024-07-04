@@ -10,7 +10,7 @@ import useUser from '@/components/hooks/useUser'
 import { Button } from '@/components/ui/button'
 import Search from '@/components/search/Search'
 import CustomShipmentItem from './CustomShipmentItem'
-import { DeliveryPoint } from '@/components/types/Shipment'
+import { CustomShipment} from '@/components/types/Shipment'
 
 const CustomPointsMap = dynamic(
   () => import('@/components/dashboard/maps/CustomPointsMap'),
@@ -38,7 +38,7 @@ const CustomShipmentsList = () => {
     }
   }, [searchParams, token])
 
-  const handleDelete = async (shipment: DeliveryPoint) => {
+  const handleDelete = async (shipment: CustomShipment) => {
     if (
       window.confirm(
         `¿Estás seguro de que deseas eliminar el envío '${shipment.name}'?`
@@ -57,7 +57,9 @@ const CustomShipmentsList = () => {
           <Search placeholder="Buscar un envío..." />
           <div>
             <Button className="bg-green-500 mr-8 transition duration-300 ease-in-out hover:bg-green-600 hover:scale-[1.05] text-foreground">
-              <Link href={'/panel-de-control/envios/predeterminados/agregar'}>
+              <Link
+                href={'/panel-de-control/envios/predeterminados/agregar-envio'}
+              >
                 <p className="flex gap-2 items-center text-lg font-semibold">
                   <CgAdd className="h-6 w-6" />
                   Agregar envios

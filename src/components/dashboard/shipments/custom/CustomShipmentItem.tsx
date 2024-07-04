@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { DeliveryPoint } from '@/components/types/Shipment'
+import { CustomShipment } from '@/components/types/Shipment'
 import { Card, CardContent, CardFooter, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 
@@ -7,8 +7,8 @@ const CustomShipmentItem = ({
   shipment,
   handleDelete
 }: {
-  shipment: DeliveryPoint
-  handleDelete: (shipment: DeliveryPoint) => void
+  shipment: CustomShipment
+  handleDelete: (shipment: CustomShipment) => void
 }) => {
   return (
     <Card
@@ -20,13 +20,25 @@ const CustomShipmentItem = ({
       </CardTitle>
       <p className="text-gray-500 italic">{shipment.description}</p>
       <CardContent className="mt-4">
-        <p className="text-lg font-bold text-gray-400 dark:text-gray-300">
-          Cargas:
-        </p>
-        {shipment.cargo.map((cargo, index) => (
-          <p key={index} className="text-gray-600 dark:text-gray-400 ml-2">
-            {cargo.quantity} uds. - {cargo.product}
-          </p>
+        {shipment.delivery_points.map((deliveryPoint) => (
+          <div key={deliveryPoint.id} className="flex flex-col gap-2">
+            <p className="text-gray-600 dark:text-gray-400 text-lg font-bold">
+              Punto de entrega: {deliveryPoint.name}
+            </p>
+            <div className="ml-4 mb-4">
+              <p className="font-medium text-gray-400 dark:text-gray-300">
+                Cargas:
+              </p>
+              {deliveryPoint.cargo.map((cargo, index) => (
+                <p
+                  key={index}
+                  className="text-gray-600 dark:text-gray-400 ml-2"
+                >
+                  {cargo.quantity} uds. - {cargo.product}
+                </p>
+              ))}
+            </div>
+          </div>
         ))}
       </CardContent>
       <CardFooter className="flex gap-2 justify-end">
