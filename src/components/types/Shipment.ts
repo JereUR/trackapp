@@ -155,6 +155,41 @@ export const initialErrorsCargo: FormErrorsCargo = {
   product: ''
 }
 
+export type CustomPoint = {
+  id: number
+  name: string
+  lat: number
+  lng: number
+}
+
+export interface PropsAddCustomPoint {
+  id?: number | null
+  name: string
+  lat: number
+  lng: number
+  [key: string]: number | null | string | undefined
+}
+
+export const initialCustomPoint: PropsAddCustomPoint = {
+  id: null,
+  name: '',
+  lat: 0,
+  lng: 0
+}
+
+export interface FormErrorsCustomPoint {
+  name?: string
+  lat?: string
+  lng?: string
+  [key: string]: string | undefined
+}
+
+export const initialErrorsCustomPoint: FormErrorsCustomPoint = {
+  name: '',
+  lat: '',
+  lng: ''
+}
+
 export const posibleStatus = [
   'Programado',
   'Pendiente',
