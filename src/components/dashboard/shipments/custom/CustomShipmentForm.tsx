@@ -3,6 +3,8 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { Cross2Icon } from '@radix-ui/react-icons'
 import { BsCheck2 } from 'react-icons/bs'
+import { useRouter } from 'next/navigation'
+import dynamic from 'next/dynamic'
 
 import ErrorText from '@/components/ErrorText'
 import useUser from '@/components/hooks/useUser'
@@ -15,14 +17,10 @@ import {
   PropsAddDeliveryPoint,
   times
 } from '@/components/types/Shipment'
-import { User } from '@/components/types/User'
 import { Button } from '@/components/ui/button'
-import dynamic from 'next/dynamic'
 import useShipments from '@/components/hooks/useShipments'
 import Loader from '@/components/Loader'
-import { useRouter } from 'next/navigation'
 import { useToast } from '@/components/ui/use-toast'
-import DeliveryPointsForm from '../DeliveryPointsForm'
 import CustomDeliveryPointsForm from './CustomDeliveryPointsForm'
 
 const MapForm = dynamic(() => import('@/components/dashboard/maps/MapForm'), {
@@ -91,7 +89,7 @@ const CustomShipmentForm: React.FC<Props> = ({ type, shipment }) => {
         '¿Estás seguro que quieres cerrar el formulario? Se perderán todos los cambios'
       )
     ) {
-      router.push('/panel-de-control/envios')
+      router.push('/panel-de-control/envios/predeterminados')
     }
   }
 
@@ -108,13 +106,13 @@ const CustomShipmentForm: React.FC<Props> = ({ type, shipment }) => {
         })
         if (res) {
           toast({
-            title: 'Envío agregado.',
+            title: 'Envío predeterminado agregado.',
             description: 'Redireccionando...',
             className: 'bg-green-600'
           })
 
           setTimeout(() => {
-            router.replace('/panel-de-control/envios')
+            router.replace('/panel-de-control/envios/predeterminados')
           }, 1000)
         }
       } else {
@@ -123,13 +121,13 @@ const CustomShipmentForm: React.FC<Props> = ({ type, shipment }) => {
         })
         if (res) {
           toast({
-            title: 'Envío actualizado.',
+            title: 'Envío predeterminado actualizado.',
             description: 'Redireccionando...',
             className: 'bg-green-600'
           })
 
           setTimeout(() => {
-            router.replace('/panel-de-control/envios')
+            router.replace('/panel-de-control/envios/predeterminados')
           }, 1000)
         }
       }

@@ -1,4 +1,5 @@
 import Link from 'next/link'
+
 import { CustomShipment } from '@/components/types/Shipment'
 import { Card, CardContent, CardFooter, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
