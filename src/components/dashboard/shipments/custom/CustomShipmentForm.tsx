@@ -7,12 +7,12 @@ import { BsCheck2 } from 'react-icons/bs'
 import ErrorText from '@/components/ErrorText'
 import useUser from '@/components/hooks/useUser'
 import {
-  FormErrorsShipment,
-  initialData,
+  FormErrorsCustomShipment,
+  initialDataCustomShipment,
   initialDeliveryData,
-  initialErrorsShipment,
+  initialErrorsCustomShipment,
+  PropsAddCustomShipment,
   PropsAddDeliveryPoint,
-  PropsAddShipment,
   times
 } from '@/components/types/Shipment'
 import { User } from '@/components/types/User'
@@ -23,6 +23,7 @@ import Loader from '@/components/Loader'
 import { useRouter } from 'next/navigation'
 import { useToast } from '@/components/ui/use-toast'
 import DeliveryPointsForm from '../DeliveryPointsForm'
+import CustomDeliveryPointsForm from './CustomDeliveryPointsForm'
 
 const MapForm = dynamic(() => import('@/components/dashboard/maps/MapForm'), {
   ssr: false
@@ -30,23 +31,21 @@ const MapForm = dynamic(() => import('@/components/dashboard/maps/MapForm'), {
 
 interface Props {
   type: string
-  shipment: PropsAddShipment
+  shipment: PropsAddCustomShipment
 }
 
 const CustomShipmentForm: React.FC<Props> = ({ type, shipment }) => {
-  const [dataShipment, setDataShipment] = useState<PropsAddShipment>(shipment)
+  const [dataShipment, setDataShipment] =
+    useState<PropsAddCustomShipment>(shipment)
   const [dataDeliveryPoint, setDataDeliveryPoint] =
     useState<PropsAddDeliveryPoint>(initialDeliveryData)
-  const [formErrors, setFormErrors] = useState<FormErrorsShipment>(
-    initialErrorsShipment
+  const [formErrors, setFormErrors] = useState<FormErrorsCustomShipment>(
+    initialErrorsCustomShipment
   )
-  const [drivers, setDrivers] = useState<User[]>([])
-  const { token, getDrivers, fleets, getFleets } = useUser()
-  const { addShipment, updateShipment, loadingShipment } = useShipments()
+  const { token } = useUser()
+  const { addCustomShipment, updateCustomShipment, loadingCustomShipment } =
+    useShipments()
 
-  const today = new Date().toISOString().split('T')[0]
-  const filteredStartTimes = times.filter((time) => time !== '23:30')
-  const filteredEndTimes = times.filter((time) => time !== '07:30')
   const mapRef = useRef()
   const router = useRouter()
   const { toast } = useToast()
@@ -55,28 +54,8 @@ const CustomShipmentForm: React.FC<Props> = ({ type, shipment }) => {
     setDataShipment(shipment)
   }, [shipment])
 
-  useEffect(() => {
-    const getDataDrivers = async () => {
-      const drivers = await getDrivers()
-      setDrivers(drivers)
-    }
-
-    if (token) {
-      getDataDrivers()
-      getFleets()
-    }
-  }, [token])
-
   const validations = () => {
-    const errors: FormErrorsShipment = {}
-
-    if (!dataShipment.fleet_id) {
-      errors.fleet_id = 'Debe seleccionar una flota.'
-    }
-
-    if (!dataShipment.assigned_driver_id) {
-      errors.assigned_driver_id = 'Debe seleccionar un conductor.'
-    }
+    const errors: FormErrorsCustomShipment = {}
 
     if (!dataShipment.name.trim()) {
       errors.name = 'Este campo no puede ser vacío.'
@@ -86,29 +65,11 @@ const CustomShipmentForm: React.FC<Props> = ({ type, shipment }) => {
       }
     }
 
-    if (!dataShipment.time_start.trim()) {
-      errors.time_start = 'Debe seleccionar una hora de inicio.'
-    }
-
-    if (!dataShipment.time_end.trim()) {
-      errors.time_end = 'Debe seleccionar una hora estimada de finalización.'
-    }
-
-    if (!dataShipment.date) {
-      errors.date = 'Debe seleccionar una fecha'
-    }
-
     if (dataShipment.delivery_points.length === 0) {
       errors.delivery_points = 'Debe agregar al menos un punto de entrega.'
     }
 
     return errors
-  }
-
-  const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    const { name, value } = event.target
-    setDataShipment({ ...dataShipment, [name]: value })
-    setFormErrors({ ...formErrors, [name]: '' })
   }
 
   const handleTextAreaChange = (
@@ -120,11 +81,7 @@ const CustomShipmentForm: React.FC<Props> = ({ type, shipment }) => {
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target
-    if (name === 'date') {
-      setDataShipment({ ...dataShipment, [name]: new Date(value) })
-    } else {
-      setDataShipment({ ...dataShipment, [name]: value })
-    }
+    setDataShipment({ ...dataShipment, [name]: value })
     setFormErrors({ ...formErrors, [name]: '' })
   }
 
@@ -146,7 +103,9 @@ const CustomShipmentForm: React.FC<Props> = ({ type, shipment }) => {
 
     if (Object.keys(err).length === 0) {
       if (type === 'add') {
-        const res = await addShipment({ dataShipment })
+        const res = await addCustomShipment({
+          dataCustomShipment: dataShipment
+        })
         if (res) {
           toast({
             title: 'Envío agregado.',
@@ -159,7 +118,9 @@ const CustomShipmentForm: React.FC<Props> = ({ type, shipment }) => {
           }, 1000)
         }
       } else {
-        const res = await updateShipment({ dataShipment })
+        const res = await updateCustomShipment({
+          dataCustomShipment: dataShipment
+        })
         if (res) {
           toast({
             title: 'Envío actualizado.',
@@ -172,9 +133,9 @@ const CustomShipmentForm: React.FC<Props> = ({ type, shipment }) => {
           }, 1000)
         }
       }
-      setDataShipment(initialData)
+      setDataShipment(initialDataCustomShipment)
       setDataDeliveryPoint(initialDeliveryData)
-      setFormErrors(initialErrorsShipment)
+      setFormErrors(initialErrorsCustomShipment)
     }
   }
 
@@ -182,73 +143,11 @@ const CustomShipmentForm: React.FC<Props> = ({ type, shipment }) => {
     <div className="">
       <div className="flex">
         <div className="flex-1 pr-4">
-          <h1 className="text-2xl font-bold mb-6">Agregar Envío</h1>
+          <h1 className="text-2xl font-bold mb-6">
+            Agregar Envío Predeterminado
+          </h1>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
-              <div>
-                <div className="flex gap-2 items-center">
-                  <label htmlFor="fleet" className="font-light text-foreground">
-                    Flota
-                  </label>
-                  {formErrors.fleet_id && (
-                    <ErrorText text={formErrors.fleet_id} />
-                  )}
-                </div>
-                <select
-                  id="fleet"
-                  name="fleet_id"
-                  onChange={handleSelectChange}
-                  className="mt-1 block w-full p-2 border border-gray-400 dark:border-gray-700 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm cursor-pointer"
-                >
-                  <option value="" selected={dataShipment.fleet_id === null}>
-                    -- Seleccione flota --
-                  </option>
-                  {fleets.map((fleet) => (
-                    <option
-                      key={fleet.id}
-                      value={fleet.id}
-                      selected={dataShipment.fleet_id === fleet.id}
-                    >
-                      {fleet.name}
-                    </option>
-                  ))}
-                </select>
-              </div>
-              <div>
-                <div className="flex gap-2 items-center">
-                  <label
-                    htmlFor="driver"
-                    className="font-light text-foreground"
-                  >
-                    Conductor
-                  </label>
-                  {formErrors.assigned_driver_id && (
-                    <ErrorText text={formErrors.assigned_driver_id} />
-                  )}
-                </div>
-                <select
-                  id="driver"
-                  name="assigned_driver_id"
-                  onChange={handleSelectChange}
-                  className="mt-1 block w-full p-2 border border-gray-400 dark:border-gray-700 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm cursor-pointer"
-                >
-                  <option
-                    value=""
-                    selected={dataShipment.assigned_driver_id === null}
-                  >
-                    -- Seleccione conductor --
-                  </option>
-                  {drivers.map((driver) => (
-                    <option
-                      key={driver.id}
-                      value={driver.id}
-                      selected={dataShipment.assigned_driver_id === driver.id}
-                    >
-                      {driver.first_name} {driver.last_name}
-                    </option>
-                  ))}
-                </select>
-              </div>
               <div>
                 <div className="flex gap-2 items-center">
                   <label htmlFor="name" className="font-light text-foreground">
@@ -265,102 +164,22 @@ const CustomShipmentForm: React.FC<Props> = ({ type, shipment }) => {
                   className="mt-1 block w-full p-2 border border-gray-400 dark:border-gray-700 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                 />
               </div>
+
               <div>
-                <div className="flex gap-2 items-center">
-                  <label htmlFor="date" className="font-light text-foreground">
-                    Fecha
-                  </label>
-                  {formErrors.date && <ErrorText text={formErrors.date} />}
-                </div>
-                {formErrors.date && <ErrorText text={formErrors.date} />}
-                <input
-                  type="date"
-                  name="date"
-                  className="mt-1 block w-full p-2 border border-gray-400 dark:border-gray-700 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm cursor-pointer"
-                  min={today}
-                  value={dataShipment.date.toISOString().split('T')[0]}
-                  onChange={handleInputChange}
+                <label
+                  htmlFor="description"
+                  className="font-light text-foreground"
+                >
+                  Descripción
+                </label>
+                <textarea
+                  id="description"
+                  name="description"
+                  value={dataShipment.description}
+                  onChange={handleTextAreaChange}
+                  className="mt-1 block w-full p-2 border border-gray-400 dark:border-gray-700 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                 />
               </div>
-              <div>
-                <div className="flex gap-2 items-center">
-                  <label
-                    htmlFor="time_start"
-                    className="font-light text-foreground"
-                  >
-                    Hora de inicio
-                  </label>
-                  {formErrors.time_start && (
-                    <ErrorText text={formErrors.time_start} />
-                  )}
-                </div>
-                <select
-                  id="time_start"
-                  name="time_start"
-                  onChange={handleSelectChange}
-                  className="mt-1 block w-full p-2 border border-gray-400 dark:border-gray-700 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm cursor-pointer"
-                >
-                  <option value="" selected={dataShipment.time_start === ''}>
-                    -- Seleccione hora de inicio --
-                  </option>
-                  {filteredStartTimes.map((time) => (
-                    <option
-                      key={time}
-                      value={time}
-                      selected={dataShipment.time_start === time}
-                    >
-                      {time}
-                    </option>
-                  ))}
-                </select>
-              </div>
-              <div>
-                <div className="flex gap-2 items-center">
-                  <label
-                    htmlFor="time_end"
-                    className="font-light text-foreground"
-                  >
-                    Hora estimada de fin
-                  </label>
-                  {formErrors.time_end && (
-                    <ErrorText text={formErrors.time_end} />
-                  )}
-                </div>
-                <select
-                  id="time_end"
-                  name="time_end"
-                  onChange={handleSelectChange}
-                  className="mt-1 block w-full p-2 border border-gray-400 dark:border-gray-700 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm cursor-pointer"
-                >
-                  <option value="" selected={dataShipment.time_end === ''}>
-                    -- Seleccione hora estimada de fin --
-                  </option>
-                  {filteredEndTimes.map((time) => (
-                    <option
-                      key={time}
-                      value={time}
-                      selected={dataShipment.time_end === time}
-                    >
-                      {time}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            </div>
-            <div>
-              <label
-                htmlFor="description"
-                className="font-light text-foreground"
-              >
-                Descripción
-              </label>
-              <textarea
-                id="description"
-                name="description"
-                value={dataShipment.description}
-                onChange={handleTextAreaChange}
-                className="mt-1 block w-full p-2 border border-gray-400 dark:border-gray-700 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-              />
             </div>
             <div className="flex gap-2 items-center">
               <p className="text-lg font-light">Puntos de entrega</p>
@@ -368,7 +187,7 @@ const CustomShipmentForm: React.FC<Props> = ({ type, shipment }) => {
                 <ErrorText text={formErrors.delivery_points} />
               )}
             </div>
-            <DeliveryPointsForm
+            <CustomDeliveryPointsForm
               dataShipment={dataShipment}
               setDataShipment={setDataShipment}
               dataDeliveryPoint={dataDeliveryPoint}
@@ -387,7 +206,7 @@ const CustomShipmentForm: React.FC<Props> = ({ type, shipment }) => {
                 type="submit"
                 className=" text-foreground bg-green-500 hover:bg-green-600"
               >
-                {loadingShipment ? (
+                {loadingCustomShipment ? (
                   <p className="flex gap-2 items-center">
                     <BsCheck2 className="h-5 w-5" /> Agregar envío
                   </p>
