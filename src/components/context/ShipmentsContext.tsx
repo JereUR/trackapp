@@ -1,5 +1,6 @@
 'use client'
 import {
+  initialCustomPoints,
   initialCustomShipments,
   initialShipments,
   onProgressShipments
@@ -12,7 +13,9 @@ import {
   Shipment,
   PropsAddShipment,
   DeliveryPoint,
-  PropsAddDeliveryPoint
+  PropsAddDeliveryPoint,
+  CustomPoint,
+  PropsAddCustomPoint
 } from '../types/Shipment'
 import { useToast } from '../ui/use-toast'
 import useUser from '../hooks/useUser'
@@ -42,7 +45,7 @@ type ShipmentsContextType = {
   }: {
     dataShipment: PropsAddShipment
   }) => Promise<boolean>
-  deleteShipmentsById: (shipments: number[]) => Promise<boolean>
+  deleteShipmentById: (id: number) => Promise<boolean>
   customShipments: DeliveryPoint[]
   loadingCustomShipment: boolean
   countCustomShipment: number
@@ -62,7 +65,23 @@ type ShipmentsContextType = {
   }: {
     dataCustomShipment: PropsAddDeliveryPoint
   }) => Promise<boolean>
-  deleteCustomShipmentsById: (customShipments: number[]) => Promise<boolean>
+  deleteCustomShipmentById: (id: number) => Promise<boolean>
+  customPoints: CustomPoint[]
+  loadingCustomPoint: boolean
+  countCustomPoint: number
+  getCustomPoints: () => Promise<void>
+  getCustomPointById: ({ id }: { id: string }) => Promise<CustomPoint | null>
+  addCustomPoint: ({
+    dataCustomPoint
+  }: {
+    dataCustomPoint: PropsAddCustomPoint
+  }) => Promise<boolean>
+  updateCustomPoint: ({
+    dataCustomPoint
+  }: {
+    dataCustomPoint: PropsAddCustomPoint
+  }) => Promise<boolean>
+  deleteCustomPointById: (id: number) => Promise<boolean>
 }
 
 export const ShipmentsContext = createContext<ShipmentsContextType | null>(null)
@@ -74,11 +93,14 @@ export default function ShipmentsContextProvider({
 }) {
   const [shipments, setShipments] = useState<Shipment[]>([])
   const [customShipments, setCustomShipments] = useState<DeliveryPoint[]>([])
+  const [customPoints, setCustomPoints] = useState<CustomPoint[]>([])
   const [loadingShipment, setLoadingShipment] = useState<boolean>(true)
   const [loadingCustomShipment, setLoadingCustomShipment] =
     useState<boolean>(true)
+  const [loadingCustomPoint, setLoadingCustomPoint] = useState<boolean>(true)
   const [countShipment, setCountShipment] = useState<number>(0)
   const [countCustomShipment, setCountCustomShipment] = useState<number>(0)
+  const [countCustomPoint, setCountCustomPoint] = useState<number>(0)
   const { toast } = useToast()
   const { token } = useUser()
   const BASE_URL = process.env.NEXT_PUBLIC_BASE_BACKEND_URL
@@ -341,9 +363,7 @@ export default function ShipmentsContextProvider({
     }
   }
 
-  async function deleteShipmentsById(
-    customShipments: number[]
-  ): Promise<boolean> {
+  async function deleteShipmentById(id: number): Promise<boolean> {
     setLoadingShipment(true)
     const url = `${BASE_URL}api/v1/shipment`
     try {
@@ -352,15 +372,13 @@ export default function ShipmentsContextProvider({
           Authorization: token
         },
         data: {
-          ids: shipments
+          id
         }
       })
 
       if (response.status === 200 || response.status === 204) {
         toast({
-          title: `Envíos con id:'${shipments.map(
-            (shipment) => shipment
-          )}' eliminado.`,
+          title: `Envíos con id:'${id}' eliminado.`,
           className: 'bg-green-600'
         })
         return true
@@ -558,9 +576,7 @@ export default function ShipmentsContextProvider({
     }
   }
 
-  async function deleteCustomShipmentsById(
-    customShipments: number[]
-  ): Promise<boolean> {
+  async function deleteCustomShipmentById(id: number): Promise<boolean> {
     setLoadingCustomShipment(true)
     const url = `${BASE_URL}api/v1/custom-shipment`
     try {
@@ -569,15 +585,13 @@ export default function ShipmentsContextProvider({
           Authorization: token
         },
         data: {
-          ids: customShipments
+          id
         }
       })
 
       if (response.status === 200 || response.status === 204) {
         toast({
-          title: `Envíos con id:'${customShipments.map(
-            (shipment) => shipment
-          )}' eliminado.`,
+          title: `Envíos con id:'${id}' eliminado.`,
           className: 'bg-green-600'
         })
         return true
@@ -600,6 +614,215 @@ export default function ShipmentsContextProvider({
     }
   }
 
+  async function getCustomPoints(): Promise<void> {
+    setCustomPoints(initialCustomPoints)
+    return
+    setLoadingCustomPoint(true)
+    const url = `${BASE_URL}api/v1/custom-points`
+
+    try {
+      const response = await axios.get(url, {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: token
+        }
+      })
+
+      if (response.status === 200 || response.status === 204) {
+        setCustomPoints(response.data.points)
+        setCountCustomPoint(response.data.count)
+      } else {
+        toast({
+          title: 'Oh no! Algo salió mal.',
+          description: response.statusText
+        })
+      }
+    } catch (error: any) {
+      toast({
+        variant: 'destructive',
+        title: 'Oh no! Algo salió mal.',
+        description: error.message
+      })
+    } finally {
+      setLoadingCustomPoint(false)
+    }
+  }
+
+  async function getCustomPointById({
+    id
+  }: {
+    id: string
+  }): Promise<CustomPoint | null> {
+    return initialCustomPoints[0]
+    setLoadingCustomPoint(true)
+    const params = new URLSearchParams()
+    params.append('id', id)
+    const url = `${BASE_URL}api/v1/custom-point?${params.toString()}`
+    try {
+      const response = await axios.get(url, {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: token
+        }
+      })
+
+      if (response.status === 200 || response.status === 204) {
+        return response.data
+      } else {
+        toast({
+          title: 'Oh no! Algo salió mal.',
+          description: response.statusText
+        })
+        return null
+      }
+    } catch (error: any) {
+      toast({
+        variant: 'destructive',
+        title: 'Oh no! Algo salió mal.',
+        description: error.message
+      })
+      return null
+    } finally {
+      setLoadingCustomPoint(false)
+    }
+  }
+
+  async function addCustomPoint({
+    dataCustomPoint
+  }: {
+    dataCustomPoint: PropsAddCustomPoint
+  }): Promise<boolean> {
+    setLoadingCustomPoint(true)
+
+    const newCustomPoint = {
+      name: dataCustomPoint.name,
+      lat: dataCustomPoint.lat,
+      lng: dataCustomPoint.lng
+    }
+
+    const url = `${BASE_URL}api/v1/custom-point`
+    try {
+      const response = await axios.post(
+        url,
+        {
+          customPoint: newCustomPoint
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: token
+          }
+        }
+      )
+
+      if (response.status === 201) {
+        return true
+      } else {
+        toast({
+          title: 'Oh no! Algo salió mal.',
+          description: response.statusText
+        })
+        return false
+      }
+    } catch (error: any) {
+      toast({
+        variant: 'destructive',
+        title: 'Oh no! Algo salió mal.',
+        description: error.message
+      })
+      return false
+    } finally {
+      setLoadingCustomPoint(false)
+    }
+  }
+
+  async function updateCustomPoint({
+    dataCustomPoint
+  }: {
+    dataCustomPoint: PropsAddCustomPoint
+  }): Promise<boolean> {
+    setLoadingCustomPoint(true)
+    const newCustomPoint = {
+      id: dataCustomPoint.id,
+      name: dataCustomPoint.name,
+      lat: dataCustomPoint.lat,
+      lng: dataCustomPoint.lng
+    }
+
+    const url = `${BASE_URL}api/v1/custom-point`
+    try {
+      const response = await axios.put(
+        url,
+        {
+          customPoint: newCustomPoint
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: token
+          }
+        }
+      )
+
+      if (response.status === 200 || response.status === 204) {
+        return true
+      } else {
+        toast({
+          title: 'Oh no! Algo salió mal.',
+          description: response.statusText
+        })
+        return false
+      }
+    } catch (error: any) {
+      toast({
+        variant: 'destructive',
+        title: 'Oh no! Algo salió mal.',
+        description: error.message
+      })
+      return false
+    } finally {
+      setLoadingCustomPoint(false)
+    }
+  }
+
+  async function deleteCustomPointById(id: number): Promise<boolean> {
+    setLoadingCustomPoint(true)
+    const url = `${BASE_URL}api/v1/custom-point`
+    try {
+      const response = await axios.delete(url, {
+        headers: {
+          Authorization: token
+        },
+        data: {
+          id
+        }
+      })
+
+      if (response.status === 200 || response.status === 204) {
+        toast({
+          title: `Punto con id:'${id}' eliminado.`,
+          className: 'bg-green-600'
+        })
+        return true
+      } else {
+        toast({
+          title: 'Oh no! Algo salió mal.',
+          description: response.statusText
+        })
+        return false
+      }
+    } catch (error: any) {
+      toast({
+        variant: 'destructive',
+        title: 'Oh no! Algo salió mal.',
+        description: error.message
+      })
+      return false
+    } finally {
+      setLoadingCustomPoint(false)
+    }
+  }
+
   return (
     <ShipmentsContext.Provider
       value={{
@@ -612,7 +835,7 @@ export default function ShipmentsContextProvider({
         getShipmentById,
         addShipment,
         updateShipment,
-        deleteShipmentsById,
+        deleteShipmentById,
         customShipments,
         loadingCustomShipment,
         countCustomShipment,
@@ -620,7 +843,15 @@ export default function ShipmentsContextProvider({
         getCustomShipmentById,
         addCustomShipment,
         updateCustomShipment,
-        deleteCustomShipmentsById
+        deleteCustomShipmentById,
+        customPoints,
+        loadingCustomPoint,
+        countCustomPoint,
+        getCustomPoints,
+        getCustomPointById,
+        addCustomPoint,
+        updateCustomPoint,
+        deleteCustomPointById
       }}
     >
       {children}
