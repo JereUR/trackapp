@@ -1,4 +1,4 @@
-import { DeliveryPoint, Shipment } from '../types/Shipment'
+import { CustomPoint, DeliveryPoint, Shipment } from '../types/Shipment'
 
 export const initialShipments: Shipment[] = [
   {
@@ -342,6 +342,7 @@ export const initialCustomShipments: DeliveryPoint[] = [
   {
     id: 1,
     name: 'Punto 1',
+    description: 'Descripción del Punto 1',
     destination: { lat: -34.88204962931506, lng: -57.91417848120565 },
     cargo: [
       { quantity: 2, product: 'Vianda normal' },
@@ -352,6 +353,7 @@ export const initialCustomShipments: DeliveryPoint[] = [
   {
     id: 2,
     name: 'Punto 2',
+    description: 'Descripción del Punto 2',
     destination: { lat: -34.88183840030232, lng: -57.91396390448096 },
     cargo: [
       { quantity: 3, product: 'Vianda normal' },
@@ -362,6 +364,7 @@ export const initialCustomShipments: DeliveryPoint[] = [
   {
     id: 3,
     name: 'Punto 3',
+    description: 'Descripción del Punto 3',
     destination: { lat: -34.88173718620799, lng: -57.91377614984685 },
     cargo: [
       { quantity: 2, product: 'Vianda normal' },
@@ -369,4 +372,10 @@ export const initialCustomShipments: DeliveryPoint[] = [
     ],
     status: 'Programado'
   }
+]
+
+export const initialCustomPoints: CustomPoint[] = [
+  { id: 1, name: 'Puerto 1', lat: -34.88185048072541, lng: -57.91396980039304 },
+  { id: 2, name: 'Puerto 2', lat: -34.88400675106401, lng: -57.91259650944449 },
+  { id: 3, name: 'Puerto 3', lat: -34.88533568950125, lng: -57.91645889023729 }
 ]
