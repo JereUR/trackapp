@@ -40,9 +40,18 @@ const CustomShipmentForm: React.FC<Props> = ({ type, shipment }) => {
   const [formErrors, setFormErrors] = useState<FormErrorsCustomShipment>(
     initialErrorsCustomShipment
   )
+  const [selectedDeliveryPoint, setSelectedDeliveryPoint] = useState<
+    number | null
+  >(null)
+
   const { token } = useUser()
-  const { addCustomShipment, updateCustomShipment, loadingCustomShipment } =
-    useShipments()
+  const {
+    addCustomShipment,
+    updateCustomShipment,
+    loadingCustomShipment,
+    customShipments,
+    getCustomShipments
+  } = useShipments()
 
   const mapRef = useRef()
   const router = useRouter()
@@ -51,6 +60,10 @@ const CustomShipmentForm: React.FC<Props> = ({ type, shipment }) => {
   useEffect(() => {
     setDataShipment(shipment)
   }, [shipment])
+
+  useEffect(() => {
+    if (token) getCustomShipments({ q: '' })
+  }, [token])
 
   const validations = () => {
     const errors: FormErrorsCustomShipment = {}
@@ -81,6 +94,33 @@ const CustomShipmentForm: React.FC<Props> = ({ type, shipment }) => {
     const { name, value } = event.target
     setDataShipment({ ...dataShipment, [name]: value })
     setFormErrors({ ...formErrors, [name]: '' })
+  }
+
+  const handleSelectDeliveryPoint = (
+    e: React.ChangeEvent<HTMLSelectElement>
+  ) => {
+    const { value } = e.target
+
+    if (value) {
+      const id = parseInt(value)
+      setSelectedDeliveryPoint(id)
+
+      const selectedDeliveryPoints =
+        customShipments.find((shipment) => shipment.id === id)
+          ?.delivery_points || []
+
+      const updatedDeliveryPoints = [
+        ...dataShipment.delivery_points,
+        ...selectedDeliveryPoints
+      ]
+
+      setDataShipment({
+        ...dataShipment,
+        delivery_points: updatedDeliveryPoints
+      })
+    } else {
+      setSelectedDeliveryPoint(null)
+    }
   }
 
   const handleClose = () => {
@@ -179,12 +219,36 @@ const CustomShipmentForm: React.FC<Props> = ({ type, shipment }) => {
                 />
               </div>
             </div>
-            <div className="flex gap-2 items-center">
-              <p className="text-lg font-light">Puntos de entrega</p>
-              {formErrors.delivery_points && (
-                <ErrorText text={formErrors.delivery_points} />
-              )}
+            <div className="flex justify-between items-center">
+              <div>
+                <p className="text-lg font-light">Puntos de entrega</p>
+                {formErrors.delivery_points && (
+                  <ErrorText text={formErrors.delivery_points} />
+                )}
+              </div>
+              <div>
+                <select
+                  id="delivery_points"
+                  name="delivery_points"
+                  onChange={handleSelectDeliveryPoint}
+                  className="mt-1 block w-full p-2 border border-gray-400 dark:border-gray-700 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm cursor-pointer"
+                >
+                  <option value="" selected={selectedDeliveryPoint === null}>
+                    -- Cargar envio predeterminado --
+                  </option>
+                  {customShipments.map((shipment) => (
+                    <option
+                      key={shipment.id}
+                      value={shipment.id}
+                      selected={selectedDeliveryPoint === shipment.id}
+                    >
+                      {shipment.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
             </div>
+            <span className="flex justify-center">ó</span>
             <CustomDeliveryPointsForm
               dataShipment={dataShipment}
               setDataShipment={setDataShipment}

@@ -1,4 +1,4 @@
-import { useState, Dispatch, SetStateAction } from 'react'
+import { useState, Dispatch, SetStateAction, useEffect } from 'react'
 import { CgAdd } from 'react-icons/cg'
 import { BiEdit, BiTrash } from 'react-icons/bi'
 import { Cross1Icon } from '@radix-ui/react-icons'
@@ -18,6 +18,8 @@ import {
 } from '@/components/types/Shipment'
 import { Button } from '@/components/ui/button'
 import ErrorText from '@/components/ErrorText'
+import useUser from '@/components/hooks/useUser'
+import useShipments from '@/components/hooks/useShipments'
 
 interface Props {
   dataShipment: PropsAddShipment
@@ -41,11 +43,19 @@ const DeliveryPointsForm: React.FC<Props> = ({
   const [showCargoForm, setShowCargoForm] = useState<boolean>(false)
   const [markerOnEdit, setMarkerOnEdit] = useState<boolean>(false)
   const [locationConfirm, setLocationConfirm] = useState<boolean>(false)
+  const [selectedPoint, setSelectedPoint] = useState<number | null>(null)
 
   const [formErrorsDeliveryPoint, setFormErrorsDeliveryPoint] =
     useState<FormErrorsDeliveryPoint>(initialErrorsDeliveryPoint)
   const [formErrorsCargo, setFormErrorsCargo] =
     useState<FormErrorsCargo>(initialErrorsCargo)
+
+  const { token } = useUser()
+  const { customPoints, getCustomPoints } = useShipments()
+
+  useEffect(() => {
+    if (token) getCustomPoints()
+  }, [token])
 
   /* Cargo handlers */
 
@@ -147,6 +157,22 @@ const DeliveryPointsForm: React.FC<Props> = ({
     setDataDeliveryPoint({ ...dataDeliveryPoint, [name]: value })
   }
 
+  const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const { value } = e.target
+    setSelectedPoint(parseInt(value))
+    setDataDeliveryPoint({
+      ...dataDeliveryPoint,
+      destination:
+        customPoints.find((point) => point.id === parseInt(value))?.location ||
+        null
+    })
+    if (value) {
+      setLocationConfirm(true)
+    } else {
+      setLocationConfirm(false)
+    }
+  }
+
   const handleEditDeliveryPoint = (index: number) => {
     setDataDeliveryPoint(dataShipment.delivery_points[index])
     setShowDeliveryForm(true)
@@ -170,6 +196,8 @@ const DeliveryPointsForm: React.FC<Props> = ({
   }
 
   const handleAddMarker = () => {
+    setSelectedPoint(null)
+    setLocationConfirm(false)
     setDataDeliveryPoint({
       ...dataDeliveryPoint,
       destination: mapRef.current.getCenter()
@@ -294,32 +322,56 @@ const DeliveryPointsForm: React.FC<Props> = ({
           </div>
           <div className="flex w-full justify-between items-center mt-2 mb-6">
             <div className="flex gap-4">
-              <Button
-                type="button"
-                disabled={markerOnEdit}
-                className="flex gap-2 items-center bg-sky-500 text-foreground transition duration-300 ease-in-out hover:bg-sky-600"
-                onClick={handleAddMarker}
-              >
-                <MdEditLocationAlt className="h-5 w-5" /> Marcar en el mapa
-              </Button>
-              {markerOnEdit && (
-                <div className="flex gap-2">
+            <div className="flex flex-col gap-2 w-max">
+                <select
+                  id="destination"
+                  name="destination"
+                  onChange={handleSelectChange}
+                  className="mt-1 block w-full p-2 border border-gray-400 dark:border-gray-700 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm cursor-pointer"
+                >
+                  <option value="" selected={selectedPoint === null}>
+                    -- Cargar punto clave --
+                  </option>
+                  {customPoints.map((point) => (
+                    <option
+                      key={point.id}
+                      value={point.id}
+                      selected={selectedPoint === point.id}
+                    >
+                      {point.name}
+                    </option>
+                  ))}
+                </select>
+                <span className="flex justify-center">ó</span>
+                <div className="flex gap-4">
                   <Button
                     type="button"
-                    onClick={handleCancel}
-                    className="p-2 bg-red-600 text-foreground mb-4 transition duration-300 ease-in-out hover:bg-red-700"
+                    disabled={markerOnEdit}
+                    className="flex gap-2 items-center bg-sky-500 text-foreground transition duration-300 ease-in-out hover:bg-sky-600 w-full"
+                    onClick={handleAddMarker}
                   >
-                    Cancelar
+                    <MdEditLocationAlt className="h-5 w-5" /> Marcar en el mapa
                   </Button>
-                  <Button
-                    type="button"
-                    className="bg-green-500 text-foreground mb-4 transition duration-300 ease-in-out hover:bg-green-600"
-                    onClick={handleConfirm}
-                  >
-                    Confirmar
-                  </Button>
+                  {markerOnEdit && (
+                    <div className="flex gap-2">
+                      <Button
+                        type="button"
+                        onClick={handleCancel}
+                        className="p-2 bg-red-600 text-foreground mb-4 transition duration-300 ease-in-out hover:bg-red-700"
+                      >
+                        Cancelar
+                      </Button>
+                      <Button
+                        type="button"
+                        className="bg-green-500 text-foreground mb-4 transition duration-300 ease-in-out hover:bg-green-600"
+                        onClick={handleConfirm}
+                      >
+                        Confirmar
+                      </Button>
+                    </div>
+                  )}
                 </div>
-              )}
+              </div>
             </div>
 
             {locationConfirm && (
