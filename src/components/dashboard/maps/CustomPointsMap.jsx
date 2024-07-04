@@ -41,7 +41,7 @@ const CustomPointsMap = ({ points }) => {
         margin: 'auto',
         borderRadius: '10px',
         padding: '8px',
-        backgroundColor: '#f0f0f0', 
+        backgroundColor: '#f0f0f0',
         boxShadow: '0 10px 15px rgba(0, 0, 0, 0.1)',
         border: '1px solid #e0e0e0'
       }}
@@ -57,7 +57,7 @@ const CustomPointsMap = ({ points }) => {
           <Marker
             key={point.id}
             icon={destinationIcon}
-            position={[point.lat, point.lng]}
+            position={[point.location.lat, point.location.lng]}
           >
             <Popup>
               <div>

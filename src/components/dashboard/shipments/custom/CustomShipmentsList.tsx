@@ -10,7 +10,7 @@ import useUser from '@/components/hooks/useUser'
 import { Button } from '@/components/ui/button'
 import Search from '@/components/search/Search'
 import CustomShipmentItem from './CustomShipmentItem'
-import { CustomShipment} from '@/components/types/Shipment'
+import { CustomShipment } from '@/components/types/Shipment'
 
 const CustomPointsMap = dynamic(
   () => import('@/components/dashboard/maps/CustomPointsMap'),
@@ -48,6 +48,8 @@ const CustomShipmentsList = () => {
       console.log('Envío eliminado:', shipment.id)
     }
   }
+
+  console.log(customPoints)
 
   return (
     <div>

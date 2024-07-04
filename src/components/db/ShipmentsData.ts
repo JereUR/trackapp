@@ -1,9 +1,4 @@
-import {
-  CustomPoint,
-  CustomShipment,
-  DeliveryPoint,
-  Shipment
-} from '../types/Shipment'
+import { CustomPoint, CustomShipment, Shipment } from '../types/Shipment'
 
 export const initialShipments: Shipment[] = [
   {
@@ -383,7 +378,19 @@ export const initialCustomShipments: CustomShipment[] = [
 ]
 
 export const initialCustomPoints: CustomPoint[] = [
-  { id: 1, name: 'Puerto 1', lat: -34.88185048072541, lng: -57.91396980039304 },
-  { id: 2, name: 'Puerto 2', lat: -34.88400675106401, lng: -57.91259650944449 },
-  { id: 3, name: 'Puerto 3', lat: -34.88533568950125, lng: -57.91645889023729 }
+  {
+    id: 1,
+    name: 'Puerto 1',
+    location: { lat: -34.88185048072541, lng: -57.91396980039304 }
+  },
+  {
+    id: 2,
+    name: 'Puerto 2',
+    location: { lat: -34.88400675106401, lng: -57.91259650944449 }
+  },
+  {
+    id: 3,
+    name: 'Puerto 3',
+    location: { lat: -34.88533568950125, lng: -57.91645889023729 }
+  }
 ]
