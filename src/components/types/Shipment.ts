@@ -193,36 +193,41 @@ export const initialErrorsCustomShipment: FormErrorsCustomShipment = {
 export type CustomPoint = {
   id: number
   name: string
-  lat: number
-  lng: number
+  description?: string
+  location: { lat: number; lng: number }
 }
 
 export interface PropsAddCustomPoint {
   id?: number | null
   name: string
-  lat: number
-  lng: number
-  [key: string]: number | null | string | undefined
+  description?: string
+  location: { lat: number; lng: number } | null
+  [key: string]:
+    | number
+    | null
+    | string
+    | undefined
+    | { lat: number; lng: number }
 }
 
 export const initialCustomPoint: PropsAddCustomPoint = {
   id: null,
   name: '',
-  lat: 0,
-  lng: 0
+  description: '',
+  location: null
 }
 
 export interface FormErrorsCustomPoint {
   name?: string
-  lat?: string
-  lng?: string
+  description?: string
+  location?: string
   [key: string]: string | undefined
 }
 
 export const initialErrorsCustomPoint: FormErrorsCustomPoint = {
   name: '',
-  lat: '',
-  lng: ''
+  description: '',
+  location: ''
 }
 
 export const posibleStatus = [
