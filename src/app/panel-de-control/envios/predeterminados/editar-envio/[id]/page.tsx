@@ -6,8 +6,8 @@ export const metadata: Metadata = {
   title: 'TrackApp - Editar envío predeterminado'
 }
 
-const EditShipmentPage = () => {
+const EditCustomShipmentPage = () => {
   return <EditCustomShipment />
 }
 
-export default EditShipmentPage
+export default EditCustomShipmentPage
