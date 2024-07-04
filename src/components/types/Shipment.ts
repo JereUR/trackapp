@@ -194,20 +194,15 @@ export type CustomPoint = {
   id: number
   name: string
   description?: string
-  location: { lat: number; lng: number }
+  location: Coords
 }
 
 export interface PropsAddCustomPoint {
   id?: number | null
   name: string
   description?: string
-  location: { lat: number; lng: number } | null
-  [key: string]:
-    | number
-    | null
-    | string
-    | undefined
-    | { lat: number; lng: number }
+  location: Coords | null
+  [key: string]: number | null | string | undefined | Coords
 }
 
 export const initialCustomPoint: PropsAddCustomPoint = {
