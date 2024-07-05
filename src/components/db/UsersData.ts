@@ -39,7 +39,15 @@ export const initialUsers = [
     last_name: 'Gonzalez',
     gender: 'female',
     role: 'staff'
-  }
+  },
+  {
+    id: 5,
+    email: 'ana@gmail.com',
+    first_name: 'Ana',
+    last_name: 'Gonzalez',
+    gender: 'female',
+    role: 'staff'
+  },
 ]
 
 export const initialDrivers = [
