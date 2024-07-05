@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 
 const CustomShipmentsPage = () => {
   return (
-    <div className="m-10">
+    <div className="m-4 md:m-10">
       <Suspense fallback={<div>Loading...</div>}>
         <CustomShipmentsList />
       </Suspense>
