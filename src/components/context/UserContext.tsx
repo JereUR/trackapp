@@ -1,6 +1,6 @@
 'use client'
 import { initialFleets } from '../db/FleetsData'
-import { initialDrivers, initialUser } from '../db/UsersData'
+import { initialDrivers, initialUser, initialUsers } from '../db/UsersData'
 
 import {
   createContext,
@@ -14,7 +14,7 @@ import { usePathname } from 'next/navigation'
 import { useRouter } from 'next/navigation'
 import axios from 'axios'
 
-import { Register, User } from '../types/User'
+import { PropsAddUser, User } from '../types/User'
 import { useToast } from '../ui/use-toast'
 import { removeCookies } from '../actions/removeCookies'
 import { Fleet, PropsUpdateFleet } from '../types/Fleet'
@@ -37,7 +37,6 @@ type UserContextType = {
     error: string | null
   }) => void
   userLogout: () => void
-  signUp: ({ dataRegister }: { dataRegister: Register }) => Promise<void>
   recover: ({ email }: { email: string }) => Promise<void>
   users: User[]
   loadingUsers: boolean
@@ -52,6 +51,10 @@ type UserContextType = {
     ITEMS_PER_PAGE: number
     role?: string
   }) => void
+  getUserById: ({ id }: { id: string }) => Promise<User | null>
+  addUser: ({ dataUser }: { dataUser: PropsAddUser }) => Promise<boolean>
+  updateUser: ({ dataUser }: { dataUser: PropsAddUser }) => Promise<boolean>
+  deleteUsersById: ({ users }: { users: number[] }) => Promise<boolean>
   fleets: Fleet[]
   loadingFleet: boolean
   getFleets: () => void
@@ -146,60 +149,6 @@ export default function UserContextProvider({
     router.push('/')
   }
 
-  async function signUp({
-    dataRegister
-  }: {
-    dataRegister: Register
-  }): Promise<void> {
-    setLoadingUser(true)
-    const user = {
-      first_name: dataRegister.first_name,
-      last_name: dataRegister.last_name,
-      email: dataRegister.email,
-      gender: dataRegister.gender,
-      date: dataRegister.date,
-      password: dataRegister.password
-    }
-    try {
-      const response = await axios.post(
-        `${BASE_URL}signup`,
-        {
-          user
-        },
-        {
-          headers: {
-            'Content-Type': 'application/json'
-          }
-        }
-      )
-
-      if (
-        response.status === 200 ||
-        response.status === 204 ||
-        response.status === 401
-      ) {
-        toast({
-          title: 'Usuario creado con éxito.',
-          description:
-            'Se te ha enviado un mail a tu correo electrónico para verificar tu cuenta.'
-        })
-      } else {
-        toast({
-          title: 'Oh no! Algo salió mal.',
-          description: response.statusText
-        })
-      }
-    } catch (error: any) {
-      toast({
-        variant: 'destructive',
-        title: 'Oh no! Algo salió mal.',
-        description: error.message
-      })
-    } finally {
-      setLoadingUser(false)
-    }
-  }
-
   async function recover({ email }: { email: string }): Promise<void> {
     setLoadingUser(true)
     try {
@@ -246,6 +195,9 @@ export default function UserContextProvider({
     ITEMS_PER_PAGE: number
     role?: string
   }): Promise<void> {
+    setUsers(initialUsers)
+    setCount(initialUsers.length)
+    return
     setLoadingUsers(true)
     const params = new URLSearchParams()
     params.append('regex', q)
@@ -277,6 +229,189 @@ export default function UserContextProvider({
         title: 'Oh no! Algo salió mal.',
         description: error.message
       })
+    } finally {
+      setLoadingUsers(false)
+    }
+  }
+
+  async function getUserById({ id }: { id: string }): Promise<User | null> {
+    setLoadingUser(true)
+    const params = new URLSearchParams()
+    params.append('id', id)
+    const url = `${BASE_URL}api/v1/user?${params.toString()}`
+    try {
+      const response = await axios.get(url, {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: token
+        }
+      })
+
+      if (response.status === 200 || response.status === 204) {
+        return response.data
+      } else {
+        toast({
+          title: 'Oh no! Algo salió mal.',
+          description: response.statusText
+        })
+        return null
+      }
+    } catch (error: any) {
+      toast({
+        variant: 'destructive',
+        title: 'Oh no! Algo salió mal.',
+        description: error.message
+      })
+      return null
+    } finally {
+      setLoadingUser(false)
+    }
+  }
+
+  async function addUser({
+    dataUser
+  }: {
+    dataUser: PropsAddUser
+  }): Promise<boolean> {
+    setLoadingUser(true)
+
+    const newUser = {
+      first_name: dataUser.first_name,
+      last_name: dataUser.last_name,
+      email: dataUser.email,
+      phone: dataUser.phone,
+      gender: dataUser.gender,
+      date: dataUser.date,
+      password: dataUser.password,
+      role: dataUser.role
+    }
+
+    try {
+      const response = await axios.post(
+        `${BASE_URL}api/v1/users`,
+        {
+          user: newUser
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: token
+          }
+        }
+      )
+
+      if (response.status === 201) {
+        return true
+      } else {
+        toast({
+          title: 'Oh no! Algo salió mal.',
+          description: response.statusText
+        })
+        return false
+      }
+    } catch (error: any) {
+      toast({
+        variant: 'destructive',
+        title: 'Oh no! Algo salió mal.',
+        description: error.message
+      })
+      return false
+    } finally {
+      setLoadingUser(false)
+    }
+  }
+
+  async function updateUser({
+    dataUser
+  }: {
+    dataUser: PropsAddUser
+  }): Promise<boolean> {
+    setLoadingUser(true)
+    const updateUser = {
+      id: dataUser.id,
+      first_name: dataUser.first_name,
+      last_name: dataUser.last_name,
+      email: dataUser.email,
+      phone: dataUser.phone,
+      gender: dataUser.gender,
+      date: dataUser.date,
+      password: dataUser.password,
+      role: dataUser.role
+    }
+
+    const url = `${BASE_URL}api/v1/user`
+    try {
+      const response = await axios.put(
+        url,
+        {
+          user: updateUser
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: token
+          }
+        }
+      )
+
+      if (response.status === 200 || response.status === 204) {
+        return true
+      } else {
+        toast({
+          title: 'Oh no! Algo salió mal.',
+          description: response.statusText
+        })
+        return false
+      }
+    } catch (error: any) {
+      toast({
+        variant: 'destructive',
+        title: 'Oh no! Algo salió mal.',
+        description: error.message
+      })
+      return false
+    } finally {
+      setLoadingUser(false)
+    }
+  }
+
+  async function deleteUsersById({
+    users
+  }: {
+    users: number[]
+  }): Promise<boolean> {
+    setLoadingUsers(true)
+    const url = `${BASE_URL}api/v1/user`
+    try {
+      const response = await axios.delete(url, {
+        headers: {
+          Authorization: token
+        },
+        data: {
+          ids: users
+        }
+      })
+
+      if (response.status === 200 || response.status === 204) {
+        toast({
+          title: `Actividades con id:'${users.map((user) => user)}' eliminado.`,
+          className: 'bg-green-600'
+        })
+        return true
+      } else {
+        toast({
+          title: 'Oh no! Algo salió mal.',
+          description: response.statusText
+        })
+        return false
+      }
+    } catch (error: any) {
+      toast({
+        variant: 'destructive',
+        title: 'Oh no! Algo salió mal.',
+        description: error.message
+      })
+      return false
     } finally {
       setLoadingUsers(false)
     }
@@ -493,7 +628,6 @@ export default function UserContextProvider({
         setRecoverState,
         userLogin,
         userLogout,
-        signUp,
         recover,
         getFleets,
         getFleetById,
@@ -501,7 +635,11 @@ export default function UserContextProvider({
         getWorkingFleet,
         updateWorkingFleet,
         getUsers,
-        getDrivers
+        getDrivers,
+        getUserById,
+        addUser,
+        updateUser,
+        deleteUsersById
       }}
     >
       {children}
