@@ -58,7 +58,8 @@ export default function TopBarWithLinks() {
               <Link
                 href="/panel-de-control/envios"
                 className={`hover:bg-blue-800 hover:opacity-70 px-4 py-2 rounded-lg transition duration-300 ${
-                  pathname === '/panel-de-control/envios' && 'bg-blue-800'
+                  pathname.startsWith('/panel-de-control/envios') &&
+                  'bg-blue-800'
                 }`}
               >
                 Envios
@@ -68,7 +69,7 @@ export default function TopBarWithLinks() {
                   <Link
                     href="/panel-de-control/registros"
                     className={`hover:bg-blue-800 hover:opacity-70 px-4 py-2 rounded-lg transition duration-300 ${
-                      pathname === '/panel-de-control/registros' &&
+                      pathname.startsWith('/panel-de-control/registros') &&
                       'bg-blue-800'
                     }`}
                   >
@@ -77,7 +78,8 @@ export default function TopBarWithLinks() {
                   <Link
                     href="/panel-de-control/usuarios"
                     className={`hover:bg-blue-800 hover:opacity-70 px-4 py-2 rounded-lg transition duration-300 ${
-                      pathname === '/panel-de-control/usuarios' && 'bg-blue-800'
+                      pathname.startsWith('/panel-de-control/usuarios') &&
+                      'bg-blue-800'
                     }`}
                   >
                     Usuarios
