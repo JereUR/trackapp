@@ -62,49 +62,6 @@ export const initialErrors: FormErrorsLogin = {
   password: ''
 }
 
-/* Register info */
-
-export interface Register {
-  first_name: string
-  last_name: string
-  email: string
-  gender: string
-  date: string
-  password: string
-  password_confirmation: string
-}
-
-export const initialDataRegister: Register = {
-  first_name: '',
-  last_name: '',
-  email: '',
-  gender: '',
-  date: '',
-  password: '',
-  password_confirmation: ''
-}
-
-export interface FormErrorsRegister {
-  first_name?: string
-  last_name?: string
-  email?: string
-  gender?: string
-  date?: string
-  password?: string
-  password_confirmation?: string
-  [key: string]: string | undefined
-}
-
-export const initialErrorsRegister: FormErrorsRegister = {
-  first_name: '',
-  last_name: '',
-  email: '',
-  gender: '',
-  date: '',
-  password: '',
-  password_confirmation: ''
-}
-
 /* Recover info */
 
 export interface Recover {
@@ -136,4 +93,58 @@ export interface FocusStateRecover {
 export const initialFocusRecover: FocusStateRecover = {
   password: false,
   confirm_password: false
+}
+
+/* Add user info */
+
+export interface PropsAddUser {
+  id?: number | null
+  first_name?: string
+  last_name?: string
+  email?: string
+  phone?: string
+  gender?: string
+  date?: string
+  role?: string
+  password?: string
+  password_confirmation?: string
+  [key: string]: string | undefined | number | null
+}
+
+export const initialDataRegister: PropsAddUser = {
+  id: null,
+  first_name: '',
+  last_name: '',
+  email: '',
+  phone: '',
+  gender: '',
+  date: '',
+  role: '',
+  password: '',
+  password_confirmation: ''
+}
+
+export interface FormErrorsAddUser {
+  first_name?: string
+  last_name?: string
+  email?: string
+  phone?: string
+  gender?: string
+  date?: string
+  role?: string
+  password?: string
+  password_confirmation?: string
+  [key: string]: string | undefined
+}
+
+export const initialErrorsRegister: FormErrorsAddUser = {
+  first_name: '',
+  last_name: '',
+  email: '',
+  phone: '',
+  gender: '',
+  date: '',
+  role: '',
+  password: '',
+  password_confirmation: ''
 }
