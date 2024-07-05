@@ -85,7 +85,7 @@ const ModalShipment: React.FC<Props> = ({
       )}
       {showConfirmDelete && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-75">
-          <div className="bg-card text-foreground p-6 rounded-lg shadow-lg w-1/3">
+          <div className="bg-card text-foreground p-6 rounded-lg shadow-lg w-3/4 md:w-1/3">
             <h4 className="text-lg font-semibold mb-4">
               Confirmar eliminación
             </h4>
