@@ -54,7 +54,7 @@ const SelectItemsPerPage: React.FC<Props> = ({
       {isOpen && (
         <div
           onClick={() => setIsOpen(false)}
-          className="absolute w-[20vw] xl:w-[15vw] bg-card mt-3 mr-5 rounded shadow-lg"
+          className="absolute w-[60vw] md:w-[20vw] xl:w-[15vw] bg-card mt-3 mr-5 rounded shadow-lg"
         >
           <div className="p-4" onClick={handleMenuClick}>
             <p className="text-lg font-medium text-foreground">
