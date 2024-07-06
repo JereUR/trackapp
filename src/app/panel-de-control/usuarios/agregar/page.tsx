@@ -1,3 +1,5 @@
+import UserForm from '@/components/dashboard/users/UserForm'
+import { initialDataAddUser } from '@/components/types/User'
 import { Metadata } from 'next'
 
 export const metadata: Metadata = {
@@ -7,7 +9,7 @@ export const metadata: Metadata = {
 const AddUsersPage = () => {
   return (
     <div className="m-4 md:m-10">
-      User form
+      <UserForm type="add" user={initialDataAddUser} />
     </div>
   )
 }
