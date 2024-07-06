@@ -235,7 +235,8 @@ export default function UserContextProvider({
   }
 
   async function getUserById({ id }: { id: string }): Promise<User | null> {
-    setLoadingUser(true)
+    return initialUsers[0]
+    setLoadingUsers(true)
     const params = new URLSearchParams()
     params.append('id', id)
     const url = `${BASE_URL}api/v1/user?${params.toString()}`
@@ -264,7 +265,7 @@ export default function UserContextProvider({
       })
       return null
     } finally {
-      setLoadingUser(false)
+      setLoadingUsers(false)
     }
   }
 
@@ -273,7 +274,7 @@ export default function UserContextProvider({
   }: {
     dataUser: PropsAddUser
   }): Promise<boolean> {
-    setLoadingUser(true)
+    setLoadingUsers(true)
 
     const newUser = {
       first_name: dataUser.first_name,
@@ -317,7 +318,7 @@ export default function UserContextProvider({
       })
       return false
     } finally {
-      setLoadingUser(false)
+      setLoadingUsers(false)
     }
   }
 
@@ -326,7 +327,7 @@ export default function UserContextProvider({
   }: {
     dataUser: PropsAddUser
   }): Promise<boolean> {
-    setLoadingUser(true)
+    setLoadingUsers(true)
     const updateUser = {
       id: dataUser.id,
       first_name: dataUser.first_name,
@@ -371,7 +372,7 @@ export default function UserContextProvider({
       })
       return false
     } finally {
-      setLoadingUser(false)
+      setLoadingUsers(false)
     }
   }
 
