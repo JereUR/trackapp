@@ -8,7 +8,8 @@ export const initialShipments: Shipment[] = [
       id: 2,
       email: 'leanlibutti@gmail.com',
       first_name: 'Leandro',
-      last_name: 'Libutti'
+      last_name: 'Libutti',
+      role: 'driver'
     },
     delivery_points: [
       {
@@ -64,7 +65,8 @@ export const initialShipments: Shipment[] = [
       id: 1,
       email: 'jeremias.jdv@gmail.com',
       first_name: 'Jeremías',
-      last_name: 'Dominguez Vega'
+      last_name: 'Dominguez Vega',
+      role: 'driver'
     },
     delivery_points: [
       {
@@ -120,7 +122,8 @@ export const initialShipments: Shipment[] = [
       id: 2,
       email: 'leanlibutti@gmail.com',
       first_name: 'Leandro',
-      last_name: 'Libutti'
+      last_name: 'Libutti',
+      role: 'driver'
     },
     delivery_points: [
       {
@@ -176,7 +179,8 @@ export const initialShipments: Shipment[] = [
       id: 2,
       email: 'jeremias.jdv@gmail.com',
       first_name: 'Jeremias',
-      last_name: 'Dominguez Vega'
+      last_name: 'Dominguez Vega',
+      role: 'driver'
     },
     delivery_points: [
       {
@@ -228,7 +232,8 @@ export const initialShipments: Shipment[] = [
       id: 2,
       email: 'leanlibutti@gmail.com',
       first_name: 'Leandro',
-      last_name: 'Libutti'
+      last_name: 'Libutti',
+      role: 'driver'
     },
     delivery_points: [
       {
@@ -287,7 +292,8 @@ export const initialShipmentsSameFleet: Shipment[] = [
       id: 2,
       email: 'leanlibutti@gmail.com',
       first_name: 'Leandro',
-      last_name: 'Libutti'
+      last_name: 'Libutti',
+      role: 'driver'
     },
     delivery_points: [
       {
@@ -343,7 +349,8 @@ export const initialShipmentsSameFleet: Shipment[] = [
       id: 2,
       email: 'leanlibutti@gmail.com',
       first_name: 'Leandro',
-      last_name: 'Libutti'
+      last_name: 'Libutti',
+      role: 'driver'
     },
     delivery_points: [
       {
@@ -399,7 +406,8 @@ export const initialShipmentsSameFleet: Shipment[] = [
       id: 2,
       email: 'jeremias.jdv@gmail.com',
       first_name: 'Jeremias',
-      last_name: 'Dominguez Vega'
+      last_name: 'Dominguez Vega',
+      role: 'driver'
     },
     delivery_points: [
       {
@@ -454,7 +462,8 @@ export const onProgressShipments: Shipment[] = [
       id: 1,
       email: 'jeremias.jdv@gmail.com',
       first_name: 'Jeremías',
-      last_name: 'Dominguez Vega'
+      last_name: 'Dominguez Vega',
+      role: 'driver'
     },
     delivery_points: [
       {
@@ -510,7 +519,8 @@ export const onProgressShipments: Shipment[] = [
       id: 2,
       email: 'leanlibutti@gmail.com',
       first_name: 'Leandro',
-      last_name: 'Libutti'
+      last_name: 'Libutti',
+      role: 'driver'
     },
     delivery_points: [
       {
@@ -597,7 +607,8 @@ export const initialCustomShipments: CustomShipment[] = [
         ]
       }
     ]
-  },{
+  },
+  {
     id: 1,
     name: 'Envío 1',
     delivery_points: [
