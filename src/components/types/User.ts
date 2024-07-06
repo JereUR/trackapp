@@ -3,13 +3,13 @@ export type User = {
   first_name: string
   last_name: string
   email: string
-  phone?: string
+  phone?: number
   gender?: string
   date?: string
   password?: string
   created_at?: string
   updated_at?: string
-  role?: string
+  role: string
 }
 
 type UserSession = {
@@ -99,26 +99,26 @@ export const initialFocusRecover: FocusStateRecover = {
 
 export interface PropsAddUser {
   id?: number | null
-  first_name?: string
-  last_name?: string
-  email?: string
-  phone?: string
-  gender?: string
-  date?: string
-  role?: string
+  first_name: string
+  last_name: string
+  email: string
+  phone?: number
+  gender: string
+  date: Date
+  role: string
   password?: string
   password_confirmation?: string
-  [key: string]: string | undefined | number | null
+  [key: string]: string | undefined | number | null | Date
 }
 
-export const initialDataRegister: PropsAddUser = {
+export const initialDataAddUser: PropsAddUser = {
   id: null,
   first_name: '',
   last_name: '',
   email: '',
-  phone: '',
+  phone: undefined,
   gender: '',
-  date: '',
+  date: new Date(),
   role: '',
   password: '',
   password_confirmation: ''
@@ -137,7 +137,7 @@ export interface FormErrorsAddUser {
   [key: string]: string | undefined
 }
 
-export const initialErrorsRegister: FormErrorsAddUser = {
+export const initialErrorsAddUser: FormErrorsAddUser = {
   first_name: '',
   last_name: '',
   email: '',
@@ -148,3 +148,7 @@ export const initialErrorsRegister: FormErrorsAddUser = {
   password: '',
   password_confirmation: ''
 }
+
+export const posibleRoles = ['Admin', 'Staff', 'Driver']
+
+export const posibleGenders = ['Masculino', 'Femenino', 'Otros']
