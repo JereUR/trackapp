@@ -82,7 +82,7 @@ const ModalMap = ({ shipment, onClose }) => {
   const position = [shipment.actual_position.lat, shipment.actual_position.lng]
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-      <div className="bg-white dark:bg-gray-800 p-2 md:p-4 m-2 md:m-8 rounded shadow-lg w-full max-w-lg mx-2">
+      <div className="bg-background dark:bg-gray-800 p-2 md:p-4 m-2 md:m-8 rounded shadow-lg w-full mx-2">
         <div className="flex justify-end mb-2">
           <button
             onClick={onClose}
@@ -96,7 +96,7 @@ const ModalMap = ({ shipment, onClose }) => {
           zoom={ZOOM_LEVEL}
           style={{ height: '80vh', width: '100%' }}
           whenCreated={setMap}
-          className="z-50"
+          className="z-20"
         >
           <TileLayer
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
