@@ -122,15 +122,15 @@ const UsersTable = () => {
       <div className="mb-8">
         <p className="text-4xl font-light">Usuarios</p>
       </div>
-      <div className="flex items-center justify-between my-4">
-        <div className="flex justify-center gap-2">
+      <div className="flex flex-col md:flex-row md:items-center justify-start md:justify-between my-4">
+        <div className="flex flex-col md:flex-row md:justify-center gap-2">
           <Search placeholder="Buscar un usuario..." />
           <SelectItemsPerPage
             selectedItemsPerPage={selectedItemsPerPage}
             setSelectedItemsPerPage={setSelectedItemsPerPage}
           />
         </div>
-        <div className="flex justify-center gap-4">
+        <div className="flex justify-end md:justify-center gap-4 -mb-4 md:my-0">
           <Button
             className="bg-green-500 mx-8 md:mr-8 transition duration-300 ease-in-out hover:bg-green-600 hover:scale-[1.05] text-foreground"
             onClick={handleAdd}
