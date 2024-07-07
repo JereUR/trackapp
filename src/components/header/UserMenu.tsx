@@ -88,7 +88,7 @@ export default function UserMenu({ user }: UserMenuProps) {
       {menuOpen && (
         <div className="absolute right-0 mt-2 px-2 rounded-lg w-48 bg-gray-100 dark:bg-gray-700 border dark:border-none shadow-lg  py-2">
           <Link
-            href="/panel-de-control/mi-perfil"
+            href="/mi-perfil"
             className="block px-4 py-2 text-foreground rounded-lg dark:text-gray-200 transition duration-300 ease-in-out hover:bg-blue-500 dark:hover:bg-blue-800"
           >
             Mi Perfil
