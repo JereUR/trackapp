@@ -51,18 +51,6 @@ const FleetItem: React.FC<Props> = ({ fleet }) => {
         <CardHeader>
           <CardTitle className="flex gap-6 items-center">
             <p className="text-lg md:text-2xl font-bold">{fleet.name}</p>
-            {fleet.on_working_area ? (
-              <p className="text-sm md:text-base text-foreground font-normal py-2 px-4 rounded-full bg-orange-500 opacity-90">
-                Area de trabajo activa
-              </p>
-            ) : (
-              <p
-                className="text-sm md:text-base text-foreground font-normal py-2 px-4 rounded-full bg-gray-500 opacity-90"
-                style={{ textShadow: '2px 2px 4px rgba(0, 0, 0, 0.3)' }}
-              >
-                Area de trabajo inactiva
-              </p>
-            )}
           </CardTitle>
         </CardHeader>
         <CardContent className="flex">
@@ -76,7 +64,7 @@ const FleetItem: React.FC<Props> = ({ fleet }) => {
           </div>
         </CardContent>
       </div>
-      <div className="flex flex-col gap-4 md:gap-6 mx-4 mb-2 md:my-auto md:mr-10">
+      <div className="flex flex-col gap-4 md:gap-6 mx-4 mb-2 md:my-8 md:mr-10">
         <Button
           className="text-sm md:text-base flex items-center gap-2 border-none bg-sky-500 hover:bg-sky-600 dark:bg-sky-600 dark:hover:bg-sky-700  text-foreground font-bold"
           disabled={!fleet.gps}
@@ -123,24 +111,6 @@ const FleetItem: React.FC<Props> = ({ fleet }) => {
             </div>
           </div>
         )}
-        <Button
-          className={`border-none text-sm md:text-base font-bold text-foreground ${
-            fleet.on_working_area
-              ? 'transition duration-300 ease-in-out bg-red-500 hover:bg-red-600 dark:bg-red-600 dark:hover:bg-red-700'
-              : 'transition duration-300 ease-in-out bg-green-500 hover:bg-green-600 dark:bg-green-600  dark:hover:bg-green-700'
-          }`}
-          disabled={!fleet.gps}
-          onClick={() => updateWorkingFleet({ id: fleet.id })}
-        >
-          {fleet.on_working_area ? (
-            <RxPinBottom className="h-5 w-5 mr-2" />
-          ) : (
-            <RxPinTop className="h-5 w-5 mr-2" />
-          )}
-          {fleet.on_working_area
-            ? 'Salir de area de trabajo'
-            : 'Ingresar a area de trabajo'}
-        </Button>
       </div>
     </Card>
   )

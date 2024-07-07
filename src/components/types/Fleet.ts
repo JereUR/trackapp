@@ -3,7 +3,7 @@ export type Fleet = {
   name: string
   description?: string
   gps: number | null
-  on_working_area: boolean
+  
 }
 
 export interface PropsUpdateFleet {
