@@ -331,7 +331,11 @@ const UserForm: React.FC<Props> = ({
               type="date"
               name="date"
               className="mt-1 block w-full p-2 border border-gray-400 dark:border-gray-700 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm cursor-pointer"
-              value={dataUser.date.toISOString().split('T')[0]}
+              value={
+                dataUser.date
+                  ? dataUser.date.toISOString().split('T')[0]
+                  : new Date().toISOString().split('T')[0]
+              }
               onChange={handleInputChange}
             />
           </div>
