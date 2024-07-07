@@ -1,9 +1,20 @@
 'use client'
 
-import React, { useEffect, useRef, useState } from 'react'
-import { Cross2Icon, EyeClosedIcon, EyeOpenIcon } from '@radix-ui/react-icons'
+import React, {
+  Dispatch,
+  SetStateAction,
+  useEffect,
+  useRef,
+  useState
+} from 'react'
+import {
+  Cross1Icon,
+  Cross2Icon,
+  EyeClosedIcon,
+  EyeOpenIcon
+} from '@radix-ui/react-icons'
 import { BsCheck2 } from 'react-icons/bs'
-import { useRouter } from 'next/navigation'
+import { useSearchParams } from 'next/navigation'
 
 import ErrorText from '@/components/ErrorText'
 import useUser from '@/components/hooks/useUser'
@@ -20,24 +31,26 @@ import { useToast } from '@/components/ui/use-toast'
 import { FormErrorsAddUser } from './../../types/User'
 
 interface Props {
-  type: string
-  user: PropsAddUser
+  dataUser: PropsAddUser
+  setDataUser: Dispatch<SetStateAction<PropsAddUser>>
+  typeForm: string
+  setShowForm: Dispatch<SetStateAction<boolean>>
+  selectedItemsPerPage:number
 }
 
-const UserForm: React.FC<Props> = ({ type, user }) => {
-  const [dataUser, setDataUser] = useState<PropsAddUser>(user)
+const UserForm: React.FC<Props> = ({
+  dataUser,
+  setDataUser,
+  typeForm,
+  setShowForm,selectedItemsPerPage
+}) => {
   const [showPassword, setShowPassword] = useState<boolean>(false)
   const [formErrors, setFormErrors] =
     useState<FormErrorsAddUser>(initialErrorsAddUser)
 
-  const { addUser, updateUser, loadingUsers } = useUser()
-
-  const router = useRouter()
+  const { addUser, updateUser, loadingUsers,getUsers } = useUser()
+  const searchParams = useSearchParams()
   const { toast } = useToast()
-
-  useEffect(() => {
-    setDataUser(user)
-  }, [user])
 
   const validations = () => {
     const errors: FormErrorsAddUser = {}
@@ -78,7 +91,7 @@ const UserForm: React.FC<Props> = ({ type, user }) => {
       errors.role = 'Este campo es obligatorio.'
     }
 
-    if (type === 'add') {
+    if (typeForm === 'add') {
       if (dataUser.password != undefined) {
         if (!dataUser.password.trim()) {
           errors.password = 'Este campo es obligatorio.'
@@ -116,13 +129,7 @@ const UserForm: React.FC<Props> = ({ type, user }) => {
   }
 
   const handleClose = () => {
-    if (
-      window.confirm(
-        '¿Estás seguro que quieres cerrar el formulario? Se perderán todos los cambios'
-      )
-    ) {
-      router.push('/panel-de-control/usuarios')
-    }
+    setShowForm(false)
   }
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -132,31 +139,35 @@ const UserForm: React.FC<Props> = ({ type, user }) => {
     setFormErrors(err)
 
     if (Object.keys(err).length === 0) {
-      if (type === 'add') {
+      if (typeForm === 'add') {
         const res = await addUser({ dataUser })
         if (res) {
           toast({
             title: 'Usuario agregado.',
-            description: 'Redireccionando...',
             className: 'bg-green-600'
           })
-
-          setTimeout(() => {
-            router.replace('/panel-de-control/usuarios')
-          }, 1000)
+          const q = searchParams.get('q') || ''
+          const page = searchParams.get('page') || '1'
+          getUsers({
+            q,
+            page,
+            ITEMS_PER_PAGE: selectedItemsPerPage
+          })
         }
       } else {
         const res = await updateUser({ dataUser })
         if (res) {
           toast({
-            title: 'usuario actualizado.',
-            description: 'Redireccionando...',
+            title: 'Usuario actualizado.',
             className: 'bg-green-600'
           })
-
-          setTimeout(() => {
-            router.replace('/panel-de-control/usuarios')
-          }, 1000)
+          const q = searchParams.get('q') || ''
+          const page = searchParams.get('page') || '1'
+          getUsers({
+            q,
+            page,
+            ITEMS_PER_PAGE: selectedItemsPerPage
+          })
         }
       }
       setDataUser(initialDataAddUser)
@@ -165,10 +176,18 @@ const UserForm: React.FC<Props> = ({ type, user }) => {
   }
 
   return (
-    <div>
-      <h1 className="text-2xl font-bold mb-6">Agregar Usuario</h1>
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <div className="grid grid-cols-3 gap-8 items-center">
+    <div className="max-w-lg mx-auto p-4 bg-card">
+      <div
+        className="absolute cursor-pointer top-0 right-0 mt-4 mr-4 trasition duration-300 ease-in-out hover:scale-[1.03]"
+        onClick={() => setShowForm(false)}
+      >
+        <Cross1Icon className="text-red-600 h-5 w-5" />
+      </div>
+      <h2 className="text-2xl mb-4">
+        {typeForm === 'add' ? 'Agregar Usuario' : 'Editar Usuario'}
+      </h2>
+      <form onSubmit={handleSubmit} className="my-16">
+        <div className="grid grid-cols-2 gap-8 items-center">
           <div>
             <div className="flex gap-2 items-center">
               <label
@@ -236,25 +255,9 @@ const UserForm: React.FC<Props> = ({ type, user }) => {
               id="phone"
               name="phone"
               value={dataUser.phone}
+              inputMode="numeric" 
               onChange={handleInputChange}
               className="mt-1 block w-full p-2 border border-gray-400 dark:border-gray-700 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-            />
-          </div>
-
-          <div>
-            <div className="flex gap-2 items-center">
-              <label htmlFor="date" className="font-light text-foreground">
-                Fecha de nacimiento
-              </label>
-              {formErrors.date && <ErrorText text={formErrors.date} />}
-            </div>
-            {formErrors.date && <ErrorText text={formErrors.date} />}
-            <input
-              type="date"
-              name="date"
-              className="mt-1 block w-full p-2 border border-gray-400 dark:border-gray-700 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm cursor-pointer"
-              value={dataUser.date.toISOString().split('T')[0]}
-              onChange={handleInputChange}
             />
           </div>
           <div>
@@ -311,8 +314,25 @@ const UserForm: React.FC<Props> = ({ type, user }) => {
               ))}
             </select>
           </div>
-
-          {type === 'add' && (
+          <div>
+            <div className="flex gap-2 items-center">
+              <label htmlFor="date" className="font-light text-foreground">
+                Fecha de nacimiento
+              </label>
+              {formErrors.date && <ErrorText text={formErrors.date} />}
+            </div>
+            {formErrors.date && <ErrorText text={formErrors.date} />}
+            <input
+              type="date"
+              name="date"
+              className="mt-1 block w-full p-2 border border-gray-400 dark:border-gray-700 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm cursor-pointer"
+              value={dataUser.date.toISOString().split('T')[0]}
+              onChange={handleInputChange}
+            />
+          </div>
+        </div>
+        <div className="flex gap-8 my-8">
+          {typeForm === 'add' && (
             <div className="flex flex-col gap-4 mb-[5vh]">
               <div className="flex gap-2 items-center">
                 <label
@@ -346,7 +366,7 @@ const UserForm: React.FC<Props> = ({ type, user }) => {
               </div>
             </div>
           )}
-          {type === 'add' && (
+          {typeForm === 'add' && (
             <div className="flex flex-col gap-4 mb-[5vh]">
               <div className="flex gap-2 items-center">
                 <label

@@ -1,20 +1,19 @@
 'use client'
 
-import { useEffect, useState } from 'react'
-import { useRouter, useSearchParams } from 'next/navigation'
-import Link from 'next/link'
+import React, { useState, useEffect } from 'react'
 import { FaEdit, FaTrash } from 'react-icons/fa'
+import { CgAdd } from 'react-icons/cg'
+import { useRouter, useSearchParams } from 'next/navigation'
+
 import useUser from '@/components/hooks/useUser'
 import Search from '@/components/search/Search'
 import SelectItemsPerPage from '../SelectedItemsPerPage'
 import { Button } from '@/components/ui/button'
-import { CgAdd } from 'react-icons/cg'
 import SelectedUsersActions from './SelectedUsersActions'
 import TableSkeleton from '@/components/skeletons/TableSkeleton'
-import Loader from '@/components/Loader'
 import Pagination from '@/components/pagination/Pagination'
-
-const BASE_URL = process.env.NEXT_PUBLIC_BASE_BACKEND_URL
+import { initialDataAddUser, PropsAddUser, User } from '@/components/types/User'
+import UserForm from './UserForm'
 
 const UsersTable = () => {
   const [selectedUsers, setSelectedUsers] = useState<number[]>([])
@@ -23,9 +22,12 @@ const UsersTable = () => {
   const [showConfirmDeleteMap, setShowConfirmDeleteMap] = useState<{
     [key: number]: boolean
   }>({})
+  const [showForm, setShowForm] = useState<boolean>(false)
+  const [typeForm, setTypeForm] = useState<'add' | 'edit' | ''>('')
+
+  const [dataUser, setDataUser] = useState<PropsAddUser>(initialDataAddUser)
 
   const router = useRouter()
-
   const searchParams = useSearchParams()
   const { token, getUsers, users, deleteUsersById, loadingUsers, count } =
     useUser()
@@ -52,7 +54,7 @@ const UsersTable = () => {
         ...prevState,
         [user]: false
       }))
-      window.location.reload()
+      window.location.reload() // Esta línea puede no ser necesaria y deberías considerar otras formas de actualizar los datos después de eliminar.
     }
   }
 
@@ -95,8 +97,31 @@ const UsersTable = () => {
     setSelectedUsers(newSelectedUsers)
   }
 
+  const handleAdd = () => {
+    setShowForm(true)
+    setTypeForm('add')
+  }
+
+  const handleEdit = async (u: User) => {
+    setDataUser({
+      id: u.id,
+      first_name: u.first_name,
+      last_name: u.last_name,
+      email: u.email,
+      phone: u.phone,
+      gender: u.gender ? u.gender : '',
+      date: u.date ? new Date(u.date) : new Date(),
+      role: u.role
+    })
+    setShowForm(true)
+    setTypeForm('edit')
+  }
+
   return (
-    <div className="container bg-background p-1 rounded-lg mt-10">
+    <div className="relative container bg-background p-1 rounded-lg mt-10">
+      <div className="mb-8">
+        <p className="text-4xl font-light">Usuarios</p>
+      </div>
       <div className="flex items-center justify-between my-4">
         <div className="flex justify-center gap-2">
           <Search placeholder="Buscar un usuario..." />
@@ -106,13 +131,14 @@ const UsersTable = () => {
           />
         </div>
         <div className="flex justify-center gap-4">
-          <Button className="bg-green-500 mx-8 md:mr-8 transition duration-300 ease-in-out hover:bg-green-600 hover:scale-[1.05] text-foreground">
-            <Link href={'/panel-de-control/usuarios/agregar'}>
-              <p className="flex gap-2 items-center text-lg font-semibold">
-                <CgAdd className="h-6 w-6" />
-                Agregar
-              </p>
-            </Link>
+          <Button
+            className="bg-green-500 mx-8 md:mr-8 transition duration-300 ease-in-out hover:bg-green-600 hover:scale-[1.05] text-foreground"
+            onClick={handleAdd}
+          >
+            <p className="flex gap-2 items-center text-lg font-semibold">
+              <CgAdd className="h-6 w-6" />
+              Agregar
+            </p>
           </Button>
           {selectedUsers.length > 0 && (
             <SelectedUsersActions
@@ -126,32 +152,28 @@ const UsersTable = () => {
       {loadingUsers && users ? (
         <TableSkeleton />
       ) : (
-        <table className="transactions-table w-full mb-4 mt-8">
-          <thead className="font-bold text-center text-muted bg-foreground text-xs xl:text-sm">
-            <tr>
-              <td className="px-2 py-5">
-                <input
-                  type="checkbox"
-                  checked={selectAll}
-                  onChange={handleSelectAllChange}
-                  className="cursor-pointer h-5 w-5"
-                />
-              </td>
-              <td className="px-2 py-5">Nombre</td>
-              <td className="px-2 py-5">Apellido</td>
-              <td className="px-2 py-5">Email</td>
-              <td className="px-2 py-5">Teléfono</td>
-
-              <td className="px-2 py-5">Género</td>
-
-              <td className="px-2 py-5">Fecha de nacimiento</td>
-
-              <td className="px-2 py-5">Rol</td>
-
-              <td className="px-2 py-5">Acción</td>
-            </tr>
-          </thead>
-          {users.length > 0 ? (
+        <>
+          <table className="transactions-table w-full mb-4 mt-8">
+            <thead className="font-bold text-center text-muted bg-foreground text-xs xl:text-sm">
+              <tr>
+                <th className="px-2 py-5">
+                  <input
+                    type="checkbox"
+                    checked={selectAll}
+                    onChange={handleSelectAllChange}
+                    className="cursor-pointer h-5 w-5"
+                  />
+                </th>
+                <th className="px-2 py-5">Nombre</th>
+                <th className="px-2 py-5">Apellido</th>
+                <th className="px-2 py-5">Email</th>
+                <th className="px-2 py-5">Teléfono</th>
+                <th className="px-2 py-5">Género</th>
+                <th className="px-2 py-5">Fecha de nacimiento</th>
+                <th className="px-2 py-5">Rol</th>
+                <th className="px-2 py-5">Acción</th>
+              </tr>
+            </thead>
             <tbody className="text-foreground text-xs xl:text-sm font-light">
               {users.map((user) => (
                 <tr
@@ -227,61 +249,74 @@ const UsersTable = () => {
                   </td>
                   <td className="border-b border-foreground px-2 py-5">
                     <div className="flex justify-center gap-2">
-                      <div>
-                        <Link
-                          href={`/panel-de-control/usuarios/editar/${user.id}`}
-                        >
-                          <button className="p-2 rounded-lg text-white bg-sky-600 border-none cursor-pointer transitiopn duration-300 ease-in-out hover:scale-105 hover:shadow-md">
-                            <FaEdit />
-                          </button>
-                        </Link>
-                      </div>
-                      <div>
-                        <button
-                          className="p-2 rounded-lg text-white bg-red-600 border-none cursor-pointer transitiopn duration-300 ease-in-out  hover:scale-105 hover:shadow-md"
-                          onClick={() => handleConfirmDelete(user.id)}
-                        >
-                          <FaTrash />
-                        </button>
-                        {showConfirmDeleteMap[user.id] && (
-                          <div className="fixed top-0 left-0 w-full h-full bg-black/30 z-50 flex justify-center items-center">
-                            <div className="flex flex-col gap-4 justify-center items-center bg-background border border-blue-600 p-8 rounded-lg shadow-md">
-                              <p>
-                                {`¿Está seguro de que desea eliminar la actividad '
-                                ${user.first_name}'?`}
-                              </p>
-                              <div className="flex justify-end gap-2">
-                                <Button
-                                  variant="secondary"
-                                  onClick={() => handleCancelDelete(user.id)}
-                                >
-                                  Cancelar
-                                </Button>
-                                <Button onClick={() => handleDelete(user.id)}>
-                                  {loadingUsers ? <Loader /> : 'Confirmar'}
-                                </Button>
-                              </div>
-                            </div>
-                          </div>
-                        )}
-                      </div>
+                      <button
+                        className="p-2 rounded-lg text-white bg-sky-600 border-none cursor-pointer transitiopn duration-300 ease-in-out hover:scale-[1.1]"
+                        onClick={() => handleEdit(user)}
+                      >
+                        <FaEdit className="h-4 w-4" />
+                      </button>
+                      <button
+                        className="p-2 rounded-lg text-white bg-red-600 border-none cursor-pointer transitiopn duration-300 ease-in-out hover:scale-[1.1]"
+                        onClick={() => handleConfirmDelete(user.id)}
+                      >
+                        <FaTrash className="h-4 w-4" />
+                      </button>
                     </div>
                   </td>
                 </tr>
               ))}
             </tbody>
-          ) : (
-            <tbody className="text-center">
-              <tr>
-                <td className="py-4 text-lg font-light italic border-b">
-                  Sin usuarios.
-                </td>
-              </tr>
-            </tbody>
-          )}
-        </table>
+          </table>
+          <Pagination count={count} ITEMS_PER_PAGE={selectedItemsPerPage} />
+        </>
       )}
-      <Pagination count={count} ITEMS_PER_PAGE={selectedItemsPerPage} />
+      {showForm && (
+        <div className="fixed inset-0 flex items-center justify-left bg-gray-900 bg-opacity-50 z-50">
+          <div
+            className={`absolute h-[870px] bottom-0 bg-background p-4 shadow-lg transform translate-x-0 transition duration-300 ease-in-out w-full max-w-lg ${
+              showForm ? 'slide-in-right' : ''
+            }`}
+          >
+            <UserForm
+              typeForm={typeForm}
+              dataUser={dataUser}
+              setDataUser={setDataUser}
+              setShowForm={setShowForm}
+              selectedItemsPerPage={selectedItemsPerPage}
+            />
+          </div>
+        </div>
+      )}
+      {Object.keys(showConfirmDeleteMap).map((key: string) => (
+        <div
+          key={key}
+          className={`fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 z-50 transition-opacity duration-300 ${
+            showConfirmDeleteMap[parseInt(key)]
+              ? 'opacity-100'
+              : 'opacity-0 pointer-events-none'
+          }`}
+        >
+          <div className="bg-background rounded-lg p-4 shadow-lg transform translate-x-0 transition duration-300 ease-in-out">
+            <p className="text-lg font-semibold mb-4">
+              ¿Seguro que deseas eliminar este usuario?
+            </p>
+            <div className="flex justify-center gap-4">
+              <button
+                className="bg-red-500 text-white px-4 py-2 rounded-lg shadow-md transition duration-300 ease-in-out hover:bg-red-600"
+                onClick={() => handleDelete(parseInt(key))}
+              >
+                Eliminar
+              </button>
+              <button
+                className="bg-gray-300 text-gray-800 px-4 py-2 rounded-lg shadow-md transition duration-300 ease-in-out hover:bg-gray-400"
+                onClick={() => handleCancelDelete(parseInt(key))}
+              >
+                Cancelar
+              </button>
+            </div>
+          </div>
+        </div>
+      ))}
     </div>
   )
 }
