@@ -14,7 +14,7 @@ import { usePathname } from 'next/navigation'
 import { useRouter } from 'next/navigation'
 import axios from 'axios'
 
-import { PropsAddUser, User } from '../types/User'
+import { PropsAddUser, PropsUpdateProfile, User } from '../types/User'
 import { useToast } from '../ui/use-toast'
 import { removeCookies } from '../actions/removeCookies'
 import { Fleet, PropsUpdateFleet } from '../types/Fleet'
@@ -38,6 +38,11 @@ type UserContextType = {
   }) => void
   userLogout: () => void
   recover: ({ email }: { email: string }) => Promise<void>
+  updateProfile: ({
+    dataUser
+  }: {
+    dataUser: PropsUpdateProfile
+  }) => Promise<boolean>
   users: User[]
   loadingUsers: boolean
   getUsers: ({
@@ -177,6 +182,57 @@ export default function UserContextProvider({
         title: 'Oh no! Algo salió mal.',
         description: error.message
       })
+    } finally {
+      setLoadingUser(false)
+    }
+  }
+
+  async function updateProfile({
+    dataUser
+  }: {
+    dataUser: PropsUpdateProfile
+  }): Promise<boolean> {
+    setLoadingUser(true)
+
+    const newProfile = {
+      first_name: dataUser.first_name,
+      last_name: dataUser.last_name,
+      phone: dataUser.phone,
+      gender: dataUser.gender,
+      date: dataUser.date,
+      password: dataUser.password
+    }
+
+    try {
+      const response = await axios.post(
+        `${BASE_URL}api/v1/user`,
+        {
+          user: newProfile
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: token
+          }
+        }
+      )
+
+      if (response.status === 201) {
+        return true
+      } else {
+        toast({
+          title: 'Oh no! Algo salió mal.',
+          description: response.statusText
+        })
+        return false
+      }
+    } catch (error: any) {
+      toast({
+        variant: 'destructive',
+        title: 'Oh no! Algo salió mal.',
+        description: error.message
+      })
+      return false
     } finally {
       setLoadingUser(false)
     }
@@ -558,6 +614,7 @@ export default function UserContextProvider({
         fleets,
         token,
         recoverState,
+        updateProfile,
         loadingUser,
         setLoadingUser,
         loadingUsers,
