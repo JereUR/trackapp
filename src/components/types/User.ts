@@ -103,8 +103,8 @@ export interface PropsAddUser {
   last_name: string
   email: string
   phone?: number
-  gender: string
-  date: Date
+  gender?: string
+  date?: Date
   role: string
   password?: string
   password_confirmation?: string
@@ -156,8 +156,8 @@ export interface PropsUpdateProfile {
   first_name: string
   last_name: string
   phone?: number
-  gender: string
-  date: Date
+  gender?: string
+  date?: Date
   password: string
   password_confirmation: string
   [key: string]: string | undefined | number | null | Date
