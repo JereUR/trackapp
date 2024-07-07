@@ -12,6 +12,7 @@ import TopBarWithLinks from '@/components/header/TopBarWithLinks'
 import { Toaster } from '@/components/ui/toaster'
 import ShipmentsContextProvider from '@/components/context/ShipmentsContext'
 import ChatContextProvider from '@/components/context/ChatContext'
+import ChatButton from '@/components/chat/ChatButton'
 
 const fontSans = FontSans({
   subsets: ['latin'],
@@ -55,6 +56,7 @@ export default function RootLayout({
                     <div>
                       <TopBarWithLinks />
                       {children}
+                      <ChatButton />
                     </div>
                   )}
 
