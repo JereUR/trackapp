@@ -56,6 +56,8 @@ type UserContextType = {
     ITEMS_PER_PAGE: number
     role?: string
   }) => void
+  getAllUsers: () => Promise<User[] | null>
+  getUsersToChat: ({ q }: { q: string }) => Promise<User[] | null>
   getUserById: ({ id }: { id: string }) => Promise<User | null>
   addUser: ({ dataUser }: { dataUser: PropsAddUser }) => Promise<boolean>
   updateUser: ({ dataUser }: { dataUser: PropsAddUser }) => Promise<boolean>
@@ -283,6 +285,81 @@ export default function UserContextProvider({
         title: 'Oh no! Algo salió mal.',
         description: error.message
       })
+    } finally {
+      setLoadingUsers(false)
+    }
+  }
+
+  async function getAllUsers(): Promise<User[] | null> {
+    return initialUsers
+    setLoadingUsers(true)
+    const params = new URLSearchParams()
+    const url = `${BASE_URL}api/v1/users`
+
+    try {
+      const response = await axios.get(url, {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: token
+        }
+      })
+
+      if (response.status === 200 || response.status === 204) {
+        return response.data.users
+      } else {
+        toast({
+          title: 'Oh no! Algo salió mal.',
+          description: response.statusText
+        })
+        return null
+      }
+    } catch (error: any) {
+      toast({
+        variant: 'destructive',
+        title: 'Oh no! Algo salió mal.',
+        description: error.message
+      })
+      return null
+    } finally {
+      setLoadingUsers(false)
+    }
+  }
+
+  async function getUsersToChat({
+    q = ''
+  }: {
+    q?: string
+  }): Promise<User[] | null> {
+    return initialUsers
+    setLoadingUsers(true)
+    const params = new URLSearchParams()
+    params.append('regex', q)
+    const url = `${BASE_URL}api/v1/users?${params.toString()}`
+
+    try {
+      const response = await axios.get(url, {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: token
+        }
+      })
+
+      if (response.status === 200 || response.status === 204) {
+        return response.data
+      } else {
+        toast({
+          title: 'Oh no! Algo salió mal.',
+          description: response.statusText
+        })
+        return null
+      }
+    } catch (error: any) {
+      toast({
+        variant: 'destructive',
+        title: 'Oh no! Algo salió mal.',
+        description: error.message
+      })
+      return null
     } finally {
       setLoadingUsers(false)
     }
@@ -627,6 +704,8 @@ export default function UserContextProvider({
         getFleetById,
         updateFleet,
         getUsers,
+        getAllUsers,
+        getUsersToChat,
         getDrivers,
         getUserById,
         addUser,
