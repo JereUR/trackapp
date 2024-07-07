@@ -119,7 +119,7 @@ const ShipmentForm: React.FC<Props> = ({ type, shipment }) => {
   const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const { name, value } = event.target
     setDataShipment({ ...dataShipment, [name]: value })
-    setFormErrors({ ...formErrors, [name]: '' })
+    if (value) setFormErrors({ ...formErrors, [name]: '' })
   }
 
   const handleSelectDeliveryPoint = (
@@ -163,7 +163,7 @@ const ShipmentForm: React.FC<Props> = ({ type, shipment }) => {
     } else {
       setDataShipment({ ...dataShipment, [name]: value })
     }
-    setFormErrors({ ...formErrors, [name]: '' })
+    if (value) setFormErrors({ ...formErrors, [name]: '' })
   }
 
   const handleClose = () => {

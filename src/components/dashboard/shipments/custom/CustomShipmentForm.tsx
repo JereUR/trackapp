@@ -93,7 +93,7 @@ const CustomShipmentForm: React.FC<Props> = ({ type, shipment }) => {
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target
     setDataShipment({ ...dataShipment, [name]: value })
-    setFormErrors({ ...formErrors, [name]: '' })
+    if (value) setFormErrors({ ...formErrors, [name]: '' })
   }
 
   const handleSelectDeliveryPoint = (

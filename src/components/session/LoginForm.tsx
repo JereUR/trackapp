@@ -57,6 +57,7 @@ const LoginForm = () => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
     setDataLogin({ ...dataLogin, [name]: value })
+    if (value) setFormErrors({ ...formErrors, [name]: '' })
   }
 
   const handleForgotPasswordClick = () => {

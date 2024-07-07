@@ -35,20 +35,21 @@ interface Props {
   setDataUser: Dispatch<SetStateAction<PropsAddUser>>
   typeForm: string
   setShowForm: Dispatch<SetStateAction<boolean>>
-  selectedItemsPerPage:number
+  selectedItemsPerPage: number
 }
 
 const UserForm: React.FC<Props> = ({
   dataUser,
   setDataUser,
   typeForm,
-  setShowForm,selectedItemsPerPage
+  setShowForm,
+  selectedItemsPerPage
 }) => {
   const [showPassword, setShowPassword] = useState<boolean>(false)
   const [formErrors, setFormErrors] =
     useState<FormErrorsAddUser>(initialErrorsAddUser)
 
-  const { addUser, updateUser, loadingUsers,getUsers } = useUser()
+  const { addUser, updateUser, loadingUsers, getUsers } = useUser()
   const searchParams = useSearchParams()
   const { toast } = useToast()
 
@@ -115,7 +116,7 @@ const UserForm: React.FC<Props> = ({
   const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const { name, value } = event.target
     setDataUser({ ...dataUser, [name]: value })
-    setFormErrors({ ...formErrors, [name]: '' })
+    if (value) setFormErrors({ ...formErrors, [name]: '' })
   }
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -125,7 +126,7 @@ const UserForm: React.FC<Props> = ({
     } else {
       setDataUser({ ...dataUser, [name]: value })
     }
-    setFormErrors({ ...formErrors, [name]: '' })
+    if (value) setFormErrors({ ...formErrors, [name]: '' })
   }
 
   const handleClose = () => {
@@ -153,6 +154,9 @@ const UserForm: React.FC<Props> = ({
             page,
             ITEMS_PER_PAGE: selectedItemsPerPage
           })
+          setShowForm(false)
+          setDataUser(initialDataAddUser)
+          setFormErrors(initialErrorsAddUser)
         }
       } else {
         const res = await updateUser({ dataUser })
@@ -168,10 +172,11 @@ const UserForm: React.FC<Props> = ({
             page,
             ITEMS_PER_PAGE: selectedItemsPerPage
           })
+          setShowForm(false)
+          setDataUser(initialDataAddUser)
+          setFormErrors(initialErrorsAddUser)
         }
       }
-      setDataUser(initialDataAddUser)
-      setFormErrors(initialErrorsAddUser)
     }
   }
 
@@ -255,7 +260,7 @@ const UserForm: React.FC<Props> = ({
               id="phone"
               name="phone"
               value={dataUser.phone}
-              inputMode="numeric" 
+              inputMode="numeric"
               onChange={handleInputChange}
               className="mt-1 block w-full p-2 border border-gray-400 dark:border-gray-700 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
             />
@@ -331,8 +336,8 @@ const UserForm: React.FC<Props> = ({
             />
           </div>
         </div>
-        <div className="flex gap-8 my-8">
-          {typeForm === 'add' && (
+        {typeForm === 'add' && (
+          <div className="flex gap-8 my-8">
             <div className="flex flex-col gap-4 mb-[5vh]">
               <div className="flex gap-2 items-center">
                 <label
@@ -365,8 +370,6 @@ const UserForm: React.FC<Props> = ({
                 </div>
               </div>
             </div>
-          )}
-          {typeForm === 'add' && (
             <div className="flex flex-col gap-4 mb-[5vh]">
               <div className="flex gap-2 items-center">
                 <label
@@ -399,8 +402,8 @@ const UserForm: React.FC<Props> = ({
                 </div>
               </div>
             </div>
-          )}
-        </div>
+          </div>
+        )}
         <div className="flex justify-end gap-2 mt-4">
           <Button
             type="button"
@@ -415,7 +418,8 @@ const UserForm: React.FC<Props> = ({
           >
             {loadingUsers ? (
               <p className="flex gap-2 items-center">
-                <BsCheck2 className="h-5 w-5" /> Agregar usuario
+                <BsCheck2 className="h-5 w-5" />{' '}
+                {typeForm === 'add' ? 'Agregar usuario' : 'Actualizar usuario'}
               </p>
             ) : (
               <Loader color="border-t-green-500" />

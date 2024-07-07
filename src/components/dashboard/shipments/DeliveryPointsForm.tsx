@@ -78,7 +78,7 @@ const DeliveryPointsForm: React.FC<Props> = ({
   const handleCargoInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
     setDataCargo({ ...dataCargo, [name]: value })
-    setFormErrorsCargo({ ...formErrorsCargo, [name]: '' })
+    if (value) setFormErrorsCargo({ ...formErrorsCargo, [name]: '' })
   }
 
   const handleAddCargoToDeliveryPoint = () => {
@@ -149,7 +149,8 @@ const DeliveryPointsForm: React.FC<Props> = ({
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
     setDataDeliveryPoint({ ...dataDeliveryPoint, [name]: value })
-    setFormErrorsDeliveryPoint({ ...formErrorsDeliveryPoint, [name]: '' })
+    if (value)
+      setFormErrorsDeliveryPoint({ ...formErrorsDeliveryPoint, [name]: '' })
   }
 
   const handleTextAreaChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -322,7 +323,7 @@ const DeliveryPointsForm: React.FC<Props> = ({
           </div>
           <div className="flex w-full justify-between items-center mt-2 mb-6">
             <div className="flex gap-4">
-            <div className="flex flex-col gap-2 w-max">
+              <div className="flex flex-col gap-2 w-max">
                 <select
                   id="destination"
                   name="destination"

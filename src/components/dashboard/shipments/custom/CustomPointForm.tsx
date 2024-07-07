@@ -82,7 +82,7 @@ const CustomPointForm: React.FC<Props> = ({ type, point }) => {
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target
     setDataCustomPoint({ ...dataCustomPoint, [name]: value })
-    setFormErrors({ ...formErrors, [name]: '' })
+    if (value) setFormErrors({ ...formErrors, [name]: '' })
   }
 
   const handleAddMarker = () => {
