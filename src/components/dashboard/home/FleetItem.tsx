@@ -21,7 +21,7 @@ const FleetItem: React.FC<Props> = ({ fleet }) => {
   const [errorEdit, setErrorEdit] = useState<string | null>(null)
   const [showEditForm, setShowEditForm] = useState<boolean>(false)
 
-  const { updateWorkingFleet, updateFleet } = useUser()
+  const { updateFleet } = useUser()
 
   const handleEditClick = () => {
     setDataFleet({

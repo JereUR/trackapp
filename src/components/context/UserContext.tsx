@@ -64,8 +64,6 @@ type UserContextType = {
   }: {
     dataFleet: PropsUpdateFleet
   }) => Promise<boolean>
-  getWorkingFleet: () => Promise<Fleet>
-  updateWorkingFleet: ({ id }: { id: number }) => Promise<boolean>
   getDrivers: () => Promise<User[]>
 }
 
@@ -551,68 +549,6 @@ export default function UserContextProvider({
     }
   }
 
-  async function getWorkingFleet() {
-    setLoadingFleet(true)
-    try {
-      const response = await axios.get(`${BASE_URL}api/v1/fleet_working`, {
-        headers: {
-          Authorization: token
-        }
-      })
-
-      if (response.status === 200 || response.status === 204) {
-        return response.data
-      } else {
-        toast({
-          title: 'Oh no! Algo salió mal.',
-          description: response.statusText
-        })
-        return null
-      }
-    } catch (error: any) {
-      toast({
-        variant: 'destructive',
-        title: 'Oh no! Algo salió mal.',
-        description: error.message
-      })
-      return null
-    } finally {
-      setLoadingFleet(false)
-    }
-  }
-
-  async function updateWorkingFleet({ id }: { id: number }): Promise<boolean> {
-    setLoadingFleet(true)
-    let url = `${BASE_URL}api/v1/activate_fleet_working_status?id=${id}`
-    try {
-      const response = await axios.put(url, null, {
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: token
-        }
-      })
-
-      if (response.status === 200) {
-        return true
-      } else {
-        toast({
-          title: 'Oh no! Algo salió mal.',
-          description: response.statusText
-        })
-        return false
-      }
-    } catch (error: any) {
-      toast({
-        variant: 'destructive',
-        title: 'Oh no! Algo salió mal.',
-        description: error.message
-      })
-      return false
-    } finally {
-      setLoadingFleet(false)
-    }
-  }
-
   return (
     <UserContext.Provider
       value={{
@@ -633,8 +569,6 @@ export default function UserContextProvider({
         getFleets,
         getFleetById,
         updateFleet,
-        getWorkingFleet,
-        updateWorkingFleet,
         getUsers,
         getDrivers,
         getUserById,
