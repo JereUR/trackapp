@@ -2,9 +2,12 @@
 
 import dynamic from 'next/dynamic'
 
-const ShowFleets = dynamic(() => import('@/components/dashboard/home/ShowFleets'), {
-  ssr: false
-})
+const ShowFleets = dynamic(
+  () => import('@/components/dashboard/home/ShowFleets'),
+  {
+    ssr: false
+  }
+)
 
 const AsideSection = dynamic(
   () => import('@/components/dashboard/home/AsideSection'),
@@ -29,10 +32,10 @@ const HomePage = () => {
       </div>
       <div className="hidden md:block">
         <div className="flex gap-8 m-10">
-          <div className="w-3/5">
+          <div className="w-1/2">
             <ShowFleets />
           </div>
-          <div className="w-2/5">
+          <div className="w-1/2">
             <AsideSection />
           </div>
         </div>
