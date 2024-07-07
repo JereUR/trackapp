@@ -11,7 +11,8 @@ export async function middleware(request: NextRequest) {
     if (
       request.nextUrl.pathname.startsWith('/panel-de-control') ||
       request.nextUrl.pathname.startsWith('/inicio') ||
-      request.nextUrl.pathname.startsWith('/mis-envios')
+      request.nextUrl.pathname.startsWith('/mis-envios') ||
+      request.nextUrl.pathname.startsWith('/mi-perfil')
     ) {
       return NextResponse.redirect(new URL('/iniciar-sesion', request.url))
     }
