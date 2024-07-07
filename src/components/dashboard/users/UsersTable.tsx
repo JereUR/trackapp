@@ -273,8 +273,8 @@ const UsersTable = () => {
       {showForm && (
         <div className="fixed inset-0 flex items-center justify-left bg-gray-900 bg-opacity-50 z-50">
           <div
-            className={`absolute h-[870px] bottom-0 bg-background p-4 shadow-lg transform translate-x-0 transition duration-300 ease-in-out w-full max-w-lg ${
-              showForm ? 'slide-in-right' : ''
+            className={`absolute h-screen overflow-y-auto  md:h-[870px] bottom-0 bg-background p-4 shadow-lg transform translate-x-0 transition duration-300 ease-in-out w-full max-w-lg ${
+              showForm && 'slide-in-right'
             }`}
           >
             <UserForm
