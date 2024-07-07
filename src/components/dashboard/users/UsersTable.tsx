@@ -152,7 +152,7 @@ const UsersTable = () => {
       {loadingUsers && users ? (
         <TableSkeleton />
       ) : (
-        <>
+        <div className="max-w-screen overflow-x-auto">
           <table className="transactions-table w-full mb-4 mt-8">
             <thead className="font-bold text-center text-muted bg-foreground text-xs xl:text-sm">
               <tr>
@@ -268,7 +268,7 @@ const UsersTable = () => {
             </tbody>
           </table>
           <Pagination count={count} ITEMS_PER_PAGE={selectedItemsPerPage} />
-        </>
+        </div>
       )}
       {showForm && (
         <div className="fixed inset-0 flex items-center justify-left bg-gray-900 bg-opacity-50 z-50">
