@@ -49,7 +49,7 @@ const ChatWindow = ({
   }
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 sm:bottom-16 sm:left-[17vw] bg-white dark:bg-slate-900 border border-gray-300 dark:border-gray-700 rounded-lg shadow-lg p-4 mx-2 my-2 sm:w-80">
+    <div className="fixed bottom-0 right-0 left-0 sm:bottom-16 sm:right-[17vw] sm:left-auto bg-white dark:bg-slate-900 border border-gray-300 dark:border-gray-700 rounded-lg shadow-lg p-4 mx-2 my-2 sm:w-80">
       <div className="flex justify-between items-center mb-4">
         <h4 className="font-bold text-sm sm:text-base">
           Chat con {getUser(chatId)}

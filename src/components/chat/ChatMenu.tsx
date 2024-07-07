@@ -42,7 +42,7 @@ const ChatMenu = ({
   }
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 sm:bottom-16 sm:left-4 bg-white dark:bg-slate-900 border border-gray-300 dark:border-gray-700 rounded-lg shadow-lg p-4 mx-2 my-2 sm:w-[15vw] sm:max-w-xs">
+    <div className="fixed bottom-0 right-0 left-0 sm:bottom-16 sm:right-4 sm:left-auto bg-white dark:bg-slate-900 border border-gray-300 dark:border-gray-700 rounded-lg shadow-lg p-4 mx-2 my-2 sm:w-[15vw] sm:max-w-xs">
       <h3 className="font-bold mb-2 text-sm sm:text-base">
         Selecciona un usuario para iniciar un chat
       </h3>
