@@ -149,6 +149,52 @@ export const initialErrorsAddUser: FormErrorsAddUser = {
   password_confirmation: ''
 }
 
+/* Profile update */
+
+export interface PropsUpdateProfile {
+  id?: number | null
+  first_name: string
+  last_name: string
+  phone?: number
+  gender: string
+  date: Date
+  password: string
+  password_confirmation: string
+  [key: string]: string | undefined | number | null | Date
+}
+
+export const initialDataUpdateProfile: PropsUpdateProfile = {
+  id: null,
+  first_name: '',
+  last_name: '',
+  phone: undefined,
+  gender: '',
+  date: new Date(),
+  password: '',
+  password_confirmation: ''
+}
+
+export interface FormErrorsUpdateProfile {
+  first_name?: string
+  last_name?: string
+  phone?: string
+  gender?: string
+  date?: string
+  password?: string
+  password_confirmation?: string
+  [key: string]: string | undefined
+}
+
+export const initialErrorsUpdateProfile: FormErrorsUpdateProfile = {
+  first_name: '',
+  last_name: '',
+  phone: '',
+  gender: '',
+  date: '',
+  password: '',
+  password_confirmation: ''
+}
+
 export const posibleRoles = ['Admin', 'Staff', 'Driver']
 
 export const posibleGenders = ['Masculino', 'Femenino', 'Otros']
