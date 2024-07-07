@@ -130,16 +130,16 @@ const Profile = () => {
           </p>
         </div>
       </div>
-      <div className="flex flex-col gap-4 my-10 mx-4 w-full max-w-lg">
+      <div className="flex flex-col gap-4 my-10 md:mx-4 w-full max-w-sm md:max-w-lg">
         <Button
-          className="flex gap-2 w-full items-center text-left px-4 py-2 text-white text-lg bg-sky-500 rounded-lg transition duration-300 ease-in-out hover:bg-sky-600 dark:hover:bg-sky-800"
+          className="flex gap-2 w-full items-center text-left px-4 py-2 text-white text-sm md:text-lg bg-sky-500 rounded-lg transition duration-300 ease-in-out hover:bg-sky-600 dark:hover:bg-sky-800"
           onClick={handleEdit}
         >
           <BiEdit className="h-5 w-5" /> Editar perfil / Actualizar contraseña
         </Button>
         <Button
           onClick={handleLogout}
-          className="flex gap-2 w-full items-center text-left px-4 py-2 text-white text-lg bg-red-500 rounded-lg transition duration-300 ease-in-out hover:bg-red-600 dark:hover:bg-red-800"
+          className="flex gap-2 w-full items-center text-left px-4 py-2 text-white text-sm md:text-lg bg-red-500 rounded-lg transition duration-300 ease-in-out hover:bg-red-600 dark:hover:bg-red-800"
         >
           {!loadingUser ? (
             <p className="flex gap-2 items-center">
