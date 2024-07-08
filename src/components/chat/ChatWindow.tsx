@@ -3,6 +3,7 @@ import { Chat } from '../types/Chat'
 import useChat from '../hooks/useChats'
 import { User } from '../types/User'
 import { Cross1Icon } from '@radix-ui/react-icons'
+import useUser from '../hooks/useUser'
 
 const ChatWindow = ({
   chatId,
@@ -20,6 +21,7 @@ const ChatWindow = ({
   const { getChat, sendMessage } = useChat()
   const [chat, setChat] = useState<Chat | null>(null)
   const [message, setMessage] = useState('')
+  const { user } = useUser()
 
   useEffect(() => {
     const fetchChat = async () => {
@@ -69,7 +71,15 @@ const ChatWindow = ({
       </div>
       <div className="h-40 sm:h-64 overflow-y-auto mb-4">
         {chat?.messages.map((msg) => (
-          <div key={msg.id} className="mb-2">
+          <div
+            key={msg.id}
+            className={`mb-2 p-2 rounded-lg ${
+              msg.sender_id === user?.id
+                ? 'bg-blue-100 dark:bg-blue-800 text-right ml-auto'
+                : 'bg-gray-100 dark:bg-gray-800 text-left mr-auto'
+            }`}
+            style={{ maxWidth: '75%' }} // Para limitar el ancho de los mensajes
+          >
             <span className="font-bold">{msg.sender_id}</span>: {msg.content}
           </div>
         ))}
