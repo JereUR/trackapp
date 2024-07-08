@@ -59,6 +59,7 @@ const ChatButton = () => {
         <ChatWindow
           key={chatId}
           chatId={chatId}
+          isChatMenuOpen={isChatMenuOpen}
           onClose={() => handleCloseChat(chatId)}
           allUsers={allUsers}
           onNewMessage={() => handleNewMessage(chatId)}
