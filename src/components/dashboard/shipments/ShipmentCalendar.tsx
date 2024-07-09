@@ -2,7 +2,6 @@ import React from 'react'
 
 import { ShipmentGroup } from '@/components/types/Shipment'
 import Calendar from './Calendar'
-import CalendarResponsive from './CalendarResponsive'
 
 interface ShipmentCalendarProps {
   shipments: ShipmentGroup[]
