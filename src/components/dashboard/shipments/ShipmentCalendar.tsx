@@ -13,12 +13,7 @@ const ShipmentCalendar: React.FC<ShipmentCalendarProps> = ({ shipments }) => {
     <div>
       {shipments.map((shipmentGroup) => (
         <div key={shipmentGroup.date}>
-          <div className="hidden md:block">
-            <Calendar shipmentGroup={shipmentGroup} />
-          </div>
-          <div className="md:hidden">
-            <CalendarResponsive shipmentGroup={shipmentGroup} />
-          </div>
+          <Calendar shipmentGroup={shipmentGroup} />
         </div>
       ))}
     </div>
