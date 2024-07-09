@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
-
+import { useRouter } from 'next/navigation'
 import { ShipmentGroup, times, ShipmentItem } from '@/components/types/Shipment'
-import ModalShipment from './ModalShipment'
+import { BiEdit, BiTrash } from 'react-icons/bi'
 
 interface CalendarProps {
   shipmentGroup: ShipmentGroup
@@ -13,120 +13,139 @@ const Calendar: React.FC<CalendarProps> = ({ shipmentGroup }) => {
     2: 'bg-green-500 border-none'
   }
 
-  const timeSlotHeight = 40 // Altura deseada para cada slot de tiempo
-  const [activeShipment, setActiveShipment] = useState<ShipmentItem | null>(
+  const [shipmentToDelete, setShipmentToDelete] = useState<ShipmentItem | null>(
     null
   )
   const [showConfirmDelete, setShowConfirmDelete] = useState<boolean>(false)
 
-  const handleShipmentClick = (shipment: ShipmentItem) => {
-    setActiveShipment(shipment)
-  }
+  const router = useRouter()
 
   const closeModal = () => {
-    setActiveShipment(null)
     setShowConfirmDelete(false)
   }
 
+  const handleClickDelete = ({ shipment }: { shipment: ShipmentItem }) => {
+    setShipmentToDelete(shipment)
+    setShowConfirmDelete(true)
+  }
+
   const handleDelete = () => {
-    // Lógica para borrar el envío
-    console.log('Deleting shipment:', activeShipment?.name)
+    console.log('Deleting shipment:', shipmentToDelete?.name)
     closeModal()
   }
 
   return (
-    <div className="w-full ml-8 mr-12 p-4">
-      <div className="border border-gray-300 dark:border-gray-500 p-4 rounded-lg shadow-lg bg-card">
-        <h3 className="text-xl font-semibold mb-4 text-gray-500 dark:text-white">
+    <div className="p-2 md:p-6 my-4 md:my-8 bg-gray-50 dark:bg-slate-800 shadow-lg rounded-lg">
+      <div className="mb-4">
+        <p className="text-lg font-semibold text-gray-700 dark:text-gray-300">
           {shipmentGroup.date}
-        </h3>
-        <div className="flex border-b border-gray-300 dark:border-gray-500 mb-2">
-          {times.map((time, index) => (
-            <div
-              key={time}
-              className="flex-1 text-center py-2"
-              style={{ height: `${timeSlotHeight}px` }}
-            >
-              <div
-                className={`text-sm font-semibold text-gray-500 dark:text-white ${
-                  index === 12 ? 'mr-6' : ''
-                }${index === 13 ? 'ml-6' : ''}`}
-              >
-                {time}
-              </div>
-            </div>
-          ))}
-        </div>
-        {shipmentGroup.shipments.map((shipment) => {
-          const startIndex = times.findIndex(
-            (time) => time === shipment.time_start
-          )
-          const endIndex = times.findIndex((time) => time === shipment.time_end)
-          const span = endIndex - startIndex
-          const fleetColor = fleetIdToColor[shipment.fleet_id]
-
-          return (
-            <div key={shipment.id} className="relative flex mt-2">
-              {times.map((time, index) => {
-                const isMorningSlot = time >= '07:30' && time < '10:30'
-                const isEveningSlot = time >= '19:30' && time < '23:30'
-
-                const isInMorningRange =
-                  isMorningSlot &&
-                  time >= shipment.time_start &&
-                  time < shipment.time_end
-                const isInEveningRange =
-                  isEveningSlot &&
-                  time >= shipment.time_start &&
-                  time < shipment.time_end
-
-                const isInTimeRange = isInMorningRange || isInEveningRange
-
-                // Restaurar el margen entre 10:30 y 19:30
-                const marginRight = time === '10:30' ? '16px' : '0px'
-                const marginLeft = time === '19:30' ? '16px' : '0px'
-
-                return (
-                  <div
-                    key={time}
-                    className={`flex-1 text-center py-2 border ${
-                      isInTimeRange
-                        ? fleetColor
-                        : 'border-gray-300 dark:border-gray-500'
-                    }`}
-                    style={{
-                      marginRight: marginRight,
-                      marginLeft: marginLeft,
-                      height: `${timeSlotHeight}px`
-                    }}
-                  ></div>
-                )
-              })}
-              {span > 0 && (
-                <div
-                  className="absolute top-1/2 transform -translate-y-1/2 flex items-center justify-center cursor-pointer"
-                  style={{
-                    left: `${(startIndex * 100) / times.length}%`,
-                    width: `${(span * 100) / times.length}%`
-                  }}
-                  onClick={() => handleShipmentClick(shipment)}
-                >
-                  <p className="text-[15px] text-gray-900 font-medium p-1 bg-gray-200 bg-opacity-75 rounded">
-                    {shipment.name}
-                  </p>
-                </div>
-              )}
-            </div>
-          )
-        })}
+        </p>
       </div>
-      <ModalShipment
-        activeShipment={activeShipment}
-        closeModal={closeModal}
-        showConfirmDelete={showConfirmDelete}
-        setShowConfirmDelete={setShowConfirmDelete}
-        handleDelete={handleDelete}
-      />
+      <div className="overflow-x-auto scrollbar-thin scrollbar-thumb-rounded scrollbar-track-rounded scrollbar-thumb-gray-400 dark:scrollbar-thumb-gray-700">
+        <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+          <thead className="bg-gray-100 dark:bg-slate-900">
+            <tr>
+              <th className="sticky left-0 z-10 bg-gray-200 dark:bg-slate-900 py-3 md:px-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider max-w-[90px] md:max-w-xs whitespace-normal">
+                <span className="block md:hidden">Envio \ Horario</span>
+                <span className="hidden md:block">
+                  Nombre del Envio \ Horario
+                </span>
+              </th>
+              {times.map((time) => (
+                <th
+                  key={time}
+                  className="md:px-2 py-3 text-left text-xs font-medium bg-gray-200 dark:bg-slate-900 text-gray-500 dark:text-gray-300 uppercase tracking-wider"
+                >
+                  {time}
+                </th>
+              ))}
+              <th className="sticky right-0 z-10 bg-gray-200 dark:bg-slate-900 md:px-2 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider max-w-[90px] md:max-w-xs whitespace-normal">
+                Acciones
+              </th>
+            </tr>
+          </thead>
+          <tbody className="bg-white dark:bg-gray-900 divide-y divide-gray-200 dark:divide-gray-700">
+            {shipmentGroup.shipments.map((shipment) => {
+              let paintCell = false
+              let lastPaint = false
+
+              return (
+                <tr key={shipment.id}>
+                  <td className="sticky left-0 z-10 bg-gray-200 dark:bg-slate-900  md:px-1 py-4 text-sm font-medium text-gray-900 dark:text-gray-300 tracking-wider max-w-[90px] md:max-w-xs whitespace-normal">
+                    {shipment.name}
+                  </td>
+                  {times.map((time) => {
+                    if (lastPaint) paintCell = false
+                    if (shipment.time_start === time) {
+                      paintCell = true
+                      lastPaint = false
+                    }
+                    if (shipment.time_end === time) lastPaint = true
+
+                    return (
+                      <td
+                        key={time}
+                        className={`${
+                          paintCell
+                            ? fleetIdToColor[shipment.fleet_id]
+                            : 'bg-background'
+                        }  md:px-1 py-4 whitespace-nowrap`}
+                      ></td>
+                    )
+                  })}
+                  <td className="sticky right-0 z-10 bg-gray-200 dark:bg-slate-900 md:px-1 tracking-wider max-w-[90px] md:max-w-xs whitespace-normal">
+                    <div className="flex justify-center gap-2">
+                      <button
+                        className="bg-transparent text-white py-2 rounded"
+                        onClick={() =>
+                          router.push(
+                            `/panel-de-control/envios/editar/${shipment.id}`
+                          )
+                        }
+                      >
+                        <BiEdit className="h-4 w-4 md:h-5 md:w-5 text-blue-600 dark:text-blue-500 transition duration-300 ease-in-out hover:scale-[1.07] hover:text-blue-800 dark:hover:text-blue-700" />
+                      </button>
+                      <button
+                        className="bg-transparent text-white py-2 rounded"
+                        onClick={() => handleClickDelete({ shipment })}
+                      >
+                        <BiTrash className="h-4 w-4 md:h-5 md:w-5 text-red-600 dark:text-red-500 transition duration-300 ease-in-out hover:scale-[1.07] hover:text-red-800 dark:hover:text-red-700" />
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              )
+            })}
+          </tbody>
+        </table>
+      </div>
+      {showConfirmDelete && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-75">
+          <div className="bg-card text-foreground p-6 rounded-lg shadow-lg w-3/4 md:w-1/3">
+            <h4 className="text-lg font-semibold mb-4">
+              Confirmar eliminación
+            </h4>
+            <p>
+              ¿Estás seguro de que deseas eliminar el envío{' '}
+              {`'${shipmentToDelete?.name}'`}?
+            </p>
+            <div className="flex justify-end space-x-4 mt-4">
+              <button
+                className="bg-gray-500 text-white px-4 py-2 rounded"
+                onClick={() => setShowConfirmDelete(false)}
+              >
+                Cancelar
+              </button>
+              <button
+                className="bg-red-500 text-white px-4 py-2 rounded"
+                onClick={handleDelete}
+              >
+                Confirmar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
