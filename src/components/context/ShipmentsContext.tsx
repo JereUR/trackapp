@@ -31,7 +31,7 @@ type ShipmentsContextType = {
     fleets_id
   }: {
     q: string
-    fleets_id: number
+    fleets_id: number[]
   }) => Promise<void>
   getShipmentById: ({ id }: { id: string }) => Promise<Shipment | null>
   getOnProgressShipments: () => Promise<Shipment[]>
@@ -144,9 +144,9 @@ export default function ShipmentsContextProvider({
     fleets_id
   }: {
     q: string
-    fleets_id: number
+    fleets_id: number[]
   }): Promise<void> {
-    setShipments(initialShipmentsSameFleet)
+    setShipments(initialShipments)
     return
     setLoadingShipment(true)
     const params = new URLSearchParams()
