@@ -1,24 +1,26 @@
 'use client'
 
-import { useSearchParams } from 'next/navigation'
-import React, { useEffect, useState } from 'react'
-import { CgAdd } from 'react-icons/cg'
-import Link from 'next/link'
-import { MdOutlineDashboardCustomize } from 'react-icons/md'
+import { useSearchParams } from 'next/navigation';
+import React, { useEffect, useState } from 'react';
+import { CgAdd } from 'react-icons/cg';
+import Link from 'next/link';
+import { MdOutlineDashboardCustomize } from 'react-icons/md';
 
-import useShipments from '@/components/hooks/useShipments'
-import useUser from '@/components/hooks/useUser'
-import ShipmentCalendar from './ShipmentCalendar'
+import useShipments from '@/components/hooks/useShipments';
+import useUser from '@/components/hooks/useUser';
+import ShipmentCalendar from './ShipmentCalendar';
 import {
+  days,
+  months,
   Shipment,
   ShipmentGroup,
   ShipmentItem
-} from '@/components/types/Shipment'
-import FleetLegend from './FleetLegend'
-import { Button } from '@/components/ui/button'
+} from '@/components/types/Shipment';
+import FleetLegend from './FleetLegend';
+import { Button } from '@/components/ui/button';
 
 const groupShipmentsByDate = (shipments: Shipment[]): ShipmentGroup[] => {
-  const shipmentGroups: { [date: string]: ShipmentGroup } = {}
+  const shipmentGroups: { [date: string]: ShipmentGroup } = {};
 
   shipments.forEach((shipment) => {
     const {
@@ -30,7 +32,17 @@ const groupShipmentsByDate = (shipments: Shipment[]): ShipmentGroup[] => {
       time_end,
       assigned_driver,
       delivery_points
-    } = shipment
+    } = shipment;
+
+    const dateObject = new Date(date);
+    const day = dateObject.getDate();
+    const month = dateObject.getMonth() + 1;
+    const year = dateObject.getFullYear();
+
+    const dayOfWeek = days[dateObject.getDay()];
+    const monthName = months[month - 1];
+    const formattedDate = ` ${dayOfWeek} ${day} de ${monthName} de ${year}`;
+
     const shipmentItem: ShipmentItem = {
       id,
       fleet_id,
@@ -42,67 +54,64 @@ const groupShipmentsByDate = (shipments: Shipment[]): ShipmentGroup[] => {
       name,
       time_start,
       time_end
+    };
+
+    if (!shipmentGroups[formattedDate]) {
+      shipmentGroups[formattedDate] = { date: formattedDate, shipments: [] };
     }
 
-    if (!shipmentGroups[date]) {
-      shipmentGroups[date] = { date, shipments: [] }
-    }
+    shipmentGroups[formattedDate].shipments.push(shipmentItem);
+  });
 
-    shipmentGroups[date].shipments.push(shipmentItem)
-  })
-
-  return Object.values(shipmentGroups)
-}
+  return Object.values(shipmentGroups);
+};
 
 const ShipmentsList = () => {
-  const [shipmentsToShow, setShipmentsToShow] = useState<ShipmentGroup[]>([])
-  const [selectedFleet, setSelectedFleet] = useState<number>(1) // Flota por defecto seleccionada (id=1)
-  const { shipments, getShipments } = useShipments()
-  const { token, getFleets, fleets } = useUser()
-  const searchParams = useSearchParams()
+  const [shipmentsToShow, setShipmentsToShow] = useState<ShipmentGroup[]>([]);
+  const [selectedFleets, setSelectedFleets] = useState<number[]>([]);
+  const { shipments, getShipments } = useShipments();
+  const { token, getFleets, fleets } = useUser();
+  const searchParams = useSearchParams();
 
   useEffect(() => {
     if (token) {
-      getFleets()
+      getFleets();
     }
-  }, [token])
+  }, [token]);
 
   useEffect(() => {
     if (fleets.length > 0) {
-      // Seleccionar por defecto la flota con id=1 si existe en las flotas disponibles
-      const defaultFleet = fleets.find((fleet) => fleet.id === 1)
-      setSelectedFleet(defaultFleet ? defaultFleet.id : 1)
+      const initialSelectedFleets = fleets.map((fleet) => fleet.id);
+      setSelectedFleets(initialSelectedFleets);
     }
-  }, [fleets])
+  }, [fleets]);
 
   useEffect(() => {
-    if (token && fleets.length > 0) {
-      const q = searchParams.get('q') || ''
-      getShipments({ q, fleets_id: selectedFleet })
+    if (token && selectedFleets.length > 0) {
+      const q = searchParams.get('q') || '';
+      getShipments({ q, fleets_id: selectedFleets });
     }
-  }, [token, selectedFleet])
+  }, [token, selectedFleets]);
 
   useEffect(() => {
     if (shipments.length > 0) {
-      const groupedShipments = groupShipmentsByDate(shipments)
-      setShipmentsToShow(groupedShipments)
+      const groupedShipments = groupShipmentsByDate(shipments);
+      setShipmentsToShow(groupedShipments);
     }
-  }, [shipments])
+  }, [shipments]);
 
-  const handleFleetSelection = (fleetId: number | null) => {
-    if (fleetId !== null) {
-      setSelectedFleet(fleetId)
-    }
-  }
+  const handleFleetSelection = (fleetId: number[]) => {
+    setSelectedFleets(fleetId);
+  };
 
   return (
     <div>
-      <h1 className="text-3xl font-bold mb-4">Próximos envios</h1>
+      <h1 className="text-3xl font-bold mb-4">Próximos envíos</h1>
       <div className="flex flex-col justify-center gap-4 mb-6 md:flex-row md:justify-between">
         <div className="flex justify-center">
           <FleetLegend
             fleets={fleets}
-            selectedFleet={selectedFleet}
+            selectedFleets={selectedFleets}
             onFleetSelection={handleFleetSelection}
           />
         </div>
@@ -135,7 +144,7 @@ const ShipmentsList = () => {
         </div>
       )}
     </div>
-  )
-}
+  );
+};
 
-export default ShipmentsList
+export default ShipmentsList;
