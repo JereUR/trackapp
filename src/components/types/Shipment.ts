@@ -1,10 +1,16 @@
 import { User } from './User'
 
+interface Cargo {
+  quantity: number
+  product: string
+  delivered_quantity?: number
+}
+
 export type DeliveryPoint = {
   id: number
   name: string
   destination: { lat: number; lng: number }
-  cargo: { quantity: number; product: string }[]
+  cargo: Cargo[]
   description?: string
   status?: string
   observations?: string
@@ -94,11 +100,6 @@ export type ShipmentItem = {
 export type ShipmentGroup = {
   date: string
   shipments: ShipmentItem[]
-}
-
-interface Cargo {
-  quantity: number
-  product: string
 }
 
 interface Coords {
