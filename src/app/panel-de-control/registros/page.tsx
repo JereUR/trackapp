@@ -1,5 +1,7 @@
 import { Metadata } from 'next'
 
+import RecordsInterface from '@/components/dashboard/records/RecordsInterface'
+
 export const metadata: Metadata = {
   title: 'TrackApp - Registros'
 }
@@ -7,7 +9,7 @@ export const metadata: Metadata = {
 const RecordsPage = () => {
   return (
     <div className="m-4 md:m-10">
-      <RecordsPage />
+      <RecordsInterface />
     </div>
   )
 }

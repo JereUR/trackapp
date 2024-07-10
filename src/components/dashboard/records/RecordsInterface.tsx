@@ -1,8 +1,11 @@
+'use client'
+
 import { useState } from 'react'
+
 import RecordsForm from './RecordsForm'
 import RecordsResume from './RecordsResume'
 
-const RecordsPage = () => {
+const RecordsInterface = () => {
   const [dataRecord, setDataRecord] = useState(null)
   const [resume, setResume] = useState(null)
 
@@ -16,4 +19,4 @@ const RecordsPage = () => {
   )
 }
 
-export default RecordsPage
+export default RecordsInterface
