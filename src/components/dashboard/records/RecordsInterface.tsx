@@ -4,17 +4,19 @@ import { useState } from 'react'
 
 import RecordsForm from './RecordsForm'
 import RecordsResume from './RecordsResume'
+import { Resume } from '@/components/types/Record'
 
 const RecordsInterface = () => {
-  const [dataRecord, setDataRecord] = useState(null)
-  const [resume, setResume] = useState(null)
+  const [resume, setResume] = useState<Resume | null>(null)
+  const [requestDone, setRequestDone] = useState<boolean>(false)
+  console.log(resume)
 
   return (
     <div className="flex flex-col gap-8">
       <p className="text-3xl font-bold">Registros</p>
-      <RecordsForm />
+      <RecordsForm setResume={setResume} setRequestDone={setRequestDone} />
       <hr />
-      <RecordsResume />
+      <RecordsResume resume={resume} requestDone={requestDone} />
     </div>
   )
 }
