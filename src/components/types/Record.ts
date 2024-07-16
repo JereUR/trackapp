@@ -29,3 +29,25 @@ export type Resume = {
   total_distance: number
   drivers_id: number[]
 }
+
+export interface PropsGetResume {
+  fleet_id: number | null
+  date: Date
+  [key: string]: number | Date | null
+}
+
+export const initialDataGetResume: PropsGetResume = {
+  fleet_id: null,
+  date: new Date()
+}
+
+export interface FormErrorsGetResume {
+  fleet_id?: string
+  date?: string
+  [key: string]: string | undefined
+}
+
+export const initialErrorsGetResume: FormErrorsGetResume = {
+  fleet_id: '',
+  date: ''
+}
