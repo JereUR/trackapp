@@ -18,6 +18,8 @@ import { PropsAddUser, PropsUpdateProfile, User } from '../types/User'
 import { useToast } from '../ui/use-toast'
 import { removeCookies } from '../actions/removeCookies'
 import { Fleet, PropsUpdateFleet } from '../types/Fleet'
+import { Resume } from '../types/Record'
+import { exampleResume } from '../db/RecordsData'
 
 type UserContextType = {
   user: User | null
@@ -72,6 +74,13 @@ type UserContextType = {
     dataFleet: PropsUpdateFleet
   }) => Promise<boolean>
   getDrivers: () => Promise<User[]>
+  getResume: ({
+    id,
+    date
+  }: {
+    id: number
+    date: string
+  }) => Promise<Resume | null>
 }
 
 export const UserContext = createContext<UserContextType | null>(null)
@@ -682,6 +691,49 @@ export default function UserContextProvider({
     }
   }
 
+  async function getResume({
+    id,
+    date
+  }: {
+    id: number
+    date: string
+  }): Promise<Resume | null> {
+    return exampleResume
+    setLoadingUser(true)
+    const params = new URLSearchParams()
+    params.append('fleet_id', id.toString())
+    params.append('date', date)
+    const url = `${BASE_URL}api/v1/resume?${params.toString()}`
+
+    try {
+      const response = await axios.get(url, {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: token
+        }
+      })
+
+      if (response.status === 200 || response.status === 204) {
+        return response.data.users
+      } else {
+        toast({
+          title: 'Oh no! Algo salió mal.',
+          description: response.statusText
+        })
+        return null
+      }
+    } catch (error: any) {
+      toast({
+        variant: 'destructive',
+        title: 'Oh no! Algo salió mal.',
+        description: error.message
+      })
+      return null
+    } finally {
+      setLoadingUser(false)
+    }
+  }
+
   return (
     <UserContext.Provider
       value={{
@@ -710,7 +762,8 @@ export default function UserContextProvider({
         getUserById,
         addUser,
         updateUser,
-        deleteUsersById
+        deleteUsersById,
+        getResume
       }}
     >
       {children}
