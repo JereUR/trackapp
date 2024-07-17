@@ -4,8 +4,14 @@ import { MapContainer, Marker, Popup, TileLayer, Polyline } from 'react-leaflet'
 import MarkerClusterGroup from 'react-leaflet-cluster'
 import 'tailwindcss/tailwind.css'
 
-import { freezeTimeIcon, sendIcon, ZOOM_LEVEL_FORM } from '../../maps/MapsInfo'
-import { IoContract } from 'react-icons/io5'
+import {
+  freezeTimeIcon,
+  sendIcon,
+  ZOOM_LEVEL_FORM,
+  destinationCompletedIcon,
+  destinationRefuseIcon,
+  destinationIcon
+} from '../../maps/MapsInfo'
 import { Cross1Icon } from '@radix-ui/react-icons'
 
 const ResumeMap = ({ resume, onClose }) => {
@@ -29,6 +35,22 @@ const ResumeMap = ({ resume, onClose }) => {
   const initialResumeTime = `${fecha.toString().padStart(2, '0')}:${minutos
     .toString()
     .padStart(2, '0')}:${segundos.toString().padStart(2, '0')}`
+
+  const formatTime = (timeString) => {
+    const dateObject = new Date(timeString)
+    const hours = dateObject.getHours()
+    const minutes = dateObject.getMinutes()
+    return `${hours.toString().padStart(2, '0')}:${minutes
+      .toString()
+      .padStart(2, '0')}`
+  }
+
+  const calculateDuration = (startTime, endTime) => {
+    const startDate = new Date(startTime)
+    const endDate = new Date(endTime)
+    const durationMs = endDate.getTime() - startDate.getTime()
+    return (durationMs / 1000 / 60).toFixed(1)
+  }
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
@@ -82,14 +104,82 @@ const ResumeMap = ({ resume, onClose }) => {
                       {`Tiempo de espera ${index + 1}`}
                     </div>
                     <div style={{ fontSize: '0.875rem', color: '#4a5568' }}>
-                      Duración:{' '}
-                      {(
-                        (point.end_time - point.start_time) /
-                        1000 /
-                        60
-                      ).toFixed(1)}{' '}
+                      <span style={{ fontWeight: 'bold' }}>Inicio:</span>{' '}
+                      {formatTime(point.start_time)} hs
+                    </div>
+                    <div style={{ fontSize: '0.875rem', color: '#4a5568' }}>
+                      <span style={{ fontWeight: 'bold' }}>Duración:</span>{' '}
+                      {calculateDuration(point.start_time, point.end_time)}
                       minutos
                     </div>
+                  </Popup>
+                </Marker>
+              )
+            })}
+          </MarkerClusterGroup>
+          <MarkerClusterGroup>
+            {resume.delivery_points.map((point) => {
+              const pointPosition = [
+                point.destination.lat,
+                point.destination.lng
+              ]
+              let icon = destinationIcon
+              let statusColor = '#d69e2e'
+              if (point.status === 'Completado') {
+                icon = destinationCompletedIcon
+                statusColor = '#48bb78'
+              } else if (
+                point.status === 'Rechazado' ||
+                point.status === 'Cancelado'
+              ) {
+                icon = destinationRefuseIcon
+                statusColor = '#f56565'
+              }
+              return (
+                <Marker key={point.id} icon={icon} position={pointPosition}>
+                  <Popup>
+                    <div style={{ fontSize: '1.125rem', fontWeight: 'bold' }}>
+                      {point.name}
+                    </div>
+                    <div style={{ fontSize: '0.875rem', color: statusColor }}>
+                      Estado: {point.status}
+                    </div>
+                    {point.cargo.length > 0 && (
+                      <div style={{ marginTop: '0.5rem' }}>
+                        <div style={{ fontSize: '1rem', fontWeight: 'bold' }}>
+                          Cargos:
+                        </div>
+                        <ul
+                          style={{
+                            listStyleType: 'disc',
+                            paddingLeft: '1.25rem',
+                            marginTop: '0.25rem'
+                          }}
+                        >
+                          {point.cargo.map((cargo, index) => (
+                            <li
+                              key={index}
+                              style={{ fontSize: '0.875rem', color: '#2d3748' }}
+                            >
+                              <span style={{ fontWeight: 'bold' }}>
+                                {cargo.product}:
+                              </span>{' '}
+                              {cargo.quantity} -{' '}
+                              <span
+                                style={{
+                                  fontWeight: '500',
+                                  fontStyle: 'italic',
+                                  textDecoration: 'underline'
+                                }}
+                              >
+                                Entregado:
+                              </span>{' '}
+                              {cargo.delivered_quantity}
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
                   </Popup>
                 </Marker>
               )
