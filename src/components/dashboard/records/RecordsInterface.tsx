@@ -9,7 +9,6 @@ import { Resume } from '@/components/types/Record'
 const RecordsInterface = () => {
   const [resume, setResume] = useState<Resume | null>(null)
   const [requestDone, setRequestDone] = useState<boolean>(false)
-  console.log(resume)
 
   return (
     <div className="flex flex-col gap-8">
