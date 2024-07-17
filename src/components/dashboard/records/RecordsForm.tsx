@@ -2,9 +2,9 @@ import ErrorText from '@/components/ErrorText'
 import useUser from '@/components/hooks/useUser'
 import {
   FormErrorsGetResume,
-  initialDataGetResume,
   initialErrorsGetResume,
   PropsGetResume,
+  initialDataGetResume,
   Resume
 } from '@/components/types/Record'
 import { Dispatch, SetStateAction, useEffect, useState } from 'react'
@@ -73,8 +73,11 @@ const RecordsForm: React.FC<Props> = ({ setResume, setRequestDone }) => {
 
   return (
     <div className="m-4 py-8 px-12 w-fit border border-gray-300 dark:border-gray-700 bg-gray-200 dark:bg-gray-800 rounded-lg shadow-md">
-      <form onSubmit={handleSubmit} className="flex gap-32 items center w-full">
-        <div className="flex gap-12">
+      <form
+        onSubmit={handleSubmit}
+        className="flex flex-col md:flex-row gap-4 md:gap-32 items center w-full"
+      >
+        <div className="flex flex-col md:flex-row gap-4 md:gap-12">
           <div>
             <div className="flex gap-2 items-center">
               <label
