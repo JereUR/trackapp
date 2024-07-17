@@ -39,7 +39,7 @@ export const exampleResume: Resume = {
     {
       id: 1,
       name: 'Puerto A',
-      destination: { lat: 19.4326, lng: -99.1332 },
+      destination: { lat: -34.882598687863755, lng: -57.91423600696487 },
       cargo: [
         {
           quantity: 2,
@@ -57,7 +57,7 @@ export const exampleResume: Resume = {
     {
       id: 2,
       name: 'Puerto B',
-      destination: { lat: 19.4326, lng: -99.1332 },
+      destination: { lat: -34.88188820357385, lng: -57.90975215272063 },
       cargo: [
         {
           quantity: 2,
@@ -71,6 +71,24 @@ export const exampleResume: Resume = {
         }
       ],
       status: 'Completado'
+    },
+    {
+      id: 1,
+      name: 'Puerto C',
+      destination: { lat: -34.877558557119144, lng: -57.907217015735895 },
+      cargo: [
+        {
+          quantity: 2,
+          product: 'Vianda',
+          delivered_quantity: 0
+        },
+        {
+          quantity: 1,
+          product: 'Vianda especial',
+          delivered_quantity: 0
+        }
+      ],
+      status: 'Cancelado'
     }
   ],
   route: generateRoute(startPoint, endPoint, numPoints),
