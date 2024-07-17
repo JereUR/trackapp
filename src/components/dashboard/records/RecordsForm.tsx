@@ -72,7 +72,7 @@ const RecordsForm: React.FC<Props> = ({ setResume, setRequestDone }) => {
   }
 
   return (
-    <div className="m-4 py-8 px-12 w-fit border border-gray-300 dark:border-gray-700 bg-gray-200 dark:bg-gray-800 rounded-lg shadow-md">
+    <div className="md:m-4 py-8 px-4 md:px-12 w-full md:w-fit border border-gray-300 dark:border-gray-700 bg-gray-200 dark:bg-gray-800 rounded-lg shadow-md">
       <form
         onSubmit={handleSubmit}
         className="flex flex-col md:flex-row gap-4 md:gap-32 items center w-full"
@@ -128,7 +128,7 @@ const RecordsForm: React.FC<Props> = ({ setResume, setRequestDone }) => {
             />
           </div>
         </div>
-        <div className="flex items-end">
+        <div className="flex justify-center mt-2 md:mt-0 md:items-end">
           <CustomButton loading={loadingUser} />
         </div>
       </form>
