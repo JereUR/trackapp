@@ -106,12 +106,37 @@ const RecordsResume: React.FC<Props> = ({ resume, requestDone }) => {
     }
   }
 
+  // Calcular los productos entregados y no entregados
+  const deliveredProducts: { [product: string]: number } = {}
+  const undeliveredProducts: { [product: string]: number } = {}
+
+  resume?.delivery_points.forEach((dp) => {
+    dp.cargo.forEach((item) => {
+      if (item.delivered_quantity && item.delivered_quantity > 0) {
+        if (deliveredProducts[item.product]) {
+          deliveredProducts[item.product] += item.delivered_quantity
+        } else {
+          deliveredProducts[item.product] = item.delivered_quantity
+        }
+      }
+      const undeliveredQuantity =
+        item.quantity - (item.delivered_quantity ? item.delivered_quantity : 0)
+      if (undeliveredQuantity > 0) {
+        if (undeliveredProducts[item.product]) {
+          undeliveredProducts[item.product] += undeliveredQuantity
+        } else {
+          undeliveredProducts[item.product] = undeliveredQuantity
+        }
+      }
+    })
+  })
+
   return (
-    <div>
+    <div className="p-4">
       {requestDone && resume ? (
         <div className="flex flex-col items-center mx-auto gap-4 p-4 border w-full max-w-6xl border-gray-300 dark:border-gray-700 bg-gray-200 dark:bg-gray-800 rounded-lg shadow-md">
-          <p className="text-2xl font-semibold">
-            Registro del dia {formatDate(resume.date)}:
+          <p className="text-2xl font-semibold text-center">
+            Registro del día {formatDate(resume.date)}:
           </p>
           <div className="flex w-full flex-col md:flex-row gap-8 m-6">
             <div className="flex-1 flex flex-col gap-4 justify-center items-center">
@@ -120,35 +145,67 @@ const RecordsResume: React.FC<Props> = ({ resume, requestDone }) => {
                 Envíos realizados: {resume.delivery_points.length}
               </p>
             </div>
-            <div className="flex-1 w-fit flex flex-col gap-8 md:justify-center md:items-center">
+            <div className="flex-1 flex flex-col gap-6 md:justify-center md:items-start ml-4 md:ml-12">
               <div className="flex gap-2 items-center">
-                <p className="text-lg">Distancia recorrida:</p>
+                <p className="text-lg font-medium">Distancia recorrida:</p>
                 <p className="text-gray-500 dark:text-gray-400 italic">
                   {resume.total_distance} km
                 </p>
               </div>
-              <div className="flex flex-col md:flex-row gap-2 items-center whitespace-nowrap">
-                <p className="text-lg">Consumo de combustible aproximado:</p>
+              <div className="flex flex-col md:flex-row gap-2 items-center">
+                <p className="text-lg font-medium">
+                  Consumo de combustible aproximado:
+                </p>
                 <p className="text-gray-500 dark:text-gray-400 italic">
                   {(15 / 100) * resume.total_distance} Litros
                 </p>
               </div>
               <div className="flex flex-col gap-2">
-                <p className="text-lg">Conductores:</p>
-                <ul className="ml-8">
+                <p className="text-lg font-medium">Conductores:</p>
+                <ul className="ml-4 list-disc">
                   {drivers.map((driver) => (
                     <li
                       key={driver.id}
                       className="text-gray-500 dark:text-gray-400 italic"
                     >
-                      - {driver.first_name} {driver.last_name}.
+                      {driver.first_name} {driver.last_name}
                     </li>
                   ))}
                 </ul>
               </div>
+              <div className="flex flex-col gap-2">
+                <p className="text-lg font-medium">Cargas entregadas:</p>
+                <ul className="ml-4 list-disc">
+                  {Object.entries(deliveredProducts).map(
+                    ([product, quantity]) => (
+                      <li
+                        key={product}
+                        className="text-gray-500 dark:text-gray-400 italic"
+                      >
+                        {product}: {quantity}
+                      </li>
+                    )
+                  )}
+                </ul>
+              </div>
+              <div className="flex flex-col gap-2">
+                <p className="text-lg font-medium">Cargas no entregadas:</p>
+                <ul className="ml-4 list-disc">
+                  {Object.entries(undeliveredProducts).map(
+                    ([product, quantity]) => (
+                      <li
+                        key={product}
+                        className="text-gray-500 dark:text-gray-400 italic"
+                      >
+                        {product}: {quantity}
+                      </li>
+                    )
+                  )}
+                </ul>
+              </div>
               <Button
                 onClick={() => setShowMap(true)}
-                className="w-fit bg-sky-500 transition duration-300 ease-in-out hover:bg-sky-600 mx-auto"
+                className="w-fit bg-sky-500 transition duration-300 ease-in-out hover:bg-sky-600 mx-auto md:mx-0"
               >
                 <p className="flex gap-2 items-center">
                   <FaMapMarkedAlt className="h-5 w-5" />
@@ -160,7 +217,9 @@ const RecordsResume: React.FC<Props> = ({ resume, requestDone }) => {
           {showMap && <ResumeMap resume={resume} onClose={onClose} />}
         </div>
       ) : (
-        <div>No existen registros para el día seleccionado</div>
+        <div className="text-center">
+          No existen registros para el día seleccionado
+        </div>
       )}
     </div>
   )
