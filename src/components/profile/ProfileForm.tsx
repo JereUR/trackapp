@@ -311,11 +311,11 @@ const ProfileForm: React.FC<Props> = ({
             className=" text-foreground bg-green-500 hover:bg-green-600"
           >
             {loadingUser ? (
+              <Loader color="border-t-green-500" />
+            ) : (
               <p className="flex gap-2 items-center">
                 <BsCheck2 className="h-5 w-5" /> Guardar
               </p>
-            ) : (
-              <Loader color="border-t-green-500" />
             )}
           </Button>
         </div>
